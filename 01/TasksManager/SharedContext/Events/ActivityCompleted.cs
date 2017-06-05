@@ -1,0 +1,14 @@
+﻿using Cqrs.Commons;
+using System;
+
+namespace TasksManager.SharedContext.Events
+{
+    public class ActivityCompleted : IEvent
+    {
+        public Guid Id { get; set; }
+        public int Day { get; set; }
+        public DateTime From { get; set; }
+        public DateTime To { get; set; }
+        public string Description { get; set; }
+    }
+}

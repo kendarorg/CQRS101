@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{5A594701-4B8A-4040-BAF2-6B83E5A72F36}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>TasksManager.Implementation</RootNamespace>
+    <AssemblyName>TasksManager.Implementation</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ActivityContext\ActivityCommandHandler.cs" />
+    <Compile Include="ActivityContext\Repositories\ActivityDayRepository.cs" />
+    <Compile Include="ActivityContext\Repositories\Entities\Activity.cs" />
+    <Compile Include="ActivityContext\Repositories\Entities\ActivityDay.cs" />
+    <Compile Include="ActivityContext\Validators\CompleteActivityValidator.cs" />
+    <Compile Include="ActivityContext\Validators\CreateActivityValidator.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewsContext\Projections\CompletedEventHandler.cs" />
+    <Compile Include="ViewsContext\Projections\NotCompletedEventHandler.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Commons.Implementation\Commons.Implementation.csproj">
+      <Project>{dcc13a7c-b94b-4d6e-b74e-a58881dc2157}</Project>
+      <Name>Commons.Implementation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Commons.Repositories\Commons.Repositories.csproj">
+      <Project>{6736b05b-be32-4ffa-8be9-940c285d4605}</Project>
+      <Name>Commons.Repositories</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Commons\Commons.csproj">
+      <Project>{22d31429-a73c-416a-a40c-3ed5ad7937e7}</Project>
+      <Name>Commons</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cqrs.Infrastructure\Cqrs.Infrastructure.csproj">
+      <Project>{e4108a43-2067-449c-b98d-470ecd8fd619}</Project>
+      <Name>Cqrs.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TasksManager\TasksManager.csproj">
+      <Project>{e96fc6dd-3029-416b-b85f-d66289327e6f}</Project>
+      <Name>TasksManager</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
