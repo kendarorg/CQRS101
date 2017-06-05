@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Commons;
-using Cqrs.SharedContext.Services;
-using Cqrs.SharedContext.Services.Dtos;
 using Cqrs.VoContext.Repositories.Entities;
+using TasksManager.SharedContext.VOs;
+using TasksManager.SharedContext.VOs.Entities;
 
 namespace Cqrs.VoContext.Services
 {

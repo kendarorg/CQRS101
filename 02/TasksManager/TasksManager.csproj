@@ -53,7 +53,7 @@
     <Compile Include="ViewsContext\Projections\Entities\ActivitySummary.cs" />
     <Compile Include="ViewsContext\Projections\Entities\CompletedActivity.cs" />
     <Compile Include="ViewsContext\Projections\Entities\NotCompletedActivity.cs" />
-    <Compile Include="VOs\Entities\ActivityType.cs" />
+    <Compile Include="VoContext\Entities\ActivityType.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Commons\Commons.csproj">

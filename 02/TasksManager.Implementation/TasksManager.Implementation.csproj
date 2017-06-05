@@ -53,7 +53,9 @@
     <Compile Include="ViewsContext\Projections\ActivitySummaryEventHandler.cs" />
     <Compile Include="ViewsContext\Projections\CompletedEventHandler.cs" />
     <Compile Include="ViewsContext\Projections\NotCompletedEventHandler.cs" />
-    <Compile Include="VOs\Repositories\ActivityTypesRepository.cs" />
+    <Compile Include="VoContext\Repositories\ActivityTypesRepository.cs" />
+    <Compile Include="VoContext\Repositories\Entities\ActivityType.cs" />
+    <Compile Include="VoContext\Services\ActivityTypesService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Commons.Implementation\Commons.Implementation.csproj">

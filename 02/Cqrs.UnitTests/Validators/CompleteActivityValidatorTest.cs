@@ -3,6 +3,7 @@ using Cqrs.LogContext.Commands;
 using Moq;
 using NUnit.Framework;
 using System;
+using TasksManager.Implementation.ActivityContext.Repositories.Entities;
 using TasksManager.Implementation.ActivityContext.Validators;
 using TasksManager.ViewsContext.Projections.Entities;
 
@@ -12,14 +13,18 @@ namespace Cqrs.UnitTests.Validators
     [Category("ValidatorCompleteActivityTest")]
     public class ValidatorCompleteActivityTest
     {
-        private Mock<IRepository<NotCompletedActivity, Guid>> _repository;
+        private Mock<IRepository<NotCompletedActivity, Guid>> _notCompletedRepository;
         private CompleteActivityValidator _target;
+        private Mock<IRepository<ActivityDay, int>> _activityDays;
 
         [SetUp]
         public void SetUp()
         {
-            _repository = new Mock<IRepository<NotCompletedActivity, Guid>>();
-            _target = new CompleteActivityValidator(_repository.Object);
+            _notCompletedRepository = new Mock<IRepository<NotCompletedActivity, Guid>>();
+            _activityDays = new Mock<IRepository<ActivityDay, int>>();
+            _target = new CompleteActivityValidator(_notCompletedRepository.Object, _activityDays.Object);
+
+            _activityDays.Setup(a => a.GetById(It.IsAny<int>())).Returns(new ActivityDay());
         }
 
         [Test]
@@ -28,7 +33,7 @@ namespace Cqrs.UnitTests.Validators
             var command = new CompleteActivity { Id = Guid.NewGuid() };
 
             Assert.Throws<Exception>(() => _target.Validate(command), "Missing activity");
-            _repository.Verify(a => a.GetById(It.Is<Guid>(b => b == command.Id)), Times.Once);
+            _notCompletedRepository.Verify(a => a.GetById(It.Is<Guid>(b => b == command.Id)), Times.Once);
         }
 
         [Test]
@@ -47,11 +52,11 @@ namespace Cqrs.UnitTests.Validators
                 To = to
             };
 
-            _repository.Setup(a => a.GetById(It.Is<Guid>(b => b == command.Id))).
+            _notCompletedRepository.Setup(a => a.GetById(It.Is<Guid>(b => b == command.Id))).
                 Returns(activityToComplete);
 
             Assert.Throws<Exception>(() => _target.Validate(command), "Cannot terminate before beginning");
-            _repository.Verify(a => a.GetById(It.Is<Guid>(b => b == command.Id)), Times.Once);
+            _notCompletedRepository.Verify(a => a.GetById(It.Is<Guid>(b => b == command.Id)), Times.Once);
         }
 
         [Test]
@@ -74,11 +79,11 @@ namespace Cqrs.UnitTests.Validators
                 Day = commandDay
             };
 
-            _repository.Setup(a => a.GetById(It.Is<Guid>(b => b == command.Id))).
+            _notCompletedRepository.Setup(a => a.GetById(It.Is<Guid>(b => b == command.Id))).
                 Returns(activityToComplete);
 
             Assert.Throws<Exception>(() => _target.Validate(command), "Activity in different day");
-            _repository.Verify(a => a.GetById(It.Is<Guid>(b => b == command.Id)), Times.Once);
+            _notCompletedRepository.Verify(a => a.GetById(It.Is<Guid>(b => b == command.Id)), Times.Once);
         }
 
 
@@ -102,11 +107,11 @@ namespace Cqrs.UnitTests.Validators
                 Day = commandDay
             };
 
-            _repository.Setup(a => a.GetById(It.Is<Guid>(b => b == command.Id))).
+            _notCompletedRepository.Setup(a => a.GetById(It.Is<Guid>(b => b == command.Id))).
                 Returns(activityToComplete);
 
             Assert.Throws<Exception>(() => _target.Validate(command), "Day not set");
-            _repository.Verify(a => a.GetById(It.Is<Guid>(b => b == command.Id)), Times.Once);
+            _notCompletedRepository.Verify(a => a.GetById(It.Is<Guid>(b => b == command.Id)), Times.Once);
         }
 
 
@@ -130,12 +135,12 @@ namespace Cqrs.UnitTests.Validators
                 Day = commandDay
             };
 
-            _repository.Setup(a => a.GetById(It.Is<Guid>(b => b == command.Id))).
+            _notCompletedRepository.Setup(a => a.GetById(It.Is<Guid>(b => b == command.Id))).
                 Returns(activityToComplete);
 
             _target.Validate(command);
 
-            _repository.Verify(a => a.GetById(It.Is<Guid>(b => b == command.Id)), Times.Once);
+            _notCompletedRepository.Verify(a => a.GetById(It.Is<Guid>(b => b == command.Id)), Times.Once);
         }
     }
 }

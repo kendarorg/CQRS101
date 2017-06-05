@@ -3,6 +3,7 @@ using Cqrs.LogContext.Commands;
 using Moq;
 using NUnit.Framework;
 using System;
+using TasksManager.Implementation.ActivityContext.Repositories.Entities;
 using TasksManager.Implementation.ActivityContext.Validators;
 using TasksManager.ViewsContext.Projections.Entities;
 
@@ -13,11 +14,13 @@ namespace Cqrs.UnitTests.Validators
     public class ValidatorCreateActivityTest
     {
         private CreateActivityValidator _target;
+        private Mock<IRepository<ActivityDay, int>> _activityDays;
 
         [SetUp]
         public void SetUp()
         {
-            _target = new CreateActivityValidator();
+            _activityDays = new Mock<IRepository<ActivityDay, int>>();
+            _target = new CreateActivityValidator(_activityDays.Object);
         }
 
         [Test]
