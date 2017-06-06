@@ -1,9 +1,9 @@
 ﻿using Commons.Implementation;
 using Cqrs.Commons;
+using Cqrs.SharedContext.Services;
 using System;
 using System.Collections.Concurrent;
 using TasksManager.SharedContext.Events;
-using TasksManager.SharedContext.VOs;
 using TasksManager.ViewsContext.Projections.Entities;
 
 namespace TasksManager.Implementation.ViewsContext.Projections

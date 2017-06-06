@@ -1,12 +1,12 @@
 ﻿using Cqrs.Commons;
 using Cqrs.LogContext.Commands;
+using Cqrs.SharedContext.Services.Dtos;
 using Moq;
 using NUnit.Framework;
 using System;
 using System.Linq;
 using TasksManager.Implementation.ActivityContext.Repositories.Entities;
 using TasksManager.SharedContext.Events;
-using TasksManager.SharedContext.VOs.Entities;
 
 namespace Cqrs.UnitTests.CommandHandlers
 {

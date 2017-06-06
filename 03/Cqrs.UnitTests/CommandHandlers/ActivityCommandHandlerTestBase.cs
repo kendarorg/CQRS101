@@ -2,6 +2,7 @@
 using Cqrs.ActivityDayContext;
 using Cqrs.Commons;
 using Cqrs.LogContext.Commands;
+using Cqrs.SharedContext.Services;
 using Moq;
 using NUnit.Framework;
 using System;

@@ -42,6 +42,7 @@
     <Compile Include="Bus\IBus.cs" />
     <Compile Include="Bus\IMessage.cs" />
     <Compile Include="Di\IComponent.cs" />
+    <Compile Include="Repository\Filter.cs" />
     <Compile Include="Repository\IFilter.cs" />
     <Compile Include="Repository\IRepository.cs" />
     <Compile Include="Di\IService.cs" />

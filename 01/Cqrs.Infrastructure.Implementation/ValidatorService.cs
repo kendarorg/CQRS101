@@ -8,13 +8,11 @@ namespace Cqrs.Commons.Infrastracture
     public class ValidatorService : IValidatorService
     {
         private readonly Dictionary<Type, List<IValidator>> _validators;
-        private readonly Dictionary<Type, List<MethodInfo>> _validatorMethods;
-
+        
         public ValidatorService(IEnumerable<IValidator> validators)
         {
             const BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public;
             _validators = new Dictionary<Type, List<IValidator>>();
-            _validatorMethods = new Dictionary<Type, List<MethodInfo>>();
             foreach (var item in validators)
             {
                 var methods = item.GetType().GetMethods(bindingFlags).Where(m => m.Name == "Validate");
@@ -25,28 +23,28 @@ namespace Cqrs.Commons.Infrastracture
                     if (!_validators.ContainsKey(paramaterType))
                     {
                         _validators[paramaterType] = new List<IValidator>();
-                        _validatorMethods[paramaterType] = new List<MethodInfo>();
                     }
                     _validators[paramaterType].Add(item);
-                    _validatorMethods[paramaterType].Add(method);
                 }
             }
         }
 
-        public void Validate<T>(T item)
+        public void Validate<T>(T item) where T : class, ICommand
         {
-            var type = typeof(T);
-            Validate(item, type);
+            IEnumerable<IValidator<T>> validators = GetValidatorsForCommand<T>();
+            foreach (var validator in validators)
+            {
+                validator.Validate(item);
+            }
         }
 
-        public void Validate(object item, Type t)
+        private IEnumerable<IValidator<T>> GetValidatorsForCommand<T>() where T : class, ICommand
         {
-            if (!_validators.ContainsKey(t)) return;
+            var t = typeof(T);
+            if (!_validators.ContainsKey(t)) yield break;
             for (var i = 0; i < _validators[t].Count; i++)
             {
-                var instance = _validators[t][i];
-                var method = _validatorMethods[t][i];
-                method.Invoke(instance, new[] { item });
+                yield return (IValidator<T>)_validators[t][i];
             }
         }
     }

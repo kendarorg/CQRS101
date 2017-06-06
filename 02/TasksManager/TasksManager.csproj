@@ -48,8 +48,8 @@
     <Compile Include="SharedContext\Events\ActivityCompleted.cs" />
     <Compile Include="SharedContext\Events\ActivityModified.cs" />
     <Compile Include="SharedContext\Events\ActivityCreated.cs" />
-    <Compile Include="SharedContext\VOs\Entities\ActivityTypeDto.cs" />
-    <Compile Include="SharedContext\VOs\IActivityTypesService.cs" />
+    <Compile Include="SharedContext\Services\Dtos\ActivityTypeDto.cs" />
+    <Compile Include="SharedContext\Services\IActivityTypesService.cs" />
     <Compile Include="ViewsContext\Projections\Entities\ActivitySummary.cs" />
     <Compile Include="ViewsContext\Projections\Entities\CompletedActivity.cs" />
     <Compile Include="ViewsContext\Projections\Entities\NotCompletedActivity.cs" />

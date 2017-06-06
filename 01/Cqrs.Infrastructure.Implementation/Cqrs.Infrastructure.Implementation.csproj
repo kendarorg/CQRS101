@@ -45,6 +45,10 @@
     <Compile Include="ValidatorService.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Commons\Commons.csproj">
+      <Project>{22d31429-a73c-416a-a40c-3ed5ad7937e7}</Project>
+      <Name>Commons</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Cqrs.Infrastructure\Cqrs.Infrastructure.csproj">
       <Project>{e4108a43-2067-449c-b98d-470ecd8fd619}</Project>
       <Name>Cqrs.Infrastructure</Name>

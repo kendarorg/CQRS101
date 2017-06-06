@@ -2,7 +2,7 @@
 using Cqrs.Commons;
 using Cqrs.LogContext.Commands;
 using TasksManager.ActivityContext.Commands;
-using TasksManager.SharedContext.VOs;
+using Cqrs.SharedContext.Services;
 
 namespace TasksManager.Implementation.ActivityContext.Validators
 {

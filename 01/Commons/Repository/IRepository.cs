@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Commons.Repository;
+using System.Collections.Generic;
 
 namespace Commons
 {
@@ -15,7 +16,7 @@ namespace Commons
         bool Delete(T entity);
         bool Delete(TK entityKey);
         bool Update(T entity);
-        IEnumerable<T> Find(IFilter filter = null);
+        IEnumerable<T> Find(Filter filter = null);
         T GetById(TK key);
     }
 }

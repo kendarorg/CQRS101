@@ -1,18 +1,17 @@
 ﻿using Commons;
+using Cqrs.SharedContext.Services;
+using Cqrs.SharedContext.Services.Dtos;
 using System;
 using System.Collections.Generic;
-using TasksManager.SharedContext.VOs;
-using TasksManager.SharedContext.VOs.Entities;
-using TasksManager.VOs.Entities;
 
 namespace TasksManager.Implementation.SharedContext
 {
     public class ActivityTypesService :
         IActivityTypesService
     {
-        private IRepository<ActivityType, string> _repository;
+        private IRepository<Cqrs.VoContext.Repositories.Entities.ActivityType, string> _repository;
 
-        public ActivityTypesService(IRepository<ActivityType, string> repository)
+        public ActivityTypesService(IRepository<Cqrs.VoContext.Repositories.Entities.ActivityType, string> repository)
         {
             _repository = repository;
         }
@@ -33,7 +32,7 @@ namespace TasksManager.Implementation.SharedContext
             return ActivityTypeToDto(result);
         }
 
-        private static ActivityTypeDto ActivityTypeToDto(ActivityType activityType)
+        private static ActivityTypeDto ActivityTypeToDto(Cqrs.VoContext.Repositories.Entities.ActivityType activityType)
         {
             return new ActivityTypeDto
             {

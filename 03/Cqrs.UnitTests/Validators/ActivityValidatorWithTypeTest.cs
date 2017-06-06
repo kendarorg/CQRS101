@@ -1,7 +1,7 @@
-﻿using Moq;
+﻿using Cqrs.SharedContext.Services;
+using Moq;
 using NUnit.Framework;
 using TasksManager.Implementation.ActivityContext.Validators;
-using TasksManager.SharedContext.VOs;
 
 namespace Cqrs.UnitTests.Validators
 {

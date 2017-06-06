@@ -1,4 +1,5 @@
 ﻿using Commons;
+using Commons.Repository;
 using System;
 using System.Collections.Generic;
 using System.Web.Http;
@@ -22,14 +23,14 @@ namespace Cqrs.Api.Controllers
 
         [HttpPost]
         [Route("completed")]
-        public IEnumerable<CompletedActivity> GetCompleted(IFilter filter)
+        public IEnumerable<CompletedActivity> GetCompleted(Filter filter)
         {
             return _completedActivities.Find(filter);
         }
 
         [HttpPost]
         [Route("notcompleted")]
-        public IEnumerable<NotCompletedActivity> GetNotCompleted(IFilter filter)
+        public IEnumerable<NotCompletedActivity> GetNotCompleted(Filter filter)
         {
             return _notCompletedActivities.Find(filter);
         }

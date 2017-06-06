@@ -2,6 +2,7 @@
 using Cqrs.ActivityDayContext;
 using Cqrs.Commons;
 using Cqrs.LogContext.Commands;
+using Cqrs.SharedContext.Services;
 using Moq;
 using NUnit.Framework;
 using System;
@@ -10,7 +11,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TasksManager.Implementation.ActivityContext.Repositories.Entities;
-using TasksManager.SharedContext.VOs;
 
 namespace Cqrs.UnitTests.CommandHandlers
 {

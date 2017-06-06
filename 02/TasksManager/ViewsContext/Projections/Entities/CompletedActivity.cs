@@ -8,8 +8,8 @@ namespace TasksManager.ViewsContext.Projections.Entities
         public int Day { get; set; }
         public DateTime To { get; set; }
         public DateTime From { get; set; }
+        public string Description { get; set; }
         public string TypeCode { get; set; }
         public string TypeName { get; set; }
-        public string Description { get; set; }
     }
 }

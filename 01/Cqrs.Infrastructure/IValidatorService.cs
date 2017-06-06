@@ -1,10 +1,9 @@
-﻿using System;
+﻿using Commons;
 
 namespace Cqrs.Commons
 {
-    public interface IValidatorService
+    public interface IValidatorService : IService
     {
-        void Validate<T>(T item);
-        void Validate(object item, Type t);
+        void Validate<T>(T item) where T : class, ICommand;
     }
 }

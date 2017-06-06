@@ -1,5 +1,6 @@
 ﻿using Commons.Implementation;
 using Cqrs.Commons;
+using Cqrs.SharedContext.Services;
 using System;
 using System.Collections.Concurrent;
 using TasksManager.SharedContext.Events;

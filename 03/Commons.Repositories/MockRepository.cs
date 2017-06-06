@@ -86,6 +86,14 @@ namespace Commons.Implementation
 
         protected virtual IEnumerable<T> Filter(IEnumerable<T> result, Filter filter)
         {
+            if (IsFilterEmpty(filter))
+            {
+                foreach (var item in result)
+                {
+                    yield return item;
+                }
+                yield break;
+            }
             var interpreter = new Interpreter();
             var properties = typeof(T).GetProperties(BindingFlags.Instance | BindingFlags.Public).
                 Where(p => p.CanRead && p.CanWrite).ToList();
@@ -100,13 +108,18 @@ namespace Commons.Implementation
             }
         }
 
+        private static bool IsFilterEmpty(Filter filter)
+        {
+            return filter == null || (string.IsNullOrWhiteSpace(filter.Field) && (filter.Conditions == null || filter.Conditions.Count == 0));
+        }
+
         private MockFilter ConvertToMockFilter(Interpreter interpreter, Filter filter, List<PropertyInfo> properties)
         {
             if (filter.Type != FilterType.And && filter.Type != FilterType.Or)
             {
                 var property = properties.First(f => f.Name == filter.Field);
-                
-                object realValue  = UniversalTypeConverter.Convert(filter.Value,property.PropertyType);
+
+                object realValue = UniversalTypeConverter.Convert(filter.Value, property.PropertyType);
                 var expression = string.Format("target.{0} {1} toCompare",
                     filter.Field, GetCompareString(filter.Type));
                 var lambda = interpreter.Parse(expression,

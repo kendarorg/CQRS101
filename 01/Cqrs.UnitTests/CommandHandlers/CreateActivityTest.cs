@@ -10,8 +10,8 @@ using TasksManager.SharedContext.Events;
 namespace Cqrs.UnitTests.CommandHandlers
 {
     [TestFixture]
-    [Category("ActivityCommandHandler")]
-    public class ActivityCommandHandlerTest : ActivityCommandHandlerTestBase
+    [Category("CreateActivityTest")]
+    public class CreateActivityTest : ActivityCommandHandlerTestBase
     {
         [Test]
         public void ShouldStopCreateActiviyWhenInvalid()

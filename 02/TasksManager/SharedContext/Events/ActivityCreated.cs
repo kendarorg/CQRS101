@@ -10,6 +10,5 @@ namespace TasksManager.SharedContext.Events
         public DateTime From { get; set; }
         public string Description { get; set; }
         public string TypeCode { get; set; }
-
     }
 }

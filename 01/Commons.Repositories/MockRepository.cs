@@ -1,5 +1,13 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Reflection;
+using System.Linq;
+using System;
+using Commons.Repository;
+using Commons.Repositories;
+using System.ComponentModel;
+using DynamicExpresso;
+using TB.ComponentModel;
 
 namespace Commons.Implementation
 {
@@ -55,7 +63,7 @@ namespace Commons.Implementation
             return true;
         }
 
-        public IEnumerable<T> Find(IFilter filter = null)
+        public IEnumerable<T> Find(Filter filter = null)
         {
             var result = GetStorage().Values;
 
@@ -63,11 +71,6 @@ namespace Commons.Implementation
             {
                 yield return RefreshSingle(item);
             }
-        }
-
-        protected virtual IEnumerable<T> Filter(IEnumerable<T> result, IFilter filter)
-        {
-            return result;
         }
 
         public T GetById(TK key)
@@ -79,6 +82,85 @@ namespace Commons.Implementation
                 return storage[stringKey];
             }
             return default(T);
+        }
+
+        protected virtual IEnumerable<T> Filter(IEnumerable<T> result, Filter filter)
+        {
+            if (IsFilterEmpty(filter))
+            {
+                foreach (var item in result)
+                {
+                    yield return item;
+                }
+                yield break;
+            }
+            var interpreter = new Interpreter();
+            var properties = typeof(T).GetProperties(BindingFlags.Instance | BindingFlags.Public).
+                Where(p => p.CanRead && p.CanWrite).ToList();
+
+            var converted = ConvertToMockFilter(interpreter, filter, properties);
+            foreach (var item in result)
+            {
+                if (converted.Match(item))
+                {
+                    yield return item;
+                }
+            }
+        }
+
+        private static bool IsFilterEmpty(Filter filter)
+        {
+            return filter == null || (string.IsNullOrWhiteSpace(filter.Field) && (filter.Conditions == null || filter.Conditions.Count == 0));
+        }
+
+        private MockFilter ConvertToMockFilter(Interpreter interpreter, Filter filter, List<PropertyInfo> properties)
+        {
+            if (filter.Type != FilterType.And && filter.Type != FilterType.Or)
+            {
+                var property = properties.First(f => f.Name == filter.Field);
+
+                object realValue = UniversalTypeConverter.Convert(filter.Value, property.PropertyType);
+                var expression = string.Format("target.{0} {1} toCompare",
+                    filter.Field, GetCompareString(filter.Type));
+                var lambda = interpreter.Parse(expression,
+                    new Parameter("target", typeof(T)), new Parameter("toCompare", property.PropertyType));
+                return new MockFilter
+                {
+                    Lambda = lambda,
+                    Value = realValue
+                };
+            }
+            else
+            {
+                return new MockFilter
+                {
+                    Type = filter.Type,
+                    Conditions = filter.Conditions.
+                        Select(c => ConvertToMockFilter(interpreter, c, properties)).ToList()
+                };
+            }
+        }
+
+        private string GetCompareString(FilterType type)
+        {
+            switch (type)
+            {
+                case (FilterType.Contains):
+                    throw new NotSupportedException();
+                case (FilterType.Greater):
+                    return ">";
+
+                case (FilterType.GreaterEqual):
+                    return ">=";
+                case (FilterType.Lower):
+                    return "<";
+                case (FilterType.LowerEqual):
+                    return "<=";
+                case (FilterType.Equal):
+                default:
+                    return "==";
+
+            }
         }
     }
 }

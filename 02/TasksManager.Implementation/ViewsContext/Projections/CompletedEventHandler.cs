@@ -4,7 +4,7 @@ using System;
 using TasksManager.SharedContext.Events;
 using TasksManager.ViewsContext.Projections.Entities;
 using System.Collections.Concurrent;
-using TasksManager.SharedContext.VOs;
+using Cqrs.SharedContext.Services;
 
 namespace TasksManager.Implementation.ViewsContext.Projections
 {

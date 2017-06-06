@@ -1,7 +1,8 @@
 ﻿using Commons;
+using Commons.Repository;
+using Cqrs.VoContext.Repositories.Entities;
 using System.Collections.Generic;
 using System.Web.Http;
-using TasksManager.VOs.Entities;
 
 namespace Cqrs.Api.Controllers
 {
@@ -24,7 +25,7 @@ namespace Cqrs.Api.Controllers
 
         [HttpPost]
         [Route("find")]
-        public IEnumerable<ActivityType> GetById(IFilter filter)
+        public IEnumerable<ActivityType> GetById(Filter filter)
         {
             return _activityTypes.Find(filter);
         }

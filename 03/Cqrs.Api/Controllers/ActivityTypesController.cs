@@ -1,8 +1,8 @@
 ﻿using Commons;
 using Commons.Repository;
+using Cqrs.VoContext.Repositories.Entities;
 using System.Collections.Generic;
 using System.Web.Http;
-using TasksManager.VOs.Entities;
 
 namespace Cqrs.Api.Controllers
 {

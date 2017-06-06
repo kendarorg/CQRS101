@@ -6,6 +6,7 @@ using Cqrs.LogContext.Commands;
 using TasksManager.Implementation.ActivityContext.Repositories.Entities;
 using TasksManager.SharedContext.Events;
 using TasksManager.ActivityContext.Commands;
+using Cqrs.SharedContext.Services;
 using TasksManager.SharedContext.VOs;
 
 namespace Cqrs.ActivityDayContext

@@ -10,6 +10,7 @@ using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.Resolvers.SpecializedResolvers;
 using Castle.Windsor;
 using Castle.Windsor.Installer;
+using Cqrs.Commons;
 
 namespace Commons.Implementation.Castle
 {
@@ -57,10 +58,6 @@ namespace Commons.Implementation.Castle
                 FromAssembly.
                     InDirectory(filter));
 
-            GlobalConfiguration.Configuration.Services.Replace(
-                typeof(IHttpControllerActivator),
-                new WindsorWebApiControllerActivator(_container));
-
             _container.Register(
                 Classes.
                     FromAssemblyInDirectory(filter).
@@ -71,8 +68,18 @@ namespace Commons.Implementation.Castle
                     FromAssemblyInDirectory(filter).
                     BasedOn<IComponent>().
                     WithServiceAllInterfaces().
+                    LifestyleTransient(),
+                Classes.
+                    FromAssemblyInDirectory(filter).
+                    BasedOn<IValidator>().
+                    WithServiceAllInterfaces().
                     LifestyleTransient()
+
              );
+
+            GlobalConfiguration.Configuration.Services.Replace(
+                typeof(IHttpControllerActivator),
+                new WindsorWebApiControllerActivator(_container));
 
 
         }

@@ -53,9 +53,9 @@
     <Compile Include="SharedContext\Events\UserCreated.cs" />
     <Compile Include="SharedContext\Events\UserModified.cs" />
     <Compile Include="SharedContext\Events\UserPasswordModified.cs" />
-    <Compile Include="SharedContext\VOs\Entities\ActivityTypeDto.cs" />
-    <Compile Include="SharedContext\VOs\IActivityTypesService.cs" />
-    <Compile Include="SharedContext\VOs\IUsersService.cs" />
+    <Compile Include="SharedContext\Services\Dtos\ActivityTypeDto.cs" />
+    <Compile Include="SharedContext\Services\IActivityTypesService.cs" />
+    <Compile Include="SharedContext\Services\IUsersService.cs" />
     <Compile Include="UsersContext\Commands\ChangeUserPassword.cs" />
     <Compile Include="UsersContext\Commands\CreateCompany.cs" />
     <Compile Include="UsersContext\Commands\CreateUser.cs" />

@@ -55,7 +55,6 @@
     <Compile Include="ViewsContext\Projections\NotCompletedEventHandler.cs" />
     <Compile Include="VoContext\Repositories\ActivityTypesRepository.cs" />
     <Compile Include="VoContext\Repositories\Entities\ActivityType.cs" />
-    <Compile Include="VoContext\Services\ActivityTypesService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Commons.Implementation\Commons.Implementation.csproj">
@@ -79,7 +78,9 @@
       <Name>TasksManager</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="VoContext\Services\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
