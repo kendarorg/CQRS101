@@ -1,0 +1,1 @@
+http://kubecloud.io/guide-getting-started-with-spring-boot/
