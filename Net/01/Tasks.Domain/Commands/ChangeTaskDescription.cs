@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Cqrs;
+using System;
 
 namespace Tasks.Commands
 {
-    public class ChangeTaskDescription
+    public class ChangeTaskDescription : ICommand
     {
         public Guid Id { get; set; }
         public String Description { get; set; }

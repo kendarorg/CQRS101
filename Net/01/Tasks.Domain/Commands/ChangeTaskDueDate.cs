@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Cqrs;
+using System;
 
 namespace Tasks.Commands
 {
-    public class ChangeTaskDueDate
+    public class ChangeTaskDueDate : ICommand
     {
         public Guid Id { get; set; }
         public DateTime? DueDate { get; set; }

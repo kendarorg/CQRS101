@@ -28,47 +28,32 @@ namespace Tasks
             _repository = repository;
         }
 
-        public void Handle(CreateTask message)
+        public void Handle(CreateTask command)
         {
             var now = DateTime.Now;
             var taskDao = new TaskDao()
             {
-                Id = message.Id,
-                Description = message.Description,
-                DueDate = message.DueDate,
-                Priority = message.Priority,
-                Title = message.Title,
+                Id = command.Id,
+                Description = command.Description,
+                DueDate = command.DueDate,
+                Priority = command.Priority,
+                Title = command.Title,
                 Completed = false,
                 CreationDate = now
             };
 
             _repository.Save(taskDao);
 
-            _bus.Send(new TaskCreated
+            var message = new TaskCreated
             {
                 Id = taskDao.Id,
                 CreationDate = now,
-                TitleSet = new TaskTitleChanged
-                {
-                    Id = taskDao.Id,
-                    New = taskDao.Title
-                },
-                DescriptionSet = new TaskDescriptionChanged
-                {
-                    Id = taskDao.Id,
-                    New = taskDao.Description
-                },
-                PrioritySet = new TaskPriorityChanged
-                {
-                    Id = taskDao.Id,
-                    New = taskDao.Priority
-                },
-                DueDateSet = new TaskDueDateChanged
-                {
-                    Id = taskDao.Id,
-                    New = taskDao.DueDate
-                }
-            });
+                TitleSet = new TaskTitleChanged(taskDao.Id, taskDao.Title),
+                DescriptionSet = new TaskDescriptionChanged(taskDao.Id, taskDao.Description),
+                PrioritySet = new TaskPriorityChanged(taskDao.Id, taskDao.Priority),
+                DueDateSet = new TaskDueDateChanged(taskDao.Id, taskDao.DueDate),
+            };
+            _bus.Send(message);
         }
 
         public void Handle(ChangeTaskPriority command)

@@ -9,6 +9,10 @@ namespace Commons.Tasks
 {
     public class TaskCompleted : IEvent
     {
+        public TaskCompleted()
+        {
+
+        }
         public Guid Id { get; set; }
         public DateTime CompletionDate { get; set; }
     }

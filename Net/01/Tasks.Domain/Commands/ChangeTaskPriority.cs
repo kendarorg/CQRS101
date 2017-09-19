@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Cqrs;
+using System;
 
 namespace Tasks.Commands
 {
-    public class ChangeTaskPriority
+    public class ChangeTaskPriority : ICommand
     {
         public Guid Id { get; set; }
-        public int Priority { get; internal set; }
+        public int Priority { get; set; }
     }
 }

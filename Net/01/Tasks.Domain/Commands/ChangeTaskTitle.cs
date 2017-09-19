@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Tasks.Commands
 {
-    public class ChangeTaskTitle:IMessage
+    public class ChangeTaskTitle : ICommand
     {
         public Guid Id { get; set; }
-        public string Title { get; internal set; }
+        public string Title { get; set; }
     }
 }

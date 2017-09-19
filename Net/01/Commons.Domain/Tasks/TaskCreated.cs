@@ -9,6 +9,10 @@ namespace Commons.Tasks
 {
     public class TaskCreated : IEvent
     {
+        public TaskCreated()
+        {
+
+        }
         public Guid Id { get; set; }
         public DateTime CreationDate { get; set; }
         public TaskDueDateChanged DueDateSet { get; set; }
