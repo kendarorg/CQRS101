@@ -11,15 +11,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.tasksmanager.Repositories.ToDoTaskDao;
+import org.tasksmanager.Repositories.DoneTaskDao;
 
 @RestController
-@RequestMapping("/api/tasks/todo")
-public class ToDoTasksController {
+@RequestMapping("/api/tasks/done")
+public class DoneTasksController {
 
-    private Repository<ToDoTaskDao> _repository;
+    private Repository<DoneTaskDao> _repository;
 
-    public ToDoTasksController(Repository<ToDoTaskDao> repository) {
+    public DoneTasksController(Repository<DoneTaskDao> repository) {
         _repository = repository;
     }
 
@@ -29,7 +29,7 @@ public class ToDoTasksController {
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ToDoTaskDao GetById(@PathVariable("id") UUID id) {
+    public DoneTaskDao GetById(@PathVariable("id") UUID id) {
         return _repository.GetById(id);
     }
 
@@ -38,7 +38,7 @@ public class ToDoTasksController {
             value = "",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<ToDoTaskDao> GetAll() {
+    public List<DoneTaskDao> GetAll() {
         return _repository.GetAll();
     }
 }
