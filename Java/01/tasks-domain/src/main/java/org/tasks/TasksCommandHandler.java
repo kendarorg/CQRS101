@@ -1,6 +1,8 @@
 package org.tasks;
 
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.inject.Named;
 import org.commons.Services.*;
 import org.commons.Tasks.*;
@@ -10,6 +12,7 @@ import org.tasks.Commands.*;
 @Named("tasksCommandHandler")
 public class TasksCommandHandler implements MessageHandler {
 
+    private static final Logger logger = Logger.getLogger(TasksCommandHandler.class.getSimpleName());
     private final Repository<TaskDao> _repository;
     private Bus _bus;
 
@@ -30,6 +33,7 @@ public class TasksCommandHandler implements MessageHandler {
     }
 
     public void Handle(CreateTask command) {
+        logger.log(Level.INFO, "CreateTask");
         Date now = new Date();
         TaskDao taskDao = new TaskDao();
         taskDao.setId(command.getId());
@@ -54,6 +58,7 @@ public class TasksCommandHandler implements MessageHandler {
     }
 
     public void Handle(ChangeTaskPriority command) {
+        logger.log(Level.INFO, "ChangeTaskPriority");
         TaskDao taskDao = _repository.GetById(command.getId());
         TaskPriorityChanged message = new TaskPriorityChanged(command.getId(), command.getPriority());
         message.setOld(taskDao.getPriority());
@@ -64,6 +69,7 @@ public class TasksCommandHandler implements MessageHandler {
     }
 
     public void Handle(ChangeTaskDueDate command) {
+        logger.log(Level.INFO, "ChangeTaskDueDate");
         TaskDao taskDao = _repository.GetById(command.getId());
         TaskDueDateChanged message = new TaskDueDateChanged(command.getId(), command.getDueDate());
         message.setOld(taskDao.getDueDate());
@@ -73,6 +79,7 @@ public class TasksCommandHandler implements MessageHandler {
     }
 
     public void Handle(ChangeTaskDescription command) {
+        logger.log(Level.INFO, "ChangeTaskDescription");
         TaskDao taskDao = _repository.GetById(command.getId());
         TaskDescriptionChanged message = new TaskDescriptionChanged(command.getId(), command.getDescription());
         message.setOld(taskDao.getDescription());
@@ -83,6 +90,7 @@ public class TasksCommandHandler implements MessageHandler {
     }
 
     public void Handle(ChangeTaskTitle command) {
+        logger.log(Level.INFO, "ChangeTaskTitle");
         TaskDao taskDao = _repository.GetById(command.getId());
         TaskTitleChanged message = new TaskTitleChanged(command.getId(), command.getTitle());
         message.setOld(taskDao.getTitle());
@@ -93,6 +101,7 @@ public class TasksCommandHandler implements MessageHandler {
     }
 
     public void Handle(CompleteTask command) {
+        logger.log(Level.INFO, "CompleteTask");
         Date now = new Date();
         TaskDao taskDao = _repository.GetById(command.getId());
         taskDao.setCompleted(true);

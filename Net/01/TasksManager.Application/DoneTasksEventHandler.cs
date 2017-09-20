@@ -40,6 +40,7 @@ namespace TasksManager
                 Title = taskDao.Title,
                 CompletionDate = message.CompletionDate
             };
+            _repository.Save(doneTask);
         }
     }
 }

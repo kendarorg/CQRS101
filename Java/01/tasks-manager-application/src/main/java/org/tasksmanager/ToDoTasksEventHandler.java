@@ -1,5 +1,7 @@
 package org.tasksmanager;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.inject.Named;
 import org.commons.Tasks.*;
 import org.cqrs.*;
@@ -8,6 +10,7 @@ import org.tasksmanager.Repositories.*;
 @Named("toDoTasksEventHandler")
 public class ToDoTasksEventHandler implements MessageHandler {
 
+    private static final Logger logger = Logger.getLogger(ToDoTasksEventHandler.class.getSimpleName());
     private final Repository<ToDoTaskDao> _repository;
     private Bus _bus;
 
@@ -25,6 +28,7 @@ public class ToDoTasksEventHandler implements MessageHandler {
     }
 
     public void Handle(TaskCreated message) {
+        logger.log(Level.INFO, "TaskCreated");
         ToDoTaskDao toDoTask = new ToDoTaskDao();
         toDoTask.setId(message.getId());
         toDoTask.setCreationDate(message.getCreationDate());
@@ -35,18 +39,21 @@ public class ToDoTasksEventHandler implements MessageHandler {
     }
 
     public void Handle(TaskPriorityChanged message) {
+        logger.log(Level.INFO, "TaskPriorityChanged");
         ToDoTaskDao toDoTask = _repository.GetById(message.getId());
         toDoTask.setPriority(message.getNew());
         _repository.Save(toDoTask);
     }
 
     public void Handle(TaskTitleChanged message) {
+        logger.log(Level.INFO, "TaskTitleChanged");
         ToDoTaskDao toDoTask = _repository.GetById(message.getId());
         toDoTask.setTitle(message.getNew());
         _repository.Save(toDoTask);
     }
 
     public void Handle(TaskCompleted message) {
+        logger.log(Level.INFO, "TaskCompleted");
         _repository.Delete(message.getId());
     }
 }

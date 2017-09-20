@@ -4,12 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.inject.Inject;
 import javax.inject.Named;
 
 @Named("bus")
 public class BusImpl implements Bus {
 
+    private static final Logger logger = Logger.getLogger(BusImpl.class.getSimpleName());
+    
     @Inject
     public BusImpl(List<MessageHandler> messageHandlers) {
         for (int i = 0; i < messageHandlers.size(); i++) {
@@ -40,6 +44,7 @@ public class BusImpl implements Bus {
         if (message == null) {
             return;
         }
+
         Class messageType = message.getClass();
         if (_handlerFunctions.containsKey(messageType)) {
             List<Consumer<Object>> handlerFunction = _handlerFunctions.get(messageType);
@@ -47,7 +52,7 @@ public class BusImpl implements Bus {
                 try {
                     handlerFunction.get(i).accept(message);
                 } catch (Exception ex) {
-                    System.out.println(ex);
+                    logger.log(Level.SEVERE, "Error handling message: "+messageType.getSimpleName());
                 }
             }
         }

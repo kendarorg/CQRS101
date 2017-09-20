@@ -44,7 +44,7 @@ PAUSE
 ECHO %LINE%
 ECHO Change the task priority
 ECHO %LINE%
-curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X POST %SITE_ROOT%/api/commands/send/createTask -d @01\01.01.changePriority.json
+curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X POST %SITE_ROOT%/api/commands/send/changeTaskPriority -d @01\01.02.changePriority.json
 ECHO.
 ECHO %LINE%
 ECHO.
@@ -55,6 +55,36 @@ ECHO %LINE%
 ECHO Verify that the priority is now 10
 ECHO %LINE%
 curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X GET %SITE_ROOT%/api/tasks/todo/8cd95b81-48d7-4d66-884d-7fd3c550eef1
+ECHO.
+ECHO %LINE%
+ECHO.
+PAUSE
+
+ECHO %LINE%
+ECHO CompleteTask
+ECHO %LINE%
+curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X POST %SITE_ROOT%/api/commands/send/completeTask -d @01\01.03.completeTask.json
+ECHO.
+ECHO %LINE%
+ECHO.
+PAUSE
+
+
+ECHO.
+ECHO %LINE%
+ECHO List the todo tasks (should be empty)
+ECHO %LINE%
+curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X GET %SITE_ROOT%/api/tasks/todo
+ECHO.
+ECHO %LINE%
+ECHO.
+PAUSE
+
+ECHO.
+ECHO %LINE%
+ECHO List the done tasks (one should exists)
+ECHO %LINE%
+curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X GET %SITE_ROOT%/api/tasks/done
 ECHO.
 ECHO %LINE%
 ECHO.

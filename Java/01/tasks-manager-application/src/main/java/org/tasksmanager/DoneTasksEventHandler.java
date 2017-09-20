@@ -1,5 +1,7 @@
 package org.tasksmanager;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.inject.Named;
 import org.commons.Services.TaskDao;
 import org.commons.Services.TasksService;
@@ -12,6 +14,7 @@ import org.tasksmanager.Repositories.DoneTaskDao;
 @Named("doneTasksEventHandler")
 public class DoneTasksEventHandler implements MessageHandler {
 
+    private static final Logger logger = Logger.getLogger(DoneTasksEventHandler.class.getSimpleName());
     private final TasksService _tasksService;
     private final Repository<DoneTaskDao> _repository;
     private Bus _bus;
@@ -28,6 +31,7 @@ public class DoneTasksEventHandler implements MessageHandler {
     }
 
     public void Handle(TaskCompleted message) {
+        logger.log(Level.INFO, "TaskCompleted");
         TaskDao taskDao = _tasksService.GetById(message.getId());
         DoneTaskDao doneTask = new DoneTaskDao();
         doneTask.setId(taskDao.getId());
@@ -35,5 +39,6 @@ public class DoneTasksEventHandler implements MessageHandler {
         doneTask.setCreationDate(taskDao.getCreationDate());
         doneTask.setTitle(taskDao.getTitle());
         doneTask.setCompletionDate(taskDao.getCompletionDate());
+        _repository.Save(doneTask);
     }
 }
