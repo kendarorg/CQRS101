@@ -1,18 +1,14 @@
 ﻿using Commons.Services;
 using Commons.Tasks;
 using Cqrs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Tasks.Repositories;
+using log4net;
 using TasksManager.Repositories;
 
 namespace TasksManager
 {
     public class DoneTasksEventHandler : IMessageHandler
     {
+        private static ILog _logger = LogManager.GetLogger(typeof(DoneTasksEventHandler));
         private ITasksService _tasksService;
         private IRepository<DoneTaskDao> _repository;
         private IBus _bus;
@@ -31,6 +27,7 @@ namespace TasksManager
 
         public void Handle(TaskCompleted message)
         {
+            _logger.Info("TaskCompleted");
             var taskDao = _tasksService.GetById(message.Id);
             var doneTask = new DoneTaskDao
             {

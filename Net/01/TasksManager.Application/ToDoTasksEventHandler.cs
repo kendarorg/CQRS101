@@ -1,11 +1,13 @@
 ﻿using Commons.Tasks;
 using Cqrs;
+using log4net;
 using TasksManager.Repositories;
 
 namespace TasksManager
 {
     public class ToDoTasksEventHandler : IMessageHandler
     {
+        private static ILog _logger = LogManager.GetLogger(typeof(ToDoTasksEventHandler));
         private IRepository<ToDoTaskDao> _repository;
         private IBus _bus;
 
@@ -25,6 +27,7 @@ namespace TasksManager
 
         public void Handle(TaskCreated message)
         {
+            _logger.Info("TaskCreated");
             var toDoTask = new ToDoTaskDao
             {
                 Id = message.Id,
@@ -37,6 +40,7 @@ namespace TasksManager
 
         public void Handle(TaskPriorityChanged message)
         {
+            _logger.Info("TaskPriorityChanged");
             var toDoTask = _repository.GetById(message.Id);
             toDoTask.Priority = message.New;
             _repository.Save(toDoTask);
@@ -44,6 +48,7 @@ namespace TasksManager
 
         public void Handle(TaskTitleChanged message)
         {
+            _logger.Info("TaskTitleChanged");
             var toDoTask = _repository.GetById(message.Id);
             toDoTask.Title = message.New;
             _repository.Save(toDoTask);
@@ -51,6 +56,7 @@ namespace TasksManager
 
         public void Handle(TaskCompleted message)
         {
+            _logger.Info("TaskCompleted");
             _repository.Delete(message.Id);
         }
     }

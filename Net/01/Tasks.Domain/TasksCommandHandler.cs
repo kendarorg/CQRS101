@@ -3,11 +3,13 @@ using Cqrs;
 using Tasks.Commands;
 using Tasks.Repositories;
 using Commons.Tasks;
+using log4net;
 
 namespace Tasks
 {
     public class TasksCommandHandler : IMessageHandler
     {
+        private static ILog _logger = LogManager.GetLogger(typeof(TasksCommandHandler));
         private IRepository<TaskDao> _repository;
         private IBus _bus;
 
@@ -30,6 +32,7 @@ namespace Tasks
 
         public void Handle(CreateTask command)
         {
+            _logger.Info("CreateTask");
             var now = DateTime.Now;
             var taskDao = new TaskDao()
             {
@@ -58,6 +61,7 @@ namespace Tasks
 
         public void Handle(ChangeTaskPriority command)
         {
+            _logger.Info("ChangeTaskPriority");
             var taskDao = _repository.GetById(command.Id);
             var message = new TaskPriorityChanged
             {
@@ -72,6 +76,7 @@ namespace Tasks
 
         public void Handle(ChangeTaskDueDate command)
         {
+            _logger.Info("ChangeTaskDueDate");
             var taskDao = _repository.GetById(command.Id);
             var message = new TaskDueDateChanged
             {
@@ -86,6 +91,7 @@ namespace Tasks
 
         public void Handle(ChangeTaskDescription command)
         {
+            _logger.Info("ChangeTaskDescription");
             var taskDao = _repository.GetById(command.Id);
             var message = new TaskDescriptionChanged
             {
@@ -100,6 +106,7 @@ namespace Tasks
 
         public void Handle(ChangeTaskTitle command)
         {
+            _logger.Info("ChangeTaskTitle");
             var taskDao = _repository.GetById(command.Id);
             var message = new TaskTitleChanged
             {
@@ -114,6 +121,7 @@ namespace Tasks
 
         public void Handle(CompleteTask message)
         {
+            _logger.Info("CompleteTask");
             var now = DateTime.Now;
             var taskDao = _repository.GetById(message.Id);
             taskDao.Completed = true;
