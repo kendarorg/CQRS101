@@ -17,7 +17,7 @@ namespace TasksManager.Web.Castle
             container.Register(Classes.FromThisAssembly()
             .Pick().If(t => t.Name.EndsWith("Controller"))
             .Configure(configurer => configurer.Named(configurer.Implementation.Name))
-            );//.LifestyleScoped());
+            .LifestyleScoped());
         }
     }
 

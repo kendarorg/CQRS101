@@ -61,6 +61,7 @@ namespace Cqrs
 
         public Type GetType(string messageTypeName)
         {
+            messageTypeName = messageTypeName.ToUpperInvariant();
             if (!_messageTypes.ContainsKey(messageTypeName))
             {
                 return null;

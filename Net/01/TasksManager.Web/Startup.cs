@@ -6,9 +6,14 @@ using Castle.MicroKernel.Resolvers.SpecializedResolvers;
 using Castle.Windsor;
 using Castle.Windsor.Installer;
 using Microsoft.Owin.Extensions;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
 using Owin;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Net.Http.Formatting;
 using System.Reflection;
 using System.Web.Http;
 using TasksManager.Web.Castle;
@@ -22,6 +27,8 @@ namespace TasksManager.Web
         // parameter in the WebApp.Start method.
         public void Configuration(IAppBuilder appBuilder)
         {
+
+
             var container = BootstrapContainer();
 
             appBuilder.Use((context, next) =>
@@ -33,6 +40,8 @@ namespace TasksManager.Web
 
             // Configure Web API for self-host. 
             HttpConfiguration config = new HttpConfiguration();
+
+            ConfigureJsonSerializationSettings(config);
             //// Web API routes
             config.MapHttpAttributeRoutes();
 
@@ -41,7 +50,24 @@ namespace TasksManager.Web
 
             appBuilder.UseWebApi(config);
         }
-        
+
+        private static void ConfigureJsonSerializationSettings(HttpConfiguration config)
+        {
+            var defaultSettings = new JsonSerializerSettings
+            {
+                Formatting = Formatting.Indented,
+                ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                Converters = new List<JsonConverter>
+                        {
+                            new StringEnumConverter{ CamelCaseText = true },
+                        }
+            };
+            JsonConvert.DefaultSettings = () => { return defaultSettings; };
+
+            config.Formatters.Clear();
+            config.Formatters.Add(new JsonMediaTypeFormatter());
+            config.Formatters.JsonFormatter.SerializerSettings = defaultSettings;
+        }
 
         private IWindsorContainer BootstrapContainer()
         {

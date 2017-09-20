@@ -29,7 +29,7 @@ namespace TasksManager.Web.Controllers
             return _bus.GetTypes();
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("send/{messageType}")]
         public void SendMessage(HttpRequestMessage request)
         {

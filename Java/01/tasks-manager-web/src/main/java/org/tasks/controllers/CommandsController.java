@@ -36,7 +36,9 @@ public class CommandsController {
 
     @RequestMapping(
             value = "/send/{messageType}",
-            method = RequestMethod.GET)
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
     public void SendMessage(@PathVariable("messageType") String messageType, @RequestBody String json) throws IOException {
         Class type = _bus.getType(messageType);
 

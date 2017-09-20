@@ -55,6 +55,7 @@ public class BusImpl implements Bus {
 
     @Override
     public Class getType(String messageTypeName) {
+        messageTypeName = messageTypeName.toUpperCase();
         if (!_messageTypes.containsKey(messageTypeName)) {
             return null;
         }
