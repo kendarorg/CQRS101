@@ -1,5 +1,6 @@
 package org.tasksmanager;
 
+import javax.inject.Named;
 import org.commons.Services.TaskDao;
 import org.commons.Services.TasksService;
 import org.commons.Tasks.TaskCompleted;
@@ -8,19 +9,21 @@ import org.cqrs.MessageHandler;
 import org.cqrs.Repository;
 import org.tasksmanager.Repositories.DoneTaskDao;
 
+@Named("doneTasksEventHandler")
 public class DoneTasksEventHandler implements MessageHandler {
 
-    private TasksService _tasksService;
-    private Repository<DoneTaskDao> _repository;
+    private final TasksService _tasksService;
+    private final Repository<DoneTaskDao> _repository;
     private Bus _bus;
 
+    @Override
     public void Register(Bus bus) {
         _bus = bus;
         _bus.RegisterHandler(m -> Handle((TaskCompleted) m), TaskCompleted.class);
     }
 
-    public DoneTasksEventHandler(TasksService tasksService, Repository<DoneTaskDao> repository) {
-        _repository = repository;
+    public DoneTasksEventHandler(TasksService tasksService, Repository<DoneTaskDao> doneTasksRepository) {
+        _repository = doneTasksRepository;
         _tasksService = tasksService;
     }
 

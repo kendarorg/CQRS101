@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -17,7 +18,8 @@ namespace Cqrs
             }
         }
 
-        private Dictionary<Type, List<Action<object>>> _handlerFunctions = new Dictionary<Type, List<Action<object>>>();
+        private ConcurrentDictionary<String, Type> _messageTypes = new ConcurrentDictionary<string, Type>();
+        private ConcurrentDictionary<Type, List<Action<object>>> _handlerFunctions = new ConcurrentDictionary<Type, List<Action<object>>>();
 
         /// <summary>
         /// This method contains the system to retrieve the handle methods from all
@@ -27,7 +29,12 @@ namespace Cqrs
         {
             if (!_handlerFunctions.ContainsKey(messageType))
             {
-                _handlerFunctions.Add(messageType, new List<Action<object>>());
+                _handlerFunctions[messageType] = new List<Action<object>>();
+            }
+            String messageTypeName = messageType.Name.ToUpperInvariant();
+            if (!_messageTypes.ContainsKey(messageTypeName))
+            {
+                _messageTypes[messageTypeName] = messageType;
             }
             _handlerFunctions[messageType].Add(handlerFunction);
         }
@@ -50,6 +57,20 @@ namespace Cqrs
                     }
                 }
             }
+        }
+
+        public Type GetType(string messageTypeName)
+        {
+            if (!_messageTypes.ContainsKey(messageTypeName))
+            {
+                return null;
+            }
+            return _messageTypes[messageTypeName];
+        }
+
+        public IEnumerable<string> GetTypes()
+        {
+            return _messageTypes.Keys;
         }
     }
 }

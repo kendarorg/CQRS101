@@ -1,14 +1,13 @@
-package controllers;
+package org.tasks.controllers;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicLong;
+import javax.inject.Inject;
 import org.cqrs.Repository;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.tasksmanager.Repositories.ToDoTaskDao;
@@ -17,10 +16,11 @@ import org.tasksmanager.Repositories.ToDoTaskDao;
 @RequestMapping("/api/tasks/todo")
 public class ToDoTasksController {
 
-    private Repository<ToDoTaskDao> _repository;
+    private final Repository<ToDoTaskDao> _repository;
 
-    public ToDoTasksController(Repository<ToDoTaskDao> repository) {
-        _repository = repository;
+    @Inject
+    public ToDoTasksController(Repository<ToDoTaskDao> toDoTasksRepository) {
+        _repository = toDoTasksRepository;
     }
 
     @ResponseBody

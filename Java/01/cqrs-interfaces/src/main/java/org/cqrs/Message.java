@@ -1,5 +1,4 @@
 package org.cqrs;
 
-    public interface Message
-    {
-    }
+public interface Message {
+}

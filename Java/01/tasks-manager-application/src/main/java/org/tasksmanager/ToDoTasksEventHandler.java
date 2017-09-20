@@ -1,15 +1,17 @@
 package org.tasksmanager;
 
-import org.commons.Services.*;
+import javax.inject.Named;
 import org.commons.Tasks.*;
 import org.cqrs.*;
 import org.tasksmanager.Repositories.*;
 
+@Named("toDoTasksEventHandler")
 public class ToDoTasksEventHandler implements MessageHandler {
 
-    private Repository<ToDoTaskDao> _repository;
+    private final Repository<ToDoTaskDao> _repository;
     private Bus _bus;
 
+    @Override
     public void Register(Bus bus) {
         _bus = bus;
         _bus.RegisterHandler(m -> Handle((TaskCreated) m), TaskCreated.class);
@@ -18,8 +20,8 @@ public class ToDoTasksEventHandler implements MessageHandler {
         _bus.RegisterHandler(m -> Handle((TaskCompleted) m), TaskCompleted.class);
     }
 
-    public ToDoTasksEventHandler(Repository<ToDoTaskDao> repository) {
-        _repository = repository;
+    public ToDoTasksEventHandler(Repository<ToDoTaskDao> toDoTasksRepository) {
+        _repository = toDoTasksRepository;
     }
 
     public void Handle(TaskCreated message) {

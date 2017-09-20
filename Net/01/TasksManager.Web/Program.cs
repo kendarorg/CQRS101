@@ -12,7 +12,8 @@ namespace TasksManager.Web
     {
         static void Main(string[] args)
         {
-            string baseAddress = "http://localhost:9000/";
+            String port = "9000";
+            String baseAddress = "http://localhost:" + port + "/";
 
             // Start OWIN host 
             using (WebApp.Start<Startup>(url: baseAddress))
@@ -20,8 +21,8 @@ namespace TasksManager.Web
                 // Create HttpCient and make a request to api/values 
                 HttpClient client = new HttpClient();
                 HttpResponseMessage response = client.GetAsync(baseAddress + "api/commands/types").Result;
-                response.Headers.Remove("Server");
-                Console.WriteLine(response);
+                //response.Headers.Remove("Server");
+                //Console.WriteLine(response);
                 Console.WriteLine(response.Content.ReadAsStringAsync
                     ().Result);
                 Console.ReadLine();

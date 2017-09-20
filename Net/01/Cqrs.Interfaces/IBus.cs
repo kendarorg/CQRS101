@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using Utils;
 
 namespace Cqrs
 {
-    public interface IBus: ISingleton
+    public interface IBus : ISingleton
     {
-        void RegisterHandler(Action<object> handlerFunc,Type messageType);
+        Type GetType(String name);
+        IEnumerable<String> GetTypes();
+        void RegisterHandler(Action<object> handlerFunc, Type messageType);
         void Send(IMessage message);
     }
 }

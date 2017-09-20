@@ -1,7 +1,6 @@
 package org.cqrs;
 
+public interface Validator {
 
-    public interface Validator 
-    {
-        void Register(GlobalValidator globalValidator);
-    }
+    void Register(GlobalValidator globalValidator);
+}

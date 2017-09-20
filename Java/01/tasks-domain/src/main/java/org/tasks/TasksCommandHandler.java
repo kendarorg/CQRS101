@@ -1,16 +1,19 @@
 package org.tasks;
 
 import java.util.Date;
+import javax.inject.Named;
 import org.commons.Services.*;
 import org.commons.Tasks.*;
 import org.cqrs.*;
 import org.tasks.Commands.*;
 
+@Named("tasksCommandHandler")
 public class TasksCommandHandler implements MessageHandler {
 
-    private Repository<TaskDao> _repository;
+    private final Repository<TaskDao> _repository;
     private Bus _bus;
 
+    @Override
     public void Register(Bus bus) {
         _bus = bus;
         _bus.RegisterHandler(c -> Handle((CreateTask) c), CreateTask.class);
@@ -22,8 +25,8 @@ public class TasksCommandHandler implements MessageHandler {
         _bus.RegisterHandler(c -> Handle((ChangeTaskPriority) c), ChangeTaskPriority.class);
     }
 
-    public TasksCommandHandler(Repository<TaskDao> repository) {
-        _repository = repository;
+    public TasksCommandHandler(Repository<TaskDao> tasksRepository) {
+        _repository = tasksRepository;
     }
 
     public void Handle(CreateTask command) {

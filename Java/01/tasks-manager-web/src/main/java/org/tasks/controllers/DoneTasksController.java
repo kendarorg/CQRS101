@@ -1,14 +1,13 @@
-package controllers;
+package org.tasks.controllers;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicLong;
+import javax.inject.Inject;
 import org.cqrs.Repository;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.tasksmanager.Repositories.DoneTaskDao;
@@ -17,10 +16,11 @@ import org.tasksmanager.Repositories.DoneTaskDao;
 @RequestMapping("/api/tasks/done")
 public class DoneTasksController {
 
-    private Repository<DoneTaskDao> _repository;
+    private final Repository<DoneTaskDao> _repository;
 
-    public DoneTasksController(Repository<DoneTaskDao> repository) {
-        _repository = repository;
+    @Inject
+    public DoneTasksController(Repository<DoneTaskDao> doneTasksRepository) {
+        _repository = doneTasksRepository;
     }
 
     @ResponseBody

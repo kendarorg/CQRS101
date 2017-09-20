@@ -1,29 +1,36 @@
 package org.cqrs;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
+import javax.inject.Inject;
+import javax.inject.Named;
 
+@Named("bus")
 public class BusImpl implements Bus {
 
-    public BusImpl(List<MessageHandler> validators) {
-        for (int i = 0; i < validators.size(); i++) {
-            MessageHandler validator = validators.get(i);
-            validator.Register(this);
+    @Inject
+    public BusImpl(List<MessageHandler> messageHandlers) {
+        for (int i = 0; i < messageHandlers.size(); i++) {
+            MessageHandler messageHandler = messageHandlers.get(i);
+            messageHandler.Register(this);
         }
     }
 
-    private Hashtable<Class, ArrayList<Consumer<Object>>> _handlerFunctions = new Hashtable<>();
+    private final ConcurrentHashMap<String, Class> _messageTypes = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Class, ArrayList<Consumer<Object>>> _handlerFunctions = new ConcurrentHashMap<>();
 
-    /// <summary>
-    /// This method contains the system to retrieve the handle methods from all
-    /// message handlers passed
-    /// </summary>
     @Override
     public void RegisterHandler(Consumer<Object> handlerFunction, Class messageType) {
         if (!_handlerFunctions.containsKey(messageType)) {
             _handlerFunctions.put(messageType, new ArrayList<>());
+        }
+        if (Command.class.isAssignableFrom(messageType)) {
+            String messageTypeName = messageType.getSimpleName().toUpperCase();
+            if (!_messageTypes.containsKey(messageTypeName)) {
+                _messageTypes.put(messageTypeName, messageType);
+            }
         }
         _handlerFunctions.get(messageType).add(handlerFunction);
     }
@@ -44,5 +51,18 @@ public class BusImpl implements Bus {
                 }
             }
         }
+    }
+
+    @Override
+    public Class getType(String messageTypeName) {
+        if (!_messageTypes.containsKey(messageTypeName)) {
+            return null;
+        }
+        return _messageTypes.get(messageTypeName);
+    }
+
+    @Override
+    public List<String> getTypes() {
+        return new ArrayList<>(_messageTypes.keySet());
     }
 }
