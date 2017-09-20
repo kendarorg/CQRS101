@@ -13,6 +13,7 @@
         
     
     <context:component-scan base-package="org.commons, org.cqrs, org.tasks, org.tasksmanager" />
+    <context:property-placeholder location="application.properties" />
     <bean id="bus" class="org.cqrs.BusImpl">
         <constructor-arg>
             <list>

@@ -55,7 +55,6 @@ namespace TasksManager.Web
         {
             var defaultSettings = new JsonSerializerSettings
             {
-                Formatting = Formatting.Indented,
                 ContractResolver = new CamelCasePropertyNamesContractResolver(),
                 Converters = new List<JsonConverter>
                         {
