@@ -13,7 +13,7 @@ import javax.inject.Named;
 public class BusImpl implements Bus {
 
     private static final Logger logger = Logger.getLogger(BusImpl.class.getSimpleName());
-    
+
     @Inject
     public BusImpl(List<MessageHandler> messageHandlers) {
         for (int i = 0; i < messageHandlers.size(); i++) {
@@ -52,7 +52,7 @@ public class BusImpl implements Bus {
                 try {
                     handlerFunction.get(i).accept(message);
                 } catch (Exception ex) {
-                    logger.log(Level.SEVERE, "Error handling message: "+messageType.getSimpleName());
+                    logger.log(Level.SEVERE, "Error handling message: " + messageType.getSimpleName(),ex);
                 }
             }
         }

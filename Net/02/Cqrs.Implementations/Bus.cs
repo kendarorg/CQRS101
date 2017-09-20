@@ -1,4 +1,5 @@
-﻿using System;
+﻿using log4net;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -8,6 +9,8 @@ namespace Cqrs
 {
     public class Bus : IBus
     {
+        private static ILog _logger = LogManager.GetLogger(typeof(Bus));
+
         public Bus(IList<IMessageHandler> validators)
         {
             for (int i = 0; i < validators.Count(); i++)
@@ -53,7 +56,7 @@ namespace Cqrs
                     }
                     catch (Exception ex)
                     {
-                        Debug.WriteLine(ex);
+                        _logger.Error("Error handling message: " + messageType.Name,ex);
                     }
                 }
             }

@@ -3,6 +3,7 @@ package org.tasksmanager;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.inject.Inject;
 import javax.inject.Named;
 import org.commons.Tasks.*;
 import org.cqrs.*;
@@ -24,6 +25,7 @@ public class ToDoTasksEventHandler implements MessageHandler {
         _bus.RegisterHandler(m -> Handle((TaskCompleted) m), TaskCompleted.class);
     }
 
+    @Inject
     public ToDoTasksEventHandler(Repository<ToDoTaskDao,UUID> toDoTasksRepository) {
         _repository = toDoTasksRepository;
     }

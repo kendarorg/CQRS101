@@ -51,6 +51,7 @@
     <Compile Include="Tasks\TaskPriorityChanged.cs" />
     <Compile Include="Tasks\TaskDescriptionChanged.cs" />
     <Compile Include="Tasks\TaskTitleChanged.cs" />
+    <Compile Include="Tasks\TaskTypeChanged.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Cqrs.Interfaces\Cqrs.Interfaces.csproj">

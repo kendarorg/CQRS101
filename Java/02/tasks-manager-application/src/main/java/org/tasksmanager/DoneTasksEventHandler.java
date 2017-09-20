@@ -3,6 +3,7 @@ package org.tasksmanager;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.inject.Inject;
 import javax.inject.Named;
 import org.commons.Services.TaskDao;
 import org.commons.Services.TasksService;
@@ -26,6 +27,7 @@ public class DoneTasksEventHandler implements MessageHandler {
         _bus.RegisterHandler(m -> Handle((TaskCompleted) m), TaskCompleted.class);
     }
 
+    @Inject
     public DoneTasksEventHandler(TasksService tasksService, Repository<DoneTaskDao,UUID> doneTasksRepository) {
         _repository = doneTasksRepository;
         _tasksService = tasksService;

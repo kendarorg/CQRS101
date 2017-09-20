@@ -38,7 +38,7 @@ public class TasksCommandHandler implements MessageHandler {
     public void Handle(CreateTask command) {
 
         TaskTypeDao taskType = null;
-        if (command.getTypeCode() != null || command.getTypeCode().length() > 0) {
+        if (command.getTypeCode() != null && command.getTypeCode().length() > 0) {
             taskType = taskTypesService.GetById(command.getTypeCode());
             if (taskType == null) {
                 throw new RuntimeException("Missing task type " + command.getTypeCode());

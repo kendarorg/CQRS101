@@ -1,4 +1,5 @@
 @ECHO OFF
+
 SET SITE_ROOT=http://localhost:9000
 SET LINE=--------------------------------------------------------
 

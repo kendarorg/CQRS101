@@ -20,6 +20,7 @@
                 <ref bean="tasksCommandHandler" />
                 <ref bean="doneTasksEventHandler" />
                 <ref bean="toDoTasksEventHandler" />
+                <ref bean="taskTypesStatsEventHandler" />
             </list>
         </constructor-arg>      
     </bean>
@@ -29,12 +30,4 @@
             </list>
         </constructor-arg>      
     </bean>
-    
-    <!--<mvc:annotation-driven>
-        <mvc:message-converters>
-            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
-                <property name="objectMapper" ref="jackson2ObjectMapper" />
-            </bean>
-        </mvc:message-converters>
-    </mvc:annotation-driven>-->
 </beans>  

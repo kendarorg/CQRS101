@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Commands\ChangeTaskDescription.cs" />
     <Compile Include="Commands\ChangeTaskDueDate.cs" />
+    <Compile Include="Commands\ChangeTaskType.cs" />
     <Compile Include="Commands\ChangeTaskPriority.cs" />
     <Compile Include="Commands\ChangeTaskTitle.cs" />
     <Compile Include="Commands\CompleteTask.cs" />

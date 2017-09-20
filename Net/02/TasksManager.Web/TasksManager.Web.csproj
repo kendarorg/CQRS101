@@ -79,6 +79,8 @@
     <Compile Include="Castle\WindsorDependencyScope.cs" />
     <Compile Include="Castle\WindsorHttpDependencyResolver.cs" />
     <Compile Include="Controllers\Commands.cs" />
+    <Compile Include="Controllers\TaskTypeStats.cs" />
+    <Compile Include="Controllers\TaskTypes.cs" />
     <Compile Include="Controllers\DoneTasks.cs" />
     <Compile Include="Controllers\ToDoTasks.cs" />
     <Compile Include="Program.cs" />
