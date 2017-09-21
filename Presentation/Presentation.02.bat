@@ -25,3 +25,63 @@ ECHO %LINE%
 ECHO.
 PAUSE
 
+ECHO.
+ECHO %LINE%
+ECHO List the tasks statistics
+ECHO %LINE%
+curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X GET %SITE_ROOT%/api/tasks/stats
+ECHO.
+ECHO %LINE%
+ECHO.
+PAUSE
+
+
+ECHO %LINE%
+ECHO Create a task type (DEV)
+ECHO %LINE%
+curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X POST %SITE_ROOT%/api/taskTypes -d @02\02.01.createType.json
+ECHO.
+ECHO %LINE%
+ECHO.
+PAUSE
+
+
+ECHO %LINE%
+ECHO Create a ToDo Task with DEV type
+ECHO %LINE%
+curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X POST %SITE_ROOT%/api/commands/send/createTask -d @02\02.02.createTask.json
+ECHO.
+ECHO %LINE%
+ECHO.
+PAUSE
+
+ECHO.
+ECHO %LINE%
+ECHO List the todo tasks (one should exists)
+ECHO %LINE%
+curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X GET %SITE_ROOT%/api/tasks/todo
+ECHO.
+ECHO %LINE%
+ECHO.
+PAUSE
+
+ECHO.
+ECHO %LINE%
+ECHO List the done tasks (one should exists)
+ECHO %LINE%
+curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X GET %SITE_ROOT%/api/tasks/done
+ECHO.
+ECHO %LINE%
+ECHO.
+PAUSE
+
+ECHO.
+ECHO %LINE%
+ECHO List the tasks statistics (1 running, 1 done)
+ECHO %LINE%
+curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X GET %SITE_ROOT%/api/tasks/stats
+ECHO.
+ECHO %LINE%
+ECHO.
+PAUSE
+
