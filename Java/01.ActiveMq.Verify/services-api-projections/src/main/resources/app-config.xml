@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd"> 
+        
+    
+    <context:component-scan base-package="org.cqrs101" />
+    <context:property-placeholder location="application.properties" />
+    <bean id="tasksService" class="org.cqrs101.views.services.TasksServiceApi"/>
+    <bean id="bus" class="org.cqrs.ActiveMqBusImpl">
+        <constructor-arg>
+            <list>
+                <ref bean="doneTasksEventHandler" />
+                <ref bean="toDoTasksEventHandler" />
+            </list>
+        </constructor-arg>   
+        <constructor-arg type = "java.lang.String" value = "Projections"/>   
+    </bean>
+    <bean id="globalValidator" class="org.cqrs.GlobalValidatorImpl">
+        <constructor-arg>
+            <list>
+            </list>
+        </constructor-arg>      
+    </bean>
+</beans>  
