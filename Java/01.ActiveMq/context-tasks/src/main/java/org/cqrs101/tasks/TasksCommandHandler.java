@@ -14,12 +14,13 @@ import org.cqrs101.shared.Tasks.TaskDueDateChanged;
 import org.cqrs101.shared.Tasks.TaskPriorityChanged;
 import org.cqrs101.shared.Tasks.TaskCreated;
 import org.cqrs101.shared.Tasks.TaskTitleVerified;
-import org.cqrs101.shared.Services.TaskDao;
+import org.cqrs101.tasks.Repositories.TaskDao;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.inject.Named;
 import org.cqrs.*;
+import org.cqrs101.Repository;
 
 @Named("tasksCommandHandler")
 public class TasksCommandHandler implements MessageHandler {

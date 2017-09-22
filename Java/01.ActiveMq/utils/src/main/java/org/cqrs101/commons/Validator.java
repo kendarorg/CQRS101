@@ -1,4 +1,4 @@
-package org.cqrs;
+package org.cqrs101.commons;
 
 public interface Validator {
 

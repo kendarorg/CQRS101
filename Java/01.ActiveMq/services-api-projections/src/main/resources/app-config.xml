@@ -22,7 +22,7 @@
                 <ref bean="toDoTasksEventHandler" />
             </list>
         </constructor-arg>   
-        <constructor-arg type = "java.lang.String" value = "Views"/>   
+        <constructor-arg type = "java.lang.String" value = "Projections"/>   
     </bean>
     <bean id="globalValidator" class="org.cqrs.GlobalValidatorImpl">
         <constructor-arg>

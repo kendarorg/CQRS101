@@ -3,7 +3,7 @@ package org.cqrs101.shared.Services;
 import java.util.Date;
 import java.util.UUID;
 
-public class TaskDao {
+public class TaskServiceDao {
 
     private UUID id;
     private String description;

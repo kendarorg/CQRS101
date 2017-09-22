@@ -1,4 +1,4 @@
-package org.cqrs;
+package org.cqrs101;
 
 import java.util.List;
 import java.util.UUID;

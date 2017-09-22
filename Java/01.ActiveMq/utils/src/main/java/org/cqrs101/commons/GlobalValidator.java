@@ -1,4 +1,4 @@
-package org.cqrs;
+package org.cqrs101.commons;
 
 import java.util.function.Consumer;
 import org.cqrs101.utils.AggregateException;

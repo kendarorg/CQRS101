@@ -5,8 +5,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.inject.Named;
-import org.cqrs.Repository;
-import org.cqrs101.shared.Services.TaskDao;
+import org.cqrs101.Repository;
 
 @Named("tasksRepository")
 public class TasksRepository implements Repository<TaskDao> {

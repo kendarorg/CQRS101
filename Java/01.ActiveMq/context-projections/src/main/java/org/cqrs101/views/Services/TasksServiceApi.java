@@ -15,22 +15,20 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.cqrs101.shared.Services.*;
-import org.cqrs101.shared.Tasks.*;
-import org.cqrs101.views.Repositories.*;
 
 @Named("tasksService")
 public class TasksServiceApi implements TasksService {
 
     private ObjectMapper mapper = new ObjectMapper();
     @Override
-    public TaskDao GetById(UUID id) {
+    public TaskServiceDao GetById(UUID id) {
         try {
             Client client = ClientBuilder.newClient();
             WebTarget target = client.target("http://localhost:9000").path("api/tasks/"+id.toString());
             Invocation.Builder invocationBuilder = target.request(MediaType.APPLICATION_JSON);
             Response response = invocationBuilder.get();
             String responseStr = response.readEntity(String.class);
-            return mapper.readValue(responseStr, TaskDao.class);
+            return mapper.readValue(responseStr, TaskServiceDao.class);
         } catch (IOException ex) {
             Logger.getLogger(TasksServiceApi.class.getName()).log(Level.SEVERE, null, ex);
             return null;
@@ -38,7 +36,7 @@ public class TasksServiceApi implements TasksService {
     }
 
     @Override
-    public List<TaskDao> GetAll() {
+    public List<TaskServiceDao> GetAll() {
         
         try {
             Client client = ClientBuilder.newClient();
@@ -46,7 +44,7 @@ public class TasksServiceApi implements TasksService {
             Invocation.Builder invocationBuilder = target.request(MediaType.APPLICATION_JSON);
             Response response = invocationBuilder.get();
             String responseStr = response.readEntity(String.class);
-            return mapper.readValue(responseStr, new TypeReference<List<TaskDao>>(){});
+            return mapper.readValue(responseStr, new TypeReference<List<TaskServiceDao>>(){});
         } catch (IOException ex) {
             Logger.getLogger(TasksServiceApi.class.getName()).log(Level.SEVERE, null, ex);
             return null;

@@ -3,7 +3,7 @@ package org.cqrs101.Controllers;
 import java.util.List;
 import java.util.UUID;
 import javax.inject.Inject;
-import org.cqrs.Repository;
+import org.cqrs101.Repository;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;

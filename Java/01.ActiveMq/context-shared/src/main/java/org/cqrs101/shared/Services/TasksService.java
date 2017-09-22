@@ -5,6 +5,6 @@ import java.util.UUID;
 
 public interface TasksService {
 
-    TaskDao GetById(UUID id);
-    List<TaskDao> GetAll();
+    TaskServiceDao GetById(UUID id);
+    List<TaskServiceDao> GetAll();
 }

@@ -6,7 +6,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import org.cqrs.Bus;
 import org.cqrs.MessageHandler;
-import org.cqrs.Repository;
+import org.cqrs101.Repository;
 import org.cqrs101.shared.Services.*;
 import org.cqrs101.shared.Tasks.*;
 import org.cqrs101.views.Repositories.*;
@@ -33,7 +33,7 @@ public class DoneTasksEventHandler implements MessageHandler {
 
     public void Handle(TaskCompleted message) {
         logger.log(Level.INFO, "TaskCompleted");
-        TaskDao taskDao = _tasksService.GetById(message.getId());
+        TaskServiceDao taskDao = _tasksService.GetById(message.getId());
         DoneTaskDao doneTask = new DoneTaskDao();
         doneTask.setId(taskDao.getId());
         doneTask.setPriority(taskDao.getPriority());

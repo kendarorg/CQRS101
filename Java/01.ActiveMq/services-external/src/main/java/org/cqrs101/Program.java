@@ -18,7 +18,7 @@ public class Program {
             SpringApplication application = new SpringApplication(Program.class);
             ApplicationContext ctx = application.run(args);
             
-            Bus bus = (Bus)ctx.getBean("bus");
+            //Bus bus = (Bus)ctx.getBean("bus");
         } catch (Exception ex) {
             Logger.getLogger(Program.class.getName()).log(Level.SEVERE, null, ex);
         }

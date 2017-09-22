@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.cqrs.*;
+import org.cqrs101.Repository;
 import org.cqrs101.shared.Services.*;
 import org.cqrs101.shared.Tasks.*;
 import org.cqrs101.views.Repositories.*;
