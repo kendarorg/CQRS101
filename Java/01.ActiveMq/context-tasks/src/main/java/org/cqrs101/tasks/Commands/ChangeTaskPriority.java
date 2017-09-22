@@ -1,14 +1,12 @@
-package org.cqrs101.tasks.Commands;
-
+package org.cqrs101.tasks.commands;
 
 import java.util.UUID;
 import org.cqrs.Command;
 
+public class ChangeTaskPriority extends Command {
 
-    public class ChangeTaskPriority implements Command
-    {
-        private UUID id;
-        private int priority;
+    private UUID id;
+    private int priority;
 
     public UUID getId() {
         return id;
@@ -25,4 +23,4 @@ import org.cqrs.Command;
     public void setPriority(int priority) {
         this.priority = priority;
     }
-    }
+}

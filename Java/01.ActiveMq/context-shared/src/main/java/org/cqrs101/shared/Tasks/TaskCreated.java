@@ -1,15 +1,12 @@
-package org.cqrs101.shared.Tasks;
-
+package org.cqrs101.shared.tasks;
 
 import java.util.Date;
 import java.util.UUID;
 import org.cqrs.Event;
 
-public class TaskCreated implements Event {
-
+public class TaskCreated extends Event {
     private UUID id;
     private Date creationDate;
-    private TaskDueDateChanged dueDateSet;
     private TaskPriorityChanged prioritySet;
     private TaskDescriptionChanged descriptionSet;
     private TaskTitleChanged titleSet;
@@ -28,14 +25,6 @@ public class TaskCreated implements Event {
 
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
-    }
-
-    public TaskDueDateChanged getDueDateSet() {
-        return dueDateSet;
-    }
-
-    public void setDueDateSet(TaskDueDateChanged dueDateSet) {
-        this.dueDateSet = dueDateSet;
     }
 
     public TaskPriorityChanged getPrioritySet() {

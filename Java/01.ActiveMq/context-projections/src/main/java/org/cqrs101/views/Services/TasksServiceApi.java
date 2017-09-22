@@ -1,4 +1,4 @@
-package org.cqrs101.views.Services;
+package org.cqrs101.views.services;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,14 +14,15 @@ import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import org.cqrs101.shared.Services.*;
+import org.cqrs101.shared.services.*;
 
 @Named("tasksService")
 public class TasksServiceApi implements TasksService {
 
-    private ObjectMapper mapper = new ObjectMapper();
+    private static final ObjectMapper mapper = new ObjectMapper();
+    
     @Override
-    public TaskServiceDao GetById(UUID id) {
+    public TaskServiceDao getById(UUID id) {
         try {
             Client client = ClientBuilder.newClient();
             WebTarget target = client.target("http://localhost:9000").path("api/tasks/"+id.toString());
@@ -36,7 +37,7 @@ public class TasksServiceApi implements TasksService {
     }
 
     @Override
-    public List<TaskServiceDao> GetAll() {
+    public List<TaskServiceDao> getAll() {
         
         try {
             Client client = ClientBuilder.newClient();

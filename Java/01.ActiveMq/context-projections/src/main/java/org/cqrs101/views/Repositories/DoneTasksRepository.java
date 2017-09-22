@@ -1,4 +1,4 @@
-package org.cqrs101.views.Repositories;
+package org.cqrs101.views.repositories;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,31 +10,31 @@ import org.cqrs101.Repository;
 @Named("doneTasksRepository")
 public class DoneTasksRepository implements Repository<DoneTaskDao> {
 
-    private static final ConcurrentHashMap<UUID, DoneTaskDao> _storage = new ConcurrentHashMap<UUID, DoneTaskDao>();
+    private static final ConcurrentHashMap<UUID, DoneTaskDao> storage = new ConcurrentHashMap<UUID, DoneTaskDao>();
 
     @Override
-    public void Delete(UUID id) {
-        if (_storage.containsKey(id)) {
-            _storage.remove(id);
+    public void delete(UUID id) {
+        if (storage.containsKey(id)) {
+            storage.remove(id);
         }
     }
 
     @Override
-    public List<DoneTaskDao> GetAll() {
-        return new ArrayList<>(_storage.values());
+    public List<DoneTaskDao> getAll() {
+        return new ArrayList<>(storage.values());
     }
 
     @Override
-    public DoneTaskDao GetById(UUID id) {
-        if (_storage.containsKey(id)) {
-            return _storage.get(id);
+    public DoneTaskDao getById(UUID id) {
+        if (storage.containsKey(id)) {
+            return storage.get(id);
         }
         return null;
     }
 
     @Override
-    public DoneTaskDao Save(DoneTaskDao item) {
-        _storage.put(item.getId(), item);
+    public DoneTaskDao save(DoneTaskDao item) {
+        storage.put(item.getId(), item);
         return item;
     }
 }

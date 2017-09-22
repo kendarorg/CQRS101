@@ -1,4 +1,4 @@
-package org.cqrs101.views.Repositories;
+package org.cqrs101.views.repositories;
 
 import java.util.Date;
 import java.util.UUID;

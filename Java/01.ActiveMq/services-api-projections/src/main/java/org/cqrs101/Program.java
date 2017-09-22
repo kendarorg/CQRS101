@@ -14,8 +14,8 @@ public class Program {
 
     public static void main(String[] args) {
         try {
-            String port = "9001";
-            String baseAddress = "http://localhost:" + port + "/";
+            final String port = "9001";
+            final String baseAddress = "http://localhost:" + port + "/";
 
             SpringApplication application = new SpringApplication(Program.class);
             Map<String, Object> map = new HashMap<>();

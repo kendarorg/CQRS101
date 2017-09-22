@@ -14,7 +14,7 @@
     
     <context:component-scan base-package="org.cqrs101" />
     <context:property-placeholder location="application.properties" />
-    <bean id="tasksService" class="org.cqrs101.views.Services.TasksServiceApi"/>
+    <bean id="tasksService" class="org.cqrs101.views.services.TasksServiceApi"/>
     <bean id="bus" class="org.cqrs.ActiveMqBusImpl">
         <constructor-arg>
             <list>

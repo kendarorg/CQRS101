@@ -5,11 +5,11 @@ import java.util.UUID;
 
 public interface Repository<T> {
 
-    T GetById(UUID id);
+    T getById(UUID id);
 
-    List<T> GetAll();
+    List<T> getAll();
 
-    T Save(T item);
+    T save(T item);
 
-    void Delete(UUID id);
+    void delete(UUID id);
 }

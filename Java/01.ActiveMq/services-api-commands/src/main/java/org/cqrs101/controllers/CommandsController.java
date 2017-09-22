@@ -3,6 +3,7 @@ package org.cqrs101.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 import javax.inject.Inject;
 import org.cqrs.Bus;
 import org.cqrs.Message;
@@ -17,21 +18,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/commands")
 public class CommandsController {
 
-    private final Bus _bus;
-    private ObjectMapper mapper = new ObjectMapper();
-    private final boolean initialized = false;
+    private final Bus bus;
+    private final ObjectMapper mapper = new ObjectMapper();
 
     @Inject
     public CommandsController(Bus bus) {
-        _bus = bus;
+        this.bus = bus;
     }
 
     @RequestMapping(
             value = "/types",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<String> GetTypes() {
-        return _bus.getTypes();
+    public List<String> getTypes() {
+        return bus.getTypes();
     }
 
     @RequestMapping(
@@ -39,10 +39,12 @@ public class CommandsController {
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void SendMessage(@PathVariable("messageType") String messageType, @RequestBody String json) throws IOException {
-        Class type = _bus.getType(messageType);
+    public UUID sendMessage(@PathVariable("messageType") String messageType, @RequestBody String json) throws IOException {
+        Class type = bus.getType(messageType);
 
         Message message = (Message) mapper.readValue(json, type);
-        _bus.Send(message);
+        message.setCorrelationId(UUID.randomUUID());
+        bus.send(message);
+        return message.getCorrelationId();
     }
 }

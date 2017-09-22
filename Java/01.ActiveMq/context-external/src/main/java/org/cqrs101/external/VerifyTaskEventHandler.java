@@ -5,26 +5,27 @@ import java.util.logging.Logger;
 import javax.inject.Named;
 import org.cqrs.Bus;
 import org.cqrs.MessageHandler;
-import org.cqrs101.shared.Tasks.TaskTitleVerified;
+import org.cqrs101.shared.tasks.TaskTitleVerified;
 
 @Named("verifyTaskEventHandler")
 public class VerifyTaskEventHandler implements MessageHandler {
 
-    private Bus _bus;
+    private Bus bus; 
     private static final Logger logger = Logger.getLogger(VerifyTaskEventHandler.class.getSimpleName());
 
     @Override
-    public void Register(Bus bus) {
-        _bus = bus;
-        _bus.RegisterHandler(m -> Handle((VerifyTaskTitle) m), VerifyTaskTitle.class);
+    public void register(Bus bus) {
+        this.bus = bus;
+        this.bus.registerHandler(m -> handle((VerifyTaskTitle) m), VerifyTaskTitle.class);
     }
 
-    public void Handle(VerifyTaskTitle verifyTaskTitleExt) {
-        logger.log(Level.INFO, "VerifyTaskTitle");
-        if (verifyTaskTitleExt.getTitle() != null && verifyTaskTitleExt.getTitle().length() > 0) {
+    public void handle(VerifyTaskTitle command) {
+        logger.log(Level.INFO, "{0}-VerifyTaskTitle", command.getCorrelationId());
+        if (command.getTitle() != null && command.getTitle().length() > 0) {
             TaskTitleVerified message = new TaskTitleVerified();
-            message.setId(verifyTaskTitleExt.getId());
-            _bus.Send(message);
+            message.setId(command.getId());
+            message.setCorrelationId(command.getCorrelationId());
+            bus.send(message);
         }
     }
 

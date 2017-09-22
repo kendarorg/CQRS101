@@ -2,6 +2,7 @@ package org.cqrs;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.logging.Level;
@@ -16,41 +17,37 @@ public class InMemoryBusImpl implements Bus {
     public InMemoryBusImpl(List<MessageHandler> messageHandlers) {
         for (int i = 0; i < messageHandlers.size(); i++) {
             MessageHandler messageHandler = messageHandlers.get(i);
-            messageHandler.Register(this);
+            messageHandler.register(this);
         }
     }
 
-    private final ConcurrentHashMap<String, Class> _messageTypes = new ConcurrentHashMap<>();
-    private final ConcurrentHashMap<Class, ArrayList<Consumer<Object>>> _handlerFunctions = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, Class> messageTypes = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Class, ArrayList<Consumer<Object>>> handlerFunctions = new ConcurrentHashMap<>();
 
     @Override
-    public void RegisterHandler(Consumer<Object> handlerFunction, Class messageType) {
-        if (!_handlerFunctions.containsKey(messageType)) {
-            _handlerFunctions.put(messageType, new ArrayList<>());
-        }
+    public void registerHandler(Consumer<Object> handlerFunction, Class messageType) {
+        handlerFunctions.putIfAbsent(messageType, new ArrayList<>());
         if (Command.class.isAssignableFrom(messageType)) {
-            String messageTypeName = messageType.getSimpleName().toUpperCase();
-            if (!_messageTypes.containsKey(messageTypeName)) {
-                _messageTypes.put(messageTypeName, messageType);
-            }
+            String messageTypeName = messageType.getSimpleName().toUpperCase(Locale.ROOT);
+            messageTypes.putIfAbsent(messageTypeName, messageType);
         }
-        _handlerFunctions.get(messageType).add(handlerFunction);
+        handlerFunctions.get(messageType).add(handlerFunction);
     }
 
     @Override
-    public void Send(Message message) {
+    public void send(Message message) {
         if (message == null) {
             return;
         }
 
         Class messageType = message.getClass();
-        if (_handlerFunctions.containsKey(messageType)) {
-            List<Consumer<Object>> handlerFunction = _handlerFunctions.get(messageType);
+        if (handlerFunctions.containsKey(messageType)) {
+            List<Consumer<Object>> handlerFunction = handlerFunctions.get(messageType);
             for (int i = 0; i < handlerFunction.size(); i++) {
                 try {
                     handlerFunction.get(i).accept(message);
                 } catch (Exception ex) {
-                    logger.log(Level.SEVERE, "Error handling message: "+messageType.getSimpleName());
+                    logger.log(Level.SEVERE, "Error handling message: {0}", messageType.getSimpleName());
                 }
             }
         }
@@ -58,15 +55,15 @@ public class InMemoryBusImpl implements Bus {
 
     @Override
     public Class getType(String messageTypeName) {
-        messageTypeName = messageTypeName.toUpperCase();
-        if (!_messageTypes.containsKey(messageTypeName)) {
+        messageTypeName = messageTypeName.toUpperCase(Locale.ROOT);
+        if (!messageTypes.containsKey(messageTypeName)) {
             return null;
         }
-        return _messageTypes.get(messageTypeName);
+        return messageTypes.get(messageTypeName);
     }
 
     @Override
     public List<String> getTypes() {
-        return new ArrayList<>(_messageTypes.keySet());
+        return new ArrayList<>(messageTypes.keySet());
     }
 }

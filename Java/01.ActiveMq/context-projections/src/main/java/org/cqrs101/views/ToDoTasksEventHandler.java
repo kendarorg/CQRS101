@@ -1,65 +1,62 @@
 package org.cqrs101.views;
 
-import org.cqrs101.views.Repositories.ToDoTaskDao;
+import org.cqrs101.views.repositories.ToDoTaskDao;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.cqrs.*;
 import org.cqrs101.Repository;
-import org.cqrs101.shared.Services.*;
-import org.cqrs101.shared.Tasks.*;
-import org.cqrs101.views.Repositories.*;
+import org.cqrs101.shared.tasks.*;
 
 @Named("toDoTasksEventHandler")
 public class ToDoTasksEventHandler implements MessageHandler {
 
     private static final Logger logger = Logger.getLogger(ToDoTasksEventHandler.class.getSimpleName());
-    private final Repository<ToDoTaskDao> _repository;
-    private Bus _bus;
+    private final Repository<ToDoTaskDao> repository;
+    private Bus bus;
 
     @Override
-    public void Register(Bus bus) {
-        _bus = bus;
-        _bus.RegisterHandler(m -> Handle((TaskCreated) m), TaskCreated.class);
-        _bus.RegisterHandler(m -> Handle((TaskPriorityChanged) m), TaskPriorityChanged.class);
-        _bus.RegisterHandler(m -> Handle((TaskTitleChanged) m), TaskTitleChanged.class);
-        _bus.RegisterHandler(m -> Handle((TaskCompleted) m), TaskCompleted.class);
+    public void register(Bus bus) {
+        this.bus = bus;
+        this.bus.registerHandler(m -> handle((TaskCreated) m), TaskCreated.class);
+        this.bus.registerHandler(m -> handle((TaskPriorityChanged) m), TaskPriorityChanged.class);
+        this.bus.registerHandler(m -> handle((TaskTitleChanged) m), TaskTitleChanged.class);
+        this.bus.registerHandler(m -> handle((TaskCompleted) m), TaskCompleted.class);
     }
-
 
     @Inject
     public ToDoTasksEventHandler(Repository<ToDoTaskDao> toDoTasksRepository) {
-        _repository = toDoTasksRepository;
+        this.repository = toDoTasksRepository;
     }
 
-    public void Handle(TaskCreated message) {
-        logger.log(Level.INFO, "TaskCreated");
+    public void handle(TaskCreated message) {
+        logger.log(Level.INFO, "{0}-TaskCreated", message.getCorrelationId());
         ToDoTaskDao toDoTask = new ToDoTaskDao();
         toDoTask.setId(message.getId());
         toDoTask.setCreationDate(message.getCreationDate());
 
-        _repository.Save(toDoTask);
-        Handle(message.getTitleSet());
-        Handle(message.getPrioritySet());
+        repository.save(toDoTask);
+        handle(message.getTitleSet());
+        handle(message.getPrioritySet());
     }
 
-    public void Handle(TaskPriorityChanged message) {
-        logger.log(Level.INFO, "TaskPriorityChanged");
-        ToDoTaskDao toDoTask = _repository.GetById(message.getId());
+    public void handle(TaskPriorityChanged message) {
+        logger.log(Level.INFO, "{0}-TaskPriorityChanged", message.getCorrelationId());
+        ToDoTaskDao toDoTask = repository.getById(message.getId());
         toDoTask.setPriority(message.getNew());
-        _repository.Save(toDoTask);
+        repository.save(toDoTask);
     }
 
-    public void Handle(TaskTitleChanged message) {
-        logger.log(Level.INFO, "TaskTitleChanged");
-        ToDoTaskDao toDoTask = _repository.GetById(message.getId());
+    public void handle(TaskTitleChanged message) {
+        logger.log(Level.INFO, "{0}-TaskTitleChanged", message.getCorrelationId());
+        ToDoTaskDao toDoTask = repository.getById(message.getId());
         toDoTask.setTitle(message.getNew());
-        _repository.Save(toDoTask);
+        repository.save(toDoTask);
     }
 
-    public void Handle(TaskCompleted message) {
-        logger.log(Level.INFO, "TaskCompleted");
-        _repository.Delete(message.getId());
+    public void handle(TaskCompleted message) {
+        logger.log(Level.INFO, "{0}-TaskCompleted", message.getCorrelationId());
+        repository.delete(message.getId());
     }
 }

@@ -1,4 +1,4 @@
-package org.cqrs101.tasks.Repositories;
+package org.cqrs101.tasks.repositories;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,31 +10,31 @@ import org.cqrs101.Repository;
 @Named("tasksRepository")
 public class TasksRepository implements Repository<TaskDao> {
 
-    private static final ConcurrentHashMap<UUID, TaskDao> _storage = new ConcurrentHashMap<UUID, TaskDao>();
+    private static final ConcurrentHashMap<UUID, TaskDao> storage = new ConcurrentHashMap<UUID, TaskDao>();
 
     @Override
-    public void Delete(UUID id) {
-        if (_storage.containsKey(id)) {
-            _storage.remove(id);
+    public void delete(UUID id) {
+        if (storage.containsKey(id)) {
+            storage.remove(id);
         }
     }
 
     @Override
-    public List<TaskDao> GetAll() {
-        return new ArrayList<>(_storage.values());
+    public List<TaskDao> getAll() {
+        return new ArrayList<>(storage.values());
     }
 
     @Override
-    public TaskDao GetById(UUID id) {
-        if (_storage.containsKey(id)) {
-            return _storage.get(id);
+    public TaskDao getById(UUID id) {
+        if (storage.containsKey(id)) {
+            return storage.get(id);
         }
         return null;
     }
 
     @Override
-    public TaskDao Save(TaskDao item) {
-        _storage.put(item.getId(), item);
+    public TaskDao save(TaskDao item) {
+        storage.put(item.getId(), item);
         return item;
     }
 }

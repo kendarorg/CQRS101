@@ -3,7 +3,7 @@ package org.cqrs101.external;
 import java.util.UUID;
 import org.cqrs.Command;
 
-public class VerifyTaskTitle implements Command {
+public class VerifyTaskTitle extends Command {
 
     private UUID id;
     private String title;

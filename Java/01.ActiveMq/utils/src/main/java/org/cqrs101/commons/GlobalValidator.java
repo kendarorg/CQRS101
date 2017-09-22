@@ -5,11 +5,11 @@ import org.cqrs101.utils.AggregateException;
 
 public abstract class GlobalValidator {
 
-    public abstract void RegisterValidator(Consumer<Object> validate, Class validateType);
+    public abstract void registerValidator(Consumer<Object> validate, Class validateType);
 
-    public abstract boolean Validate(Object toValidate, boolean throwOnError) throws AggregateException;
+    public abstract boolean validate(Object toValidate, boolean throwOnError) throws AggregateException;
 
-    public boolean Validate(Object toValidate) throws AggregateException {
-        return Validate(toValidate, false);
+    public boolean validate(Object toValidate) throws AggregateException {
+        return validate(toValidate, false);
     }
 }

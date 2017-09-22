@@ -1,4 +1,4 @@
-package org.cqrs101.shared.Services;
+package org.cqrs101.shared.services;
 
 import java.util.Date;
 import java.util.UUID;
@@ -7,7 +7,7 @@ public class TaskServiceDao {
 
     private UUID id;
     private String description;
-    private Date dueDate;
+    private int taskHours;
     private int priority;
     private String title;
     private boolean completed;
@@ -31,12 +31,12 @@ public class TaskServiceDao {
         this.description = description;
     }
 
-    public Date getDueDate() {
-        return dueDate;
+    public int getTaskHours() {
+        return taskHours;
     }
 
-    public void setDueDate(Date dueDate) {
-        this.dueDate = dueDate;
+    public void setTaskHours(int taskHours) {
+        this.taskHours = taskHours;
     }
 
     public int getPriority() {

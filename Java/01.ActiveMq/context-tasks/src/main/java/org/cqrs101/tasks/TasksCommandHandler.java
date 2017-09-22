@@ -1,20 +1,20 @@
 package org.cqrs101.tasks;
 
-import org.cqrs101.tasks.Commands.ChangeTaskPriority;
-import org.cqrs101.tasks.Commands.ChangeTaskDescription;
-import org.cqrs101.tasks.Commands.CompleteTask;
-import org.cqrs101.tasks.Commands.CreateTask;
-import org.cqrs101.tasks.Commands.ChangeTaskTitle;
-import org.cqrs101.tasks.Commands.VerifyTaskTitle;
-import org.cqrs101.tasks.Commands.ChangeTaskDueDate;
-import org.cqrs101.shared.Tasks.TaskCompleted;
-import org.cqrs101.shared.Tasks.TaskTitleChanged;
-import org.cqrs101.shared.Tasks.TaskDescriptionChanged;
-import org.cqrs101.shared.Tasks.TaskDueDateChanged;
-import org.cqrs101.shared.Tasks.TaskPriorityChanged;
-import org.cqrs101.shared.Tasks.TaskCreated;
-import org.cqrs101.shared.Tasks.TaskTitleVerified;
-import org.cqrs101.tasks.Repositories.TaskDao;
+import org.cqrs101.tasks.commands.ChangeTaskPriority;
+import org.cqrs101.tasks.commands.ChangeTaskDescription;
+import org.cqrs101.tasks.commands.CompleteTask;
+import org.cqrs101.tasks.commands.CreateTask;
+import org.cqrs101.tasks.commands.ChangeTaskTitle;
+import org.cqrs101.tasks.commands.VerifyTaskTitle;
+import org.cqrs101.tasks.commands.AddTaskHours;
+import org.cqrs101.shared.tasks.TaskCompleted;
+import org.cqrs101.shared.tasks.TaskTitleChanged;
+import org.cqrs101.shared.tasks.TaskDescriptionChanged;
+import org.cqrs101.shared.tasks.TaskHoursAdded;
+import org.cqrs101.shared.tasks.TaskPriorityChanged;
+import org.cqrs101.shared.tasks.TaskCreated;
+import org.cqrs101.shared.tasks.TaskTitleVerified;
+import org.cqrs101.tasks.repositories.TaskDao;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,113 +26,118 @@ import org.cqrs101.Repository;
 public class TasksCommandHandler implements MessageHandler {
 
     private static final Logger logger = Logger.getLogger(TasksCommandHandler.class.getSimpleName());
-    private final Repository<TaskDao> _repository;
-    private Bus _bus;
+    private final Repository<TaskDao> repository;
+    private Bus bus;
 
     @Override
-    public void Register(Bus bus) {
-        _bus = bus;
-        _bus.RegisterHandler(c -> Handle((CreateTask) c), CreateTask.class);
-        _bus.RegisterHandler(c -> Handle((CompleteTask) c), CompleteTask.class);
+    public void register(Bus bus) {
+        this.bus = bus;
+        this.bus.registerHandler(c -> handle((CreateTask) c), CreateTask.class);
+        this.bus.registerHandler(c -> handle((CompleteTask) c), CompleteTask.class);
 
-        _bus.RegisterHandler(c -> Handle((ChangeTaskTitle) c), ChangeTaskTitle.class);
-        _bus.RegisterHandler(c -> Handle((ChangeTaskDescription) c), ChangeTaskDescription.class);
-        _bus.RegisterHandler(c -> Handle((ChangeTaskDueDate) c), ChangeTaskDueDate.class);
-        _bus.RegisterHandler(c -> Handle((ChangeTaskPriority) c), ChangeTaskPriority.class);
-        
-        _bus.RegisterHandler(c -> Handle((TaskTitleVerified) c), TaskTitleVerified.class);
+        this.bus.registerHandler(c -> handle((ChangeTaskTitle) c), ChangeTaskTitle.class);
+        this.bus.registerHandler(c -> handle((ChangeTaskDescription) c), ChangeTaskDescription.class);
+        this.bus.registerHandler(c -> handle((AddTaskHours) c), AddTaskHours.class);
+        this.bus.registerHandler(c -> handle((ChangeTaskPriority) c), ChangeTaskPriority.class);
+
+        this.bus.registerHandler(c -> handle((TaskTitleVerified) c), TaskTitleVerified.class);
     }
 
     public TasksCommandHandler(Repository<TaskDao> tasksRepository) {
-        _repository = tasksRepository;
+        this.repository = tasksRepository;
     }
 
-    public void Handle(CreateTask command) {
-        logger.log(Level.INFO, "CreateTask");
+    public void handle(CreateTask command) {
+        logger.log(Level.INFO, "{0}-CreateTask", command.getCorrelationId());
         Date now = new Date();
         TaskDao taskDao = new TaskDao();
         taskDao.setId(command.getId());
         taskDao.setDescription(command.getDescription());
-        taskDao.setDueDate(command.getDueDate());
         taskDao.setPriority(command.getPriority());
         taskDao.setTitle(command.getTitle());
         taskDao.setCompleted(false);
         taskDao.setCreationDate(now);
 
-        _repository.Save(taskDao);
+        repository.save(taskDao);
         VerifyTaskTitle message = new VerifyTaskTitle();
         message.setId(command.getId());
         message.setTitle(command.getTitle());
-        _bus.Send(message);
+        message.setCorrelationId(command.getCorrelationId());
+        bus.send(message);
     }
 
-    public void Handle(ChangeTaskPriority command) {
-        logger.log(Level.INFO, "ChangeTaskPriority");
-        TaskDao taskDao = _repository.GetById(command.getId());
+    public void handle(ChangeTaskPriority command) {
+        logger.log(Level.INFO, "{0}-ChangeTaskPriority", command.getCorrelationId());
+        TaskDao taskDao = repository.getById(command.getId());
         TaskPriorityChanged message = new TaskPriorityChanged(command.getId(), command.getPriority());
         message.setOld(taskDao.getPriority());
 
         taskDao.setPriority(command.getPriority());
-        _repository.Save(taskDao);
-        _bus.Send(message);
+        repository.save(taskDao);
+        bus.send(message);
     }
 
-    public void Handle(ChangeTaskDueDate command) {
-        logger.log(Level.INFO, "ChangeTaskDueDate");
-        TaskDao taskDao = _repository.GetById(command.getId());
-        TaskDueDateChanged message = new TaskDueDateChanged(command.getId(), command.getDueDate());
-        message.setOld(taskDao.getDueDate());
-        taskDao.setDueDate(command.getDueDate());
-        _repository.Save(taskDao);
-        _bus.Send(message);
+    public void handle(AddTaskHours command) {
+        logger.log(Level.INFO, "{0}-AddTaskHours", command.getCorrelationId());
+        TaskDao taskDao = repository.getById(command.getId());
+        TaskHoursAdded message = new TaskHoursAdded(command.getId(), command.getTaskHours());
+        message.setOld(taskDao.getHours());
+        taskDao.setHours(taskDao.getHours() + command.getTaskHours());
+        repository.save(taskDao);
+        message.setCorrelationId(command.getCorrelationId());
+        bus.send(message);
     }
 
-    public void Handle(ChangeTaskDescription command) {
-        logger.log(Level.INFO, "ChangeTaskDescription");
-        TaskDao taskDao = _repository.GetById(command.getId());
+    public void handle(ChangeTaskDescription command) {
+        logger.log(Level.INFO, "{0}-ChangeTaskDescription", command.getCorrelationId());
+        TaskDao taskDao = repository.getById(command.getId());
         TaskDescriptionChanged message = new TaskDescriptionChanged(command.getId(), command.getDescription());
         message.setOld(taskDao.getDescription());
 
         taskDao.setDescription(command.getDescription());
-        _repository.Save(taskDao);
-        _bus.Send(message);
+        repository.save(taskDao);
+        message.setCorrelationId(command.getCorrelationId());
+        bus.send(message);
     }
 
-    public void Handle(ChangeTaskTitle command) {
-        logger.log(Level.INFO, "ChangeTaskTitle");
-        TaskDao taskDao = _repository.GetById(command.getId());
+    public void handle(ChangeTaskTitle command) {
+        logger.log(Level.INFO, "{0}-ChangeTaskTitle", command.getCorrelationId());
+        TaskDao taskDao = repository.getById(command.getId());
         TaskTitleChanged message = new TaskTitleChanged(command.getId(), command.getTitle());
         message.setOld(taskDao.getTitle());
 
         taskDao.setTitle(command.getTitle());
-        _repository.Save(taskDao);
-        _bus.Send(message);
+        repository.save(taskDao);
+        message.setCorrelationId(command.getCorrelationId());
+        bus.send(message);
     }
 
-    public void Handle(CompleteTask command) {
-        logger.log(Level.INFO, "CompleteTask");
+    public void handle(CompleteTask command) {
+        logger.log(Level.INFO, "{0}-CompleteTask", command.getCorrelationId());
         Date now = new Date();
-        TaskDao taskDao = _repository.GetById(command.getId());
+        TaskDao taskDao = repository.getById(command.getId());
         taskDao.setCompleted(true);
         taskDao.setCompletionDate(now);
 
-        _bus.Send(new TaskCompleted(taskDao.getId(), now));
+        TaskCompleted message = new TaskCompleted(taskDao.getId(), now);
+        message.setCorrelationId(command.getCorrelationId());
+        bus.send(message);
     }
 
-    private void Handle(TaskTitleVerified command) {
-        logger.log(Level.INFO, "TaskTitleVerified");
-        TaskDao taskDao = _repository.GetById(command.getId());
+    public void handle(TaskTitleVerified command) {
+        logger.log(Level.INFO, "{0}-TaskTitleVerified", command.getCorrelationId());
+        TaskDao taskDao = repository.getById(command.getId());
         taskDao.setInitialized(true);
-        _repository.Save(taskDao);
-        
+        repository.save(taskDao);
+
         TaskCreated message = new TaskCreated();
         message.setId(taskDao.getId());
         message.setCreationDate(taskDao.getCreationDate());
         message.setTitleSet(new TaskTitleChanged(taskDao.getId(), taskDao.getTitle()));
         message.setDescriptionSet(new TaskDescriptionChanged(taskDao.getId(), taskDao.getDescription()));
         message.setPrioritySet(new TaskPriorityChanged(taskDao.getId(), taskDao.getPriority()));
-        message.setDueDateSet(new TaskDueDateChanged(taskDao.getId(), taskDao.getDueDate()));
 
-        _bus.Send(message);
+        message.setCorrelationId(command.getCorrelationId());
+        bus.send(message);
     }
 }

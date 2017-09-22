@@ -1,4 +1,4 @@
 package org.cqrs;
 
-public interface Command extends Message {
+public abstract class Command extends Message {
 }

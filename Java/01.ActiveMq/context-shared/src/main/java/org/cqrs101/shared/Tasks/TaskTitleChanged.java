@@ -1,10 +1,10 @@
-package org.cqrs101.shared.Tasks;
+package org.cqrs101.shared.tasks;
 
 
 import java.util.UUID;
 import org.cqrs.Event;
 
-public class TaskTitleChanged implements Event {
+public class TaskTitleChanged extends Event {
 
     private UUID id;
     private String old;

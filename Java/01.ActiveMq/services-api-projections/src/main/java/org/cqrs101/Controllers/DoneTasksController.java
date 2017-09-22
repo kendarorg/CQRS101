@@ -1,4 +1,4 @@
-package org.cqrs101.Controllers;
+package org.cqrs101.controllers;
 
 import java.util.List;
 import java.util.UUID;
@@ -10,17 +10,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.cqrs101.views.Repositories.DoneTaskDao;
+import org.cqrs101.views.repositories.DoneTaskDao;
 
 @RestController
 @RequestMapping("/api/tasks/done")
 public class DoneTasksController {
 
-    private final Repository<DoneTaskDao> _repository;
+    private final Repository<DoneTaskDao> repository;
 
     @Inject
     public DoneTasksController(Repository<DoneTaskDao> doneTasksRepository) {
-        _repository = doneTasksRepository;
+        this.repository = doneTasksRepository;
     }
 
     @ResponseBody
@@ -29,8 +29,8 @@ public class DoneTasksController {
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
-    public DoneTaskDao GetById(@PathVariable("id") UUID id) {
-        return _repository.GetById(id);
+    public DoneTaskDao getById(@PathVariable("id") UUID id) {
+        return repository.getById(id);
     }
 
     @ResponseBody
@@ -38,7 +38,7 @@ public class DoneTasksController {
             value = "",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<DoneTaskDao> GetAll() {
-        return _repository.GetAll();
+    public List<DoneTaskDao> getAll() {
+        return repository.getAll();
     }
 }

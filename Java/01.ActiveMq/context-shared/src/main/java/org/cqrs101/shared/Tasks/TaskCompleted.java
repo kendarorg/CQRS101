@@ -1,10 +1,10 @@
-package org.cqrs101.shared.Tasks;
+package org.cqrs101.shared.tasks;
 
 import java.util.Date;
 import java.util.UUID;
 import org.cqrs.Event;
 
-public class TaskCompleted implements Event {
+public class TaskCompleted extends Event {
 
     private UUID id;
     private Date completionDate;

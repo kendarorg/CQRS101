@@ -1,10 +1,10 @@
-package org.cqrs101.shared.Services;
+package org.cqrs101.shared.services;
 
 import java.util.List;
 import java.util.UUID;
 
 public interface TasksService {
 
-    TaskServiceDao GetById(UUID id);
-    List<TaskServiceDao> GetAll();
+    TaskServiceDao getById(UUID id);
+    List<TaskServiceDao> getAll();
 }

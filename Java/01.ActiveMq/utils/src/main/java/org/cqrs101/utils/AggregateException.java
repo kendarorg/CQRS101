@@ -11,31 +11,27 @@ public class AggregateException extends Exception {
     public AggregateException(String message, Exception... others) {
         super(message);
         this.secondaryExceptions = new ArrayList<>();
-        for(int i=0;i<others.length;i++){
-            this.secondaryExceptions.add(others[i]);
-        }
+        this.secondaryExceptions.addAll(Arrays.asList(others));
     }
 
     public AggregateException(Exception... others) {
         super();
         this.secondaryExceptions = new ArrayList<>();
-        for(int i=0;i<others.length;i++){
-            this.secondaryExceptions.add(others[i]);
-        }
+        this.secondaryExceptions.addAll(Arrays.asList(others));
     }
 
     public AggregateException(String message, List<Exception> exceptions) {
         super(message);
         this.secondaryExceptions = new ArrayList<>();
-        for(int i=0;i<exceptions.size();i++){
+        for (int i = 0; i < exceptions.size(); i++) {
             this.secondaryExceptions.add(exceptions.get(i));
         }
     }
 
-    public AggregateException( List<Exception> exceptions) {
+    public AggregateException(List<Exception> exceptions) {
         super();
         this.secondaryExceptions = new ArrayList<>();
-        for(int i=0;i<exceptions.size();i++){
+        for (int i = 0; i < exceptions.size(); i++) {
             this.secondaryExceptions.add(exceptions.get(i));
         }
     }

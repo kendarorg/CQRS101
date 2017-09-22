@@ -1,15 +1,17 @@
 package org.cqrs;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.inject.Inject;
 import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
 import javax.jms.DeliveryMode;
 import javax.jms.Destination;
 import javax.jms.JMSException;
@@ -23,7 +25,7 @@ import org.apache.activemq.command.ActiveMQQueue;
 public class ActiveMqBusImpl implements Bus {
 
     private static final Logger logger = Logger.getLogger(ActiveMqBusImpl.class.getSimpleName());
-    public static String brokerURL = "failover:tcp://localhost:61616";
+    public static final String brokerURL = "failover:tcp://localhost:61616";
     private ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory(brokerURL);
     private final Connection connection;
     private final String instanceName;
@@ -41,7 +43,7 @@ public class ActiveMqBusImpl implements Bus {
 
             for (int i = 0; i < messageHandlers.size(); i++) {
                 MessageHandler messageHandler = messageHandlers.get(i);
-                messageHandler.Register(this);
+                messageHandler.register(this);
             }
         } catch (JMSException ex) {
             logger.log(Level.SEVERE, "Error initializing ActiveMQ and Handlers;", ex);
@@ -49,22 +51,20 @@ public class ActiveMqBusImpl implements Bus {
         }
     }
 
-    private final ConcurrentHashMap<String, Class> _messageTypes = new ConcurrentHashMap<>();
-    private final ConcurrentHashMap<Class, ArrayList<Consumer<Object>>> _handlerFunctions = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, Class> messageTypes = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Class, ArrayList<Consumer<Object>>> handlerFunctions = new ConcurrentHashMap<>();
 
     @Override
-    public void RegisterHandler(Consumer<Object> handlerFunction, Class messageType) {
+    public void registerHandler(Consumer<Object> handlerFunction, Class messageType) {
 
         boolean isEvent = Event.class.isAssignableFrom(messageType);
         boolean isCommand = Command.class.isAssignableFrom(messageType);
-        String messageTypeName = messageType.getSimpleName().toUpperCase();
-        if (!_messageTypes.containsKey(messageTypeName)) {
-            _messageTypes.put(messageTypeName, messageType);
-        }
+        String messageTypeName = messageType.getSimpleName().toUpperCase(Locale.ROOT);
+        messageTypes.putIfAbsent(messageTypeName, messageType);
 
-        if (!_handlerFunctions.containsKey(messageType)) {
-            _handlerFunctions.put(messageType, new ArrayList<>());
-            MessageConsumer consumer = null;
+        if (!handlerFunctions.containsKey(messageType)) {
+            handlerFunctions.putIfAbsent(messageType, new ArrayList<>());
+            MessageConsumer consumer;
             try {
                 String queueName = "";
                 if (isCommand) {
@@ -76,44 +76,44 @@ public class ActiveMqBusImpl implements Bus {
                 ActiveMQQueue commandsQueue = new ActiveMQQueue(queueName);
                 consumer = session.createConsumer(commandsQueue);
                 consumer.setMessageListener((javax.jms.Message genericMsg) -> {
-                    HandleMessage(genericMsg);
+                    handleMessage(genericMsg);
                 });
-            } catch (Exception ex) {
+            } catch (JMSException ex) {
                 logger.log(Level.SEVERE, "Error registering message handler", ex);
             }
         }
-        _handlerFunctions.get(messageType).add(handlerFunction);
+        handlerFunctions.get(messageType).add(handlerFunction);
     }
 
-    private void HandleMessage(javax.jms.Message genericMsg) throws RuntimeException {
+    private void handleMessage(javax.jms.Message genericMsg) throws RuntimeException {
         try {
             TextMessage msg = (TextMessage) genericMsg;
             String jsonContent = msg.getText();
-            String stringType = msg.getStringProperty("TYPE").toUpperCase();
-            Class classType = _messageTypes.get(stringType);
+            String stringType = msg.getStringProperty("TYPE").toUpperCase(Locale.ROOT);
+            Class classType = messageTypes.get(stringType);
             Message event = (Message) mapper.readValue(jsonContent, classType);
 
-            if (_handlerFunctions.containsKey(classType)) {
-                List<Consumer<Object>> handlerFunctions = _handlerFunctions.get(classType);
-                for (int i = 0; i < handlerFunctions.size(); i++) {
-                    handlerFunctions.get(i).accept(event);
+            if (handlerFunctions.containsKey(classType)) {
+                List<Consumer<Object>> handlerFunctionsByType = handlerFunctions.get(classType);
+                for (int i = 0; i < handlerFunctionsByType.size(); i++) {
+                    handlerFunctionsByType.get(i).accept(event);
 
                 }
             }
-        } catch (Exception ex) {
+        } catch (IOException | JMSException ex) {
             logger.log(Level.SEVERE, "Error receiving message", ex);
             throw new RuntimeException(ex);
         }
     }
 
     @Override
-    public void Send(Message message) {
+    public void send(Message message) {
         if (message == null) {
             return;
         }
         try {
             Class messageType = message.getClass();
-            String messageTypeName = messageType.getSimpleName().toUpperCase();
+            String messageTypeName = messageType.getSimpleName().toUpperCase(Locale.ROOT);
             boolean isEvent = Event.class.isAssignableFrom(messageType);
             boolean isCommand = Command.class.isAssignableFrom(messageType);
             Destination destination = null;
@@ -129,23 +129,24 @@ public class ActiveMqBusImpl implements Bus {
 
             TextMessage amqMessage = session.createTextMessage(mapper.writeValueAsString(message));
             amqMessage.setStringProperty("TYPE", messageTypeName);
+            amqMessage.setJMSCorrelationID(message.getCorrelationId().toString());
             producer.send(amqMessage);
-        } catch (Exception ex) {
+        } catch (JMSException | JsonProcessingException ex) {
             logger.log(Level.SEVERE, "Error sending data", ex);
         }
     }
 
     @Override
     public Class getType(String messageTypeName) {
-        messageTypeName = messageTypeName.toUpperCase();
-        if (!_messageTypes.containsKey(messageTypeName)) {
+        messageTypeName = messageTypeName.toUpperCase(Locale.ROOT);
+        if (!messageTypes.containsKey(messageTypeName)) {
             return null;
         }
-        return _messageTypes.get(messageTypeName);
+        return messageTypes.get(messageTypeName);
     }
 
     @Override
     public List<String> getTypes() {
-        return new ArrayList<>(_messageTypes.keySet());
+        return new ArrayList<>(messageTypes.keySet());
     }
 }

@@ -1,24 +1,15 @@
-package org.cqrs101.tasks.Commands;
+package org.cqrs101.tasks.commands;
 
 import java.util.Date;
 import java.util.UUID;
 import org.cqrs.Command;
 
-public class CreateTask implements Command {
+public class CreateTask extends Command {
 
-    private Date dueDate;
     private UUID id;
     private String title;
     private String description;
     private int priority;
-
-    public Date getDueDate() {
-        return dueDate;
-    }
-
-    public void setDueDate(Date dueDate) {
-        this.dueDate = dueDate;
-    }
 
     public UUID getId() {
         return id;

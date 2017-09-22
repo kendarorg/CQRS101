@@ -1,4 +1,4 @@
-package org.cqrs101.tasks.Repositories;
+package org.cqrs101.tasks.repositories;
 
 import java.util.Date;
 import java.util.UUID;
@@ -7,7 +7,7 @@ public class TaskDao {
 
     private UUID id;
     private String description;
-    private Date dueDate;
+    private int hours;
     private int priority;
     private String title;
     private boolean completed;
@@ -29,14 +29,6 @@ public class TaskDao {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Date getDueDate() {
-        return dueDate;
-    }
-
-    public void setDueDate(Date dueDate) {
-        this.dueDate = dueDate;
     }
 
     public int getPriority() {
@@ -85,5 +77,13 @@ public class TaskDao {
 
     public void setInitialized(boolean initialized) {
         this.initialized = initialized;
+    }
+
+    public int getHours() {
+        return hours;
+    }
+
+    public void setHours(int hours) {
+        this.hours = hours;
     }
 }

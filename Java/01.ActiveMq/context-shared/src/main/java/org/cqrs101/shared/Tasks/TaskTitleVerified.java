@@ -1,9 +1,9 @@
-package org.cqrs101.shared.Tasks;
+package org.cqrs101.shared.tasks;
 
 import java.util.UUID;
 import org.cqrs.Event;
 
-public class TaskTitleVerified implements Event {
+public class TaskTitleVerified extends Event {
 
     private UUID id;
 

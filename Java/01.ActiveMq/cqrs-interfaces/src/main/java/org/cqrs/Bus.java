@@ -7,6 +7,6 @@ public interface Bus
 {
     Class getType(String name);
     List<String> getTypes();
-    void RegisterHandler(Consumer<Object> handlerFunction,Class messageType);
-    void Send(Message message);
+    void registerHandler(Consumer<Object> handlerFunction,Class messageType);
+    void send(Message message);
 }

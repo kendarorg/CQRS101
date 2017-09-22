@@ -1,4 +1,4 @@
 package org.cqrs;
 
-public interface Event extends Message {
+public abstract class Event extends Message {
 }
