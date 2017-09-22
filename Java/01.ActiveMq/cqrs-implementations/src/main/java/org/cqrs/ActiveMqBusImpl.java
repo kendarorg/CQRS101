@@ -8,18 +8,15 @@ import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.DeliveryMode;
 import javax.jms.Destination;
 import javax.jms.JMSException;
-import javax.jms.MapMessage;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
 import javax.jms.TextMessage;
-import javax.jms.Topic;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.command.ActiveMQQueue;
 
@@ -27,7 +24,7 @@ public class ActiveMqBusImpl implements Bus {
 
     private static final Logger logger = Logger.getLogger(ActiveMqBusImpl.class.getSimpleName());
     public static String brokerURL = "failover:tcp://localhost:61616";
-    private ConnectionFactory factory = new ActiveMQConnectionFactory(brokerURL);
+    private ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory(brokerURL);
     private final Connection connection;
     private final String instanceName;
     private ObjectMapper mapper = new ObjectMapper();
@@ -37,6 +34,7 @@ public class ActiveMqBusImpl implements Bus {
     public ActiveMqBusImpl(List<MessageHandler> messageHandlers, String instanceName) throws Exception {
         try {
             this.instanceName = instanceName;
+            factory.setWatchTopicAdvisories(false);
             connection = factory.createConnection();
             connection.start();
             session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
@@ -68,39 +66,44 @@ public class ActiveMqBusImpl implements Bus {
             _handlerFunctions.put(messageType, new ArrayList<>());
             MessageConsumer consumer = null;
             try {
+                String queueName = "";
                 if (isCommand) {
-                    ActiveMQQueue commandsQueue = new ActiveMQQueue("COMMANDS");
-                    consumer = session.createConsumer(commandsQueue);
+                    queueName = "COMMANDS." + messageTypeName;
                 } else if (isEvent) {
-                    ActiveMQQueue commandsQueue = new ActiveMQQueue("Consumer." + instanceName + ".VirtualTopic.EVENTS_" + messageTypeName);
-                    //ActiveMQQueue topic = session.createQueue();
-                    consumer = session.createConsumer(commandsQueue);
+                    queueName = "Consumer." + instanceName + ".VirtualTopic.EVENTS_" + messageTypeName;
                 }
+
+                ActiveMQQueue commandsQueue = new ActiveMQQueue(queueName);
+                consumer = session.createConsumer(commandsQueue);
                 consumer.setMessageListener((javax.jms.Message genericMsg) -> {
-                    try {
-                        TextMessage msg = (TextMessage) genericMsg;
-                        String jsonContent = msg.getText();
-                        String stringType = msg.getStringProperty("TYPE").toUpperCase();
-                        Class classType = _messageTypes.get(stringType);
-                        Message event = (Message) mapper.readValue(jsonContent, classType);
-
-                        if (_handlerFunctions.containsKey(classType)) {
-                            List<Consumer<Object>> handlerFunctions = _handlerFunctions.get(classType);
-                            for (int i = 0; i < handlerFunctions.size(); i++) {
-                                handlerFunctions.get(i).accept(event);
-
-                            }
-                        }
-                    } catch (Exception ex) {
-                        logger.log(Level.SEVERE, "Error receiving message", ex);
-                        throw new RuntimeException(ex);
-                    }
+                    HandleMessage(genericMsg);
                 });
-            } catch (JMSException ex) {
-                Logger.getLogger(ActiveMqBusImpl.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (Exception ex) {
+                logger.log(Level.SEVERE, "Error registering message handler", ex);
             }
         }
         _handlerFunctions.get(messageType).add(handlerFunction);
+    }
+
+    private void HandleMessage(javax.jms.Message genericMsg) throws RuntimeException {
+        try {
+            TextMessage msg = (TextMessage) genericMsg;
+            String jsonContent = msg.getText();
+            String stringType = msg.getStringProperty("TYPE").toUpperCase();
+            Class classType = _messageTypes.get(stringType);
+            Message event = (Message) mapper.readValue(jsonContent, classType);
+
+            if (_handlerFunctions.containsKey(classType)) {
+                List<Consumer<Object>> handlerFunctions = _handlerFunctions.get(classType);
+                for (int i = 0; i < handlerFunctions.size(); i++) {
+                    handlerFunctions.get(i).accept(event);
+
+                }
+            }
+        } catch (Exception ex) {
+            logger.log(Level.SEVERE, "Error receiving message", ex);
+            throw new RuntimeException(ex);
+        }
     }
 
     @Override
@@ -115,8 +118,7 @@ public class ActiveMqBusImpl implements Bus {
             boolean isCommand = Command.class.isAssignableFrom(messageType);
             Destination destination = null;
             if (isCommand) {
-                destination = session.createQueue("COMMANDS");
-
+                destination = session.createQueue("COMMANDS." + messageTypeName);
             } else if (isEvent) {
                 destination = session.createTopic("VirtualTopic.EVENTS_" + messageTypeName);
             }

@@ -6,14 +6,16 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
-        <module>../commons-domain</module>
         <module>../cqrs-implementations</module>
         <module>../cqrs-interfaces</module>
-        <module>../tasks-domain</module>
         <module>../utils</module>
-        <module>../tasks-commands-web</module>
-        <module>../tasks-views-web</module>
-        <module>../tasks-manager-application</module>
+        <module>../context-shared</module>
+        <module>../context-tasks</module>
+        <module>../services-external</module>
+        <module>../context-external</module>
+        <module>../services-api-commands</module>
+        <module>../services-api-projections</module>
+        <module>../context-projections</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

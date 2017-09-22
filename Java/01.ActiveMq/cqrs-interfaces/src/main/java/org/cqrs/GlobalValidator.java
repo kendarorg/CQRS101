@@ -1,7 +1,7 @@
 package org.cqrs;
 
 import java.util.function.Consumer;
-import org.commons.AggregateException;
+import org.cqrs101.utils.AggregateException;
 
 public abstract class GlobalValidator {
 

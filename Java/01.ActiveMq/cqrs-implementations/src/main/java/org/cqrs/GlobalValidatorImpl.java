@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import javax.inject.Inject;
 import javax.inject.Named;
-import org.commons.AggregateException;
+import org.cqrs101.utils.AggregateException;
 
 @Named("globalValidator")
 public class GlobalValidatorImpl extends GlobalValidator {
