@@ -12,7 +12,7 @@ import javax.inject.Inject;
 public class InMemoryBusImpl implements Bus {
 
     private static final Logger logger = Logger.getLogger(InMemoryBusImpl.class.getSimpleName());
-            
+
     @Inject
     public InMemoryBusImpl(List<MessageHandler> messageHandlers) {
         for (int i = 0; i < messageHandlers.size(); i++) {
@@ -25,7 +25,7 @@ public class InMemoryBusImpl implements Bus {
     private final ConcurrentHashMap<Class, ArrayList<Consumer<Object>>> handlerFunctions = new ConcurrentHashMap<>();
 
     @Override
-    public void registerHandler(Consumer<Object> handlerFunction, Class messageType) {
+    public void registerHandler(Consumer<Object> handlerFunction, Class messageType, Class callerType) {
         handlerFunctions.putIfAbsent(messageType, new ArrayList<>());
         if (Command.class.isAssignableFrom(messageType)) {
             String messageTypeName = messageType.getSimpleName().toUpperCase(Locale.ROOT);
@@ -47,7 +47,7 @@ public class InMemoryBusImpl implements Bus {
                 try {
                     handlerFunction.get(i).accept(message);
                 } catch (Exception ex) {
-                    logger.log(Level.SEVERE, "Error handling message: {0}", messageType.getSimpleName());
+                    logger.log(Level.SEVERE, "Error handling message: " + messageType.getSimpleName(), ex);
                 }
             }
         }

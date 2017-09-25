@@ -17,6 +17,8 @@
         <module>../services-api-projections</module>
         <module>../context-projections</module>
         <module>../repository-interfaces</module>
+        <module>../es-interfaces</module>
+        <module>../es-implementations</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

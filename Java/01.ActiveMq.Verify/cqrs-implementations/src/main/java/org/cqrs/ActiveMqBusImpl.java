@@ -52,40 +52,37 @@ public class ActiveMqBusImpl implements Bus {
     }
 
     private final ConcurrentHashMap<String, Class> messageTypes = new ConcurrentHashMap<>();
-    private final ConcurrentHashMap<Class, ArrayList<Consumer<Object>>> handlerFunctions = new ConcurrentHashMap<>();
 
     @Override
-    public void registerHandler(Consumer<Object> handlerFunction, Class messageType) {
+    public void registerHandler(Consumer<Object> handlerFunction, Class messageType, Class callerType) {
 
         boolean isEvent = Event.class.isAssignableFrom(messageType);
         boolean isCommand = Command.class.isAssignableFrom(messageType);
         String messageTypeName = messageType.getSimpleName().toUpperCase(Locale.ROOT);
         messageTypes.putIfAbsent(messageTypeName, messageType);
+        String realInstanceName = instanceName + "_" + callerType.getSimpleName();
 
-        if (!handlerFunctions.containsKey(messageType)) {
-            handlerFunctions.putIfAbsent(messageType, new ArrayList<>());
-            MessageConsumer consumer;
-            try {
-                String queueName = "";
-                if (isCommand) {
-                    queueName = "COMMANDS." + messageTypeName;
-                } else if (isEvent) {
-                    queueName = "Consumer." + instanceName + ".VirtualTopic.EVENTS_" + messageTypeName;
-                }
-
-                ActiveMQQueue commandsQueue = new ActiveMQQueue(queueName);
-                consumer = session.createConsumer(commandsQueue);
-                consumer.setMessageListener((javax.jms.Message genericMsg) -> {
-                    handleMessage(genericMsg);
-                });
-            } catch (JMSException ex) {
-                logger.log(Level.SEVERE, "Error registering message handler", ex);
+        MessageConsumer consumer;
+        try {
+            String queueName = "";
+            if (isCommand) {
+                queueName = "COMMANDS." + messageTypeName;
+            } else if (isEvent) {
+                queueName = "Consumer." + realInstanceName + ".VirtualTopic.EVENTS_" + messageTypeName;
             }
+
+            ActiveMQQueue commandsQueue = new ActiveMQQueue(queueName);
+            consumer = session.createConsumer(commandsQueue);
+            consumer.setMessageListener((javax.jms.Message genericMsg) -> {
+                handleMessage(genericMsg, handlerFunction);
+            });
+        } catch (JMSException ex) {
+            logger.log(Level.SEVERE, "Error registering message handler", ex);
         }
-        handlerFunctions.get(messageType).add(handlerFunction);
+
     }
 
-    private void handleMessage(javax.jms.Message genericMsg) throws RuntimeException {
+    private void handleMessage(javax.jms.Message genericMsg, Consumer<Object> handlerFunction) throws RuntimeException {
         try {
             TextMessage msg = (TextMessage) genericMsg;
             String jsonContent = msg.getText();
@@ -93,13 +90,7 @@ public class ActiveMqBusImpl implements Bus {
             Class classType = messageTypes.get(stringType);
             Message event = (Message) mapper.readValue(jsonContent, classType);
 
-            if (handlerFunctions.containsKey(classType)) {
-                List<Consumer<Object>> handlerFunctionsByType = handlerFunctions.get(classType);
-                for (int i = 0; i < handlerFunctionsByType.size(); i++) {
-                    handlerFunctionsByType.get(i).accept(event);
-
-                }
-            }
+            handlerFunction.accept(event);
         } catch (IOException | JMSException ex) {
             logger.log(Level.SEVERE, "Error receiving message", ex);
             throw new RuntimeException(ex);
