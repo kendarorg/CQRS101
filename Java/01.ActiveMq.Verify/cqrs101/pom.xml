@@ -9,16 +9,10 @@
         <module>../cqrs-implementations</module>
         <module>../cqrs-interfaces</module>
         <module>../utils</module>
-        <module>../context-shared</module>
-        <module>../context-tasks</module>
-        <module>../services-external</module>
-        <module>../context-external</module>
-        <module>../services-api-commands</module>
-        <module>../services-api-projections</module>
-        <module>../context-projections</module>
         <module>../repository-interfaces</module>
         <module>../es-interfaces</module>
         <module>../es-implementations</module>
+        <module>../repository-implementations</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
