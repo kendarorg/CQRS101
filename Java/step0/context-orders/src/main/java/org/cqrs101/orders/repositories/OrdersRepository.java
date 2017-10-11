@@ -1,9 +1,7 @@
 package org.cqrs101.orders.repositories;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import javax.inject.Named;
 import org.cqrs101.Repository;

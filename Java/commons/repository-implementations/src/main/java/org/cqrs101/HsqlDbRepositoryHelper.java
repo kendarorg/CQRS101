@@ -28,11 +28,15 @@ public class HsqlDbRepositoryHelper implements RepositoryHelper {
     public RepositoryHelper create(Class clazz) {
         Connection conn = null;
         this.clazz = clazz;
+
         try {
             Class.forName(driverName);
-            HsqlDbRepositoryHelper helper = new HsqlDbRepositoryHelper();
-            helper.name = clazz.getSimpleName().toUpperCase(Locale.ROOT).toUpperCase(Locale.ROOT);
-
+        } catch (Exception e) {
+            throw new RuntimeException("Missing HSQLDB Driver");
+        }
+        HsqlDbRepositoryHelper helper = new HsqlDbRepositoryHelper();
+        helper.name = clazz.getSimpleName().toUpperCase(Locale.ROOT).toUpperCase(Locale.ROOT);
+        try {
             conn = createConnection();
             Statement stmt = conn.createStatement();
             stmt.executeUpdate(
@@ -41,7 +45,7 @@ public class HsqlDbRepositoryHelper implements RepositoryHelper {
                     + "PRIMARY KEY (id));");
             return helper;
         } catch (Exception ex) {
-            throw new RuntimeException("Missing hslqDb Driver", ex);
+            return helper;
         } finally {
             try {
                 if (conn != null) {
