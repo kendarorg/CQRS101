@@ -1,7 +1,6 @@
 package org.cqrs101.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.UUID;
 import javax.inject.Named;
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.Response;
@@ -39,4 +38,22 @@ public class UsersServiceImpl implements UsersService {
             return null;
         }
     }
+    /*
+    @Override
+    public List<TaskServiceDao> getAll() {
+        
+        try {
+            Client client = ClientBuilder.newClient();
+            WebTarget target = client.target("http://localhost:9001").path("api/tasks");
+            Invocation.Builder invocationBuilder = target.request(MediaType.APPLICATION_JSON);
+            Response response = invocationBuilder.get();
+            String responseStr = response.readEntity(String.class);
+            return mapper.readValue(responseStr, new TypeReference<List<TaskServiceDao>>(){});
+        } catch (IOException ex) {
+            Logger.getLogger(TasksServiceApi.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+        
+    }
+    */
 }
