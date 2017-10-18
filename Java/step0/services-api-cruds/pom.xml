@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.kendar</groupId>
-    <artifactId>services-api-commands</artifactId>
+    <artifactId>services-api-cruds</artifactId>
     <version>0.1.0</version>
-    <name>services-api-commands</name>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -31,18 +30,8 @@
         </dependency>
         <dependency>
             <groupId>com.cqrs101</groupId>
-            <artifactId>cqrs-implementations</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.cqrs101</groupId>
             <artifactId>repository-interfaces</artifactId>
             <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-beanutils</groupId>
-            <artifactId>commons-beanutils</artifactId>
-            <version>1.9.3</version>
         </dependency>
         <dependency>
             <groupId>com.cqrs101</groupId>
@@ -55,18 +44,17 @@
             <version>2.4.0</version>
         </dependency>
         
+        <dependency>
+            <groupId>com.cqrs101</groupId>
+            <artifactId>context-cruds</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
         
         <dependency>
             <groupId>com.cqrs101</groupId>
             <artifactId>context-shared</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>com.cqrs101</groupId>
-            <artifactId>context-orders</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        
     </dependencies>
 
     <properties>
@@ -95,4 +83,5 @@
             <url>https://repo.spring.io/libs-release</url>
         </pluginRepository>
     </pluginRepositories>
+    <name>services-api-projections</name>
 </project>

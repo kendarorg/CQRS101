@@ -1,6 +1,8 @@
 package org.cqrs101;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.core.env.Environment;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -16,12 +18,21 @@ import java.util.function.Function;
 public class HsqlDbRepositoryHelper implements RepositoryHelper {
 
     private static final ObjectMapper mapper = new ObjectMapper();
+    private final Environment environment;
     private String name;
     private final String driverName = "org.hsqldb.jdbcDriver";
     private Class clazz;
 
+
+    public HsqlDbRepositoryHelper(Environment environment){
+        this.environment = environment;
+    }
+
     private Connection createConnection() throws SQLException {
-        return DriverManager.getConnection("jdbc:hsqldb:hsql://localhost/", "SA", "");
+        String url = environment.getProperty("hsqldb.url");
+        String user = environment.getProperty("hsqldb.user");
+        String password = environment.getProperty("hsqldb.password");
+        return DriverManager.getConnection(url,user,password);
     }
 
     @Override
@@ -34,7 +45,7 @@ public class HsqlDbRepositoryHelper implements RepositoryHelper {
         } catch (Exception e) {
             throw new RuntimeException("Missing HSQLDB Driver");
         }
-        HsqlDbRepositoryHelper helper = new HsqlDbRepositoryHelper();
+        HsqlDbRepositoryHelper helper = new HsqlDbRepositoryHelper(environment);
         helper.name = clazz.getSimpleName().toUpperCase(Locale.ROOT).toUpperCase(Locale.ROOT);
         try {
             conn = createConnection();

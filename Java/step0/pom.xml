@@ -10,9 +10,11 @@
         <module>../commons</module>
         <module>context-shared</module>
         <module>context-orders</module>
+        <module>context-cruds</module>
         <module>context-projections</module>
         <module>services-api-commands</module>
         <module>services-api-projections</module>
+        <module>services-api-cruds</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

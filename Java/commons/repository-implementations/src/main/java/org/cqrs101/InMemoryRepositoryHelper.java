@@ -1,5 +1,8 @@
 package org.cqrs101;
 
+
+import org.springframework.core.env.Environment;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -13,13 +16,18 @@ import java.util.stream.Collectors;
 public class InMemoryRepositoryHelper implements RepositoryHelper {
 
     private static final ConcurrentHashMap<Class, ConcurrentHashMap<UUID, Object>> storage = new ConcurrentHashMap<>();
+    private final Environment environment;
     private Class clazz;
     private String name;
+    
+    public InMemoryRepositoryHelper(Environment environment){
+        this.environment = environment;
+    }
 
     @Override
     public RepositoryHelper create(Class clazz) {
         storage.putIfAbsent(clazz, new ConcurrentHashMap<>());
-        InMemoryRepositoryHelper helper = new InMemoryRepositoryHelper();
+        InMemoryRepositoryHelper helper = new InMemoryRepositoryHelper(environment);
         helper.clazz = clazz;
         helper.name = clazz.getSimpleName().toUpperCase(Locale.ROOT).toUpperCase(Locale.ROOT);
         return helper;

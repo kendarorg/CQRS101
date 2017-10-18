@@ -4,24 +4,24 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.cqrs101</groupId>
-    <artifactId>repository-implementations</artifactId>
+    <artifactId>context-cruds</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>repository-implementations</name>
+    <name>context-cruds</name>
     <url>http://www.kendar.org</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
     </properties>
-    
+
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>1.5.7.RELEASE</version>
     </parent>
-
+    
     <build>
         <plugins>
             <plugin>
@@ -44,9 +44,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.cqrs101</groupId>
-            <artifactId>repository-interfaces</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <groupId>javax</groupId>
+            <artifactId>javaee-api</artifactId>
+            <version>7.0</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -55,42 +55,20 @@
             <type>jar</type>
         </dependency>
         <dependency>
-            <groupId>javax</groupId>
-            <artifactId>javaee-api</artifactId>
-            <version>7.0</version>
-        </dependency>    
-        <dependency>
-            <groupId>javax.jms</groupId>
-            <artifactId>jms</artifactId>
-            <version>1.1</version>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-client</artifactId>
+            <version>3.0.2.Final</version>
         </dependency>
         <dependency>
             <groupId>com.cqrs101</groupId>
-            <artifactId>utils</artifactId>
+            <artifactId>repository-interfaces</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        
         <dependency>
-            <groupId>org.hsqldb</groupId>
-            <artifactId>hsqldb</artifactId>
-            <version>2.4.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.6</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-            <version>4.3.11.RELEASE</version>
+            <groupId>com.cqrs101</groupId>
+            <artifactId>context-shared</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
-    
-    <repositories>
-        <repository>
-            <id>repository.jboss.org-public</id>
-            <name>JBoss repository</name>
-            <url>https://repository.jboss.org/nexus/content/groups/public</url>
-        </repository>
-    </repositories>
 </project>

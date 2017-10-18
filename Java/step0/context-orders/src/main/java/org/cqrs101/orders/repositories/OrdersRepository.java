@@ -3,6 +3,7 @@ package org.cqrs101.orders.repositories;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import javax.inject.Inject;
 import javax.inject.Named;
 import org.cqrs101.Repository;
 import org.cqrs101.RepositoryHelper;
@@ -12,6 +13,7 @@ public class OrdersRepository implements Repository<Order> {
 
     private RepositoryHelper helper;
 
+    @Inject
     public OrdersRepository(RepositoryHelper helper) {
         this.helper = helper.create(Order.class);
     }

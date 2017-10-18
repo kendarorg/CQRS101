@@ -14,7 +14,7 @@ public class Program {
 
     public static void main(String[] args) {
         try {
-            final String port = "8090";
+            final String port = "8091";
             final String baseAddress = "http://localhost:" + port + "/";
 
             SpringApplication application = new SpringApplication(Program.class);
