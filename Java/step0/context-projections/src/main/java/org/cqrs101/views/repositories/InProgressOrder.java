@@ -7,7 +7,8 @@ public class InProgressOrder {
 
     private UUID id;
     private Date creationDate;
-    private String userName;
+    private String customerName;
+    private UUID customerId;
 
     public UUID getId() {
         return id;
@@ -25,11 +26,19 @@ public class InProgressOrder {
         this.creationDate = creationDate;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getCustomerName() {
+        return customerName;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public UUID getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(UUID customerId) {
+        this.customerId = customerId;
     }
 }

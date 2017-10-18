@@ -1,16 +1,16 @@
-package org.cqrs101.shared.orders.events;
+package org.cqrs101.views.repositories;
 
 import java.util.Date;
 import java.util.UUID;
-import org.cqrs.Event;
 
-public class OrderCompleted extends Event {
+public class CompletedOrder {
 
     private UUID id;
     private Date creationDate;
-    private Date completionDate;
+    private Date coompletionDate;
     private double value;
     private UUID customerId;
+    private String customerName;
 
     public UUID getId() {
         return id;
@@ -28,12 +28,12 @@ public class OrderCompleted extends Event {
         this.creationDate = creationDate;
     }
 
-    public Date getCompletionDate() {
-        return completionDate;
+    public Date getCoompletionDate() {
+        return coompletionDate;
     }
 
-    public void setCompletionDate(Date coompletionDate) {
-        this.completionDate = coompletionDate;
+    public void setCoompletionDate(Date coompletionDate) {
+        this.coompletionDate = coompletionDate;
     }
 
     public double getValue() {
@@ -51,4 +51,14 @@ public class OrderCompleted extends Event {
     public void setCustomerId(UUID customerId) {
         this.customerId = customerId;
     }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+
 }

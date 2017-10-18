@@ -6,7 +6,7 @@ import org.cqrs.Command;
 public class CreateOrder extends Command {
 
     private UUID id;
-    private UUID userId;
+    private UUID customerId;
 
     public UUID getId() {
         return id;
@@ -16,11 +16,11 @@ public class CreateOrder extends Command {
         this.id = id;
     }
 
-    public UUID getUserId() {
-        return userId;
+    public UUID getCustomerId() {
+        return customerId;
     }
 
-    public void setUserId(UUID userId) {
-        this.userId = userId;
+    public void setCustomerId(UUID userId) {
+        this.customerId = userId;
     }
 }

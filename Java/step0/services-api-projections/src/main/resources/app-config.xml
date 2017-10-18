@@ -21,6 +21,7 @@
         <constructor-arg>
             <list>
                 <ref bean="inProgressOrdersEventHandler" />
+                <ref bean="completedrdersEventHandler" />
             </list>
         </constructor-arg>   
         <constructor-arg type = "java.lang.String" value = "Projections"/>   

@@ -12,8 +12,8 @@ import org.cqrs101.orders.commands.CreateOrder;
 import org.cqrs101.orders.repositories.Order;
 import org.cqrs101.shared.orders.events.OrderCompleted;
 import org.cqrs101.shared.orders.events.OrderCreated;
-import org.cqrs101.shared.users.UserDto;
-import org.cqrs101.shared.users.UsersService;
+import org.cqrs101.shared.customers.CustomerDto;
+import org.cqrs101.shared.customers.CustomersService;
 
 @Named("ordersCommandHandler")
 public class OrdersCommandHandler implements MessageHandler {
@@ -21,7 +21,7 @@ public class OrdersCommandHandler implements MessageHandler {
     private static final Logger logger = Logger.getLogger(OrdersCommandHandler.class.getSimpleName());
     private final Repository<Order> repository;
     private Bus bus;
-    private final UsersService usersService;
+    private final CustomersService usersService;
 
     @Override
     public void register(Bus bus) {
@@ -31,25 +31,25 @@ public class OrdersCommandHandler implements MessageHandler {
         this.bus.registerHandler(c -> handle((CancelOrder) c), CancelOrder.class, this.getClass());
     }
 
-    public OrdersCommandHandler(Repository<Order> ordersRepository, UsersService usersService) {
+    public OrdersCommandHandler(Repository<Order> ordersRepository, CustomersService usersService) {
         this.repository = ordersRepository;
         this.usersService = usersService;
     }
 
     public void handle(CreateOrder command) {
         logger.log(Level.INFO, "{0}-CreateOrder", command.getCorrelationId());
-        UserDto user = usersService.getUser(command.getUserId());
+        CustomerDto user = usersService.getCustomer(command.getCustomerId());
 
         Date now = new Date();
         Order orderDao = new Order();
         orderDao.setId(command.getId());
-        orderDao.setUser(user);
+        orderDao.setCustomer(user);
         orderDao.setCreationDate(now);
 
         repository.save(orderDao);
         OrderCreated message = new OrderCreated();
         message.setId(command.getId());
-        message.setUserId(user.getId());
+        message.setCustomerId(user.getId());
         message.setCreationDate(now);
         bus.send(message);
     }

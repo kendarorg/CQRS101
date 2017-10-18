@@ -7,7 +7,7 @@ import org.cqrs.Event;
 public class OrderCreated extends Event {
 
     private UUID id;
-    private UUID userId;
+    private UUID customerId;
     private Date creationDate;
 
     public UUID getId() {
@@ -18,12 +18,12 @@ public class OrderCreated extends Event {
         this.id = id;
     }
 
-    public UUID getUserId() {
-        return userId;
+    public UUID getCustomerId() {
+        return customerId;
     }
 
-    public void setUserId(UUID userId) {
-        this.userId = userId;
+    public void setCustomerId(UUID userId) {
+        this.customerId = userId;
     }
 
     public Date getCreationDate() {

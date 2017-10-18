@@ -2,12 +2,12 @@ package org.cqrs101.orders.repositories;
 
 import java.util.Date;
 import java.util.UUID;
-import org.cqrs101.shared.users.UserDto;
+import org.cqrs101.shared.customers.CustomerDto;
 
 public class Order {
 
     private UUID id;
-    private UserDto user;
+    private CustomerDto customer;
     private Date creationDate;
     private Date completionDate;
     private float value;
@@ -21,12 +21,12 @@ public class Order {
         this.id = id;
     }
 
-    public UserDto getUser() {
-        return user;
+    public CustomerDto getCustomer() {
+        return customer;
     }
 
-    public void setUser(UserDto user) {
-        this.user = user;
+    public void setCustomer(CustomerDto user) {
+        this.customer = user;
     }
 
     public Date getCreationDate() {
