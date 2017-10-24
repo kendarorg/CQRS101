@@ -20,7 +20,7 @@ public class InvoicesCommandHandler implements MessageHandler {
     private static final Logger logger = Logger.getLogger(InvoicesCommandHandler.class.getSimpleName());
     private final Repository<Invoice> repository;
     private Bus bus;
-    private final CustomersService usersService;
+    private final CustomersService customersService;
 
     @Override
     public void register(Bus bus) {
@@ -29,25 +29,25 @@ public class InvoicesCommandHandler implements MessageHandler {
         this.bus.registerHandler(c -> handle((CompleteInvoice) c), CompleteInvoice.class, this.getClass());
     }
 
-    public InvoicesCommandHandler(Repository<Invoice> invoicesRepository, CustomersService usersService) {
+    public InvoicesCommandHandler(Repository<Invoice> invoicesRepository, CustomersService customersService) {
         this.repository = invoicesRepository;
-        this.usersService = usersService;
+        this.customersService = customersService;
     }
 
     public void handle(CreateInvoice command) {
         logger.log(Level.INFO, "{0}-CreateInvoice", command.getCorrelationId());
-        CustomerDto user = usersService.getCustomer(command.getCustomerId());
+        CustomerDto customer = customersService.getCustomer(command.getCustomerId());
 
         Date now = new Date();
         Invoice invoiceDao = new Invoice();
         invoiceDao.setId(command.getId());
-        invoiceDao.setCustomer(user);
+        invoiceDao.setCustomer(customer);
         invoiceDao.setCreationDate(now);
 
         repository.save(invoiceDao);
         InvoiceCreated message = new InvoiceCreated();
         message.setId(command.getId());
-        message.setCustomerId(user.getId());
+        message.setCustomerId(customer.getId());
         message.setCreationDate(now);
         bus.send(message);
     }

@@ -20,7 +20,7 @@ public class CreateInvoice extends Command {
         return customerId;
     }
 
-    public void setCustomerId(UUID userId) {
-        this.customerId = userId;
+    public void setCustomerId(UUID customerId) {
+        this.customerId = customerId;
     }
 }

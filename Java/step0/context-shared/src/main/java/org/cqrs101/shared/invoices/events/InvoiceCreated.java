@@ -22,8 +22,8 @@ public class InvoiceCreated extends Event {
         return customerId;
     }
 
-    public void setCustomerId(UUID userId) {
-        this.customerId = userId;
+    public void setCustomerId(UUID customerId) {
+        this.customerId = customerId;
     }
 
     public Date getCreationDate() {

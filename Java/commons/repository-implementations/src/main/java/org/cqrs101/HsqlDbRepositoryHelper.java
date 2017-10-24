@@ -30,9 +30,9 @@ public class HsqlDbRepositoryHelper implements RepositoryHelper {
 
     private Connection createConnection() throws SQLException {
         String url = environment.getProperty("hsqldb.url");
-        String user = environment.getProperty("hsqldb.user");
+        String customer = environment.getProperty("hsqldb.customer");
         String password = environment.getProperty("hsqldb.password");
-        return DriverManager.getConnection(url,user,password);
+        return DriverManager.getConnection(url,customer,password);
     }
 
     @Override

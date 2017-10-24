@@ -18,7 +18,7 @@ public class InProgressInvoicesEventHandler implements MessageHandler {
 
     private static final Logger logger = Logger.getLogger(InProgressInvoicesEventHandler.class.getSimpleName());
     private Bus bus;
-    private final CustomersService usersService;
+    private final CustomersService customersService;
     private final Repository<InProgressInvoice> repository;
 
     @Override
@@ -29,19 +29,19 @@ public class InProgressInvoicesEventHandler implements MessageHandler {
    }
 
     @Inject
-    public InProgressInvoicesEventHandler(CustomersService usersService, Repository<InProgressInvoice> repository) {
-        this.usersService = usersService;
+    public InProgressInvoicesEventHandler(CustomersService customersService, Repository<InProgressInvoice> repository) {
+        this.customersService = customersService;
         this.repository = repository;
     }
 
     public void handle(InvoiceCreated message) {
         logger.log(Level.INFO, "{0}-InvoiceCompleted", message.getCorrelationId());
-        CustomerDto user = usersService.getCustomer(message.getCustomerId());
+        CustomerDto customer = customersService.getCustomer(message.getCustomerId());
         InProgressInvoice invoice = new InProgressInvoice();
         invoice.setId(message.getId());
         invoice.setCreationDate(message.getCreationDate());
-        invoice.setCustomerName(user.getCustomerName());
-        invoice.setCustomerId(user.getId());
+        invoice.setCustomerName(customer.getCustomerName());
+        invoice.setCustomerId(customer.getId());
 
         repository.save(invoice);
     }

@@ -25,8 +25,8 @@ public class Invoice {
         return customer;
     }
 
-    public void setCustomer(CustomerDto user) {
-        this.customer = user;
+    public void setCustomer(CustomerDto customer) {
+        this.customer = customer;
     }
 
     public Date getCreationDate() {

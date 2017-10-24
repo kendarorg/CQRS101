@@ -18,7 +18,7 @@ public class CompletedInvoicesEventHandler implements MessageHandler {
 
     private static final Logger logger = Logger.getLogger(CompletedInvoicesEventHandler.class.getSimpleName());
     private Bus bus;
-    private final CustomersService usersService;
+    private final CustomersService customersService;
     private final Repository<CompletedInvoice> repository;
 
     @Override
@@ -28,20 +28,20 @@ public class CompletedInvoicesEventHandler implements MessageHandler {
     }
 
     @Inject
-    public CompletedInvoicesEventHandler(CustomersService usersService, Repository<CompletedInvoice> repository) {
-        this.usersService = usersService;
+    public CompletedInvoicesEventHandler(CustomersService customersService, Repository<CompletedInvoice> repository) {
+        this.customersService = customersService;
         this.repository = repository;
     }
 
     public void handle(InvoiceCompleted message) {
         logger.log(Level.INFO, "{0}-InvoiceCompleted", message.getCorrelationId());
-        CustomerDto user = usersService.getCustomer(message.getCustomerId());
+        CustomerDto customer = customersService.getCustomer(message.getCustomerId());
         CompletedInvoice invoice = new CompletedInvoice();
         invoice.setId(message.getId());
         invoice.setCreationDate(message.getCreationDate());
         invoice.setCoompletionDate(message.getCompletionDate());
-        invoice.setCustomerName(user.getCustomerName());
-        invoice.setCustomerId(user.getId());
+        invoice.setCustomerName(customer.getCustomerName());
+        invoice.setCustomerId(customer.getId());
         
         repository.save(invoice);
     }

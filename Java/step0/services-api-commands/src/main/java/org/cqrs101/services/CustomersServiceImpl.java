@@ -3,8 +3,11 @@ package org.cqrs101.services;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.cqrs101.shared.customers.CustomerDto;
-import org.cqrs101.shared.customers.CustomersService;
-
+import java.io.IOException;
+import java.util.List;
+import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.inject.Named;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -12,14 +15,10 @@ import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
-import java.util.List;
-import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.cqrs101.shared.customers.CustomersService;
 
-@Named("usersService")
-public class UsersServiceImpl implements CustomersService {
+@Named("customersService")
+public class CustomersServiceImpl implements CustomersService {
 
     private static long crudApiPort = 8091;
     private static final ObjectMapper mapper = new ObjectMapper();
@@ -34,7 +33,7 @@ public class UsersServiceImpl implements CustomersService {
             String responseStr = response.readEntity(String.class);
             return mapper.readValue(responseStr, CustomerDto.class);
         } catch (IOException ex) {
-            Logger.getLogger(UsersServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CustomersServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
     }
