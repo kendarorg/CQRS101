@@ -9,7 +9,7 @@
     <modules>
         <module>../commons</module>
         <module>context-shared</module>
-        <module>context-orders</module>
+        <module>context-invoices</module>
         <module>context-cruds</module>
         <module>context-projections</module>
         <module>services-api-commands</module>

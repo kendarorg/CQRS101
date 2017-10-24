@@ -3,13 +3,14 @@ package org.cqrs101.views.repositories;
 import java.util.Date;
 import java.util.UUID;
 
-public class CanceledOrder {
+public class CompletedInvoice {
 
     private UUID id;
     private Date creationDate;
-    private Date cancellationDate;
-    private String customerName;
+    private Date coompletionDate;
+    private double value;
     private UUID customerId;
+    private String customerName;
 
     public UUID getId() {
         return id;
@@ -27,12 +28,20 @@ public class CanceledOrder {
         this.creationDate = creationDate;
     }
 
-    public String getCustomerName() {
-        return customerName;
+    public Date getCoompletionDate() {
+        return coompletionDate;
     }
 
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
+    public void setCoompletionDate(Date coompletionDate) {
+        this.coompletionDate = coompletionDate;
+    }
+
+    public double getValue() {
+        return value;
+    }
+
+    public void setValue(double value) {
+        this.value = value;
     }
 
     public UUID getCustomerId() {
@@ -43,11 +52,13 @@ public class CanceledOrder {
         this.customerId = customerId;
     }
 
-    public Date getCancellationDate() {
-        return cancellationDate;
+    public String getCustomerName() {
+        return customerName;
     }
 
-    public void setCancellationDate(Date cancellationDate) {
-        this.cancellationDate = cancellationDate;
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
     }
+
+
 }

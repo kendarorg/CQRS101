@@ -1,14 +1,12 @@
-package org.cqrs101.shared.orders.events;
+package org.cqrs101.invoices.commands;
 
-import java.util.Date;
 import java.util.UUID;
-import org.cqrs.Event;
+import org.cqrs.Command;
 
-public class OrderCreated extends Event {
+public class CreateInvoice extends Command {
 
     private UUID id;
     private UUID customerId;
-    private Date creationDate;
 
     public UUID getId() {
         return id;
@@ -24,13 +22,5 @@ public class OrderCreated extends Event {
 
     public void setCustomerId(UUID userId) {
         this.customerId = userId;
-    }
-
-    public Date getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(Date creationDate) {
-        this.creationDate = creationDate;
     }
 }

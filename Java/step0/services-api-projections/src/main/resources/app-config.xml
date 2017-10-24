@@ -20,9 +20,9 @@
     <bean id="bus" class="org.cqrs.ActiveMqBusImpl">
         <constructor-arg>
             <list>
-                <ref bean="inProgressOrdersEventHandler" />
-                <ref bean="completedOrdersEventHandler" />
-                <ref bean="canceledOrdersEventHandler" />
+                <ref bean="inProgressInvoicesEventHandler" />
+                <ref bean="completedInvoicesEventHandler" />
+                <ref bean="canceledInvoicesEventHandler" />
             </list>
         </constructor-arg>   
         <constructor-arg type = "java.lang.String" value = "Projections"/>   

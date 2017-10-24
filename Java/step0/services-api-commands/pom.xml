@@ -63,7 +63,7 @@
         </dependency>
         <dependency>
             <groupId>com.cqrs101</groupId>
-            <artifactId>context-orders</artifactId>
+            <artifactId>context-invoices</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         

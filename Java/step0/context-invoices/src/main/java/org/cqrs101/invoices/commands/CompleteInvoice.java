@@ -1,12 +1,13 @@
-package org.cqrs101.orders.commands;
+package org.cqrs101.invoices.commands;
 
 import java.util.Date;
 import java.util.UUID;
 import org.cqrs.Command;
 
-public class CancelOrder extends Command {
+public class CompleteInvoice extends Command {
 
     private UUID id;
+    private float value;
     private Date completionDate;
 
     public UUID getId() {
@@ -15,6 +16,14 @@ public class CancelOrder extends Command {
 
     public void setId(UUID id) {
         this.id = id;
+    }
+
+    public float getValue() {
+        return value;
+    }
+
+    public void setValue(float value) {
+        this.value = value;
     }
 
     public Date getCompletionDate() {

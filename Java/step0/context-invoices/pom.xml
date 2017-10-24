@@ -4,11 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.cqrs101</groupId>
-    <artifactId>context-orders</artifactId>
+    <artifactId>context-invoices</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>context-orders</name>
+    <name>context-invoices</name>
     <url>http://www.kendar.org</url>
 
     <properties>

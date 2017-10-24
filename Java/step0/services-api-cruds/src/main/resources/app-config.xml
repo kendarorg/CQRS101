@@ -20,7 +20,7 @@
     <bean id="bus" class="org.cqrs.ActiveMqBusImpl">
         <constructor-arg>
             <list>
-                <ref bean="inProgressOrdersEventHandler" />
+                <ref bean="inProgressInvoicesEventHandler" />
                 <ref bean="completedrdersEventHandler" />
             </list>
         </constructor-arg>   

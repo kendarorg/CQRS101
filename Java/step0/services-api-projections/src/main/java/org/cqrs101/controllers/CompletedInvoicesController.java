@@ -1,22 +1,22 @@
 package org.cqrs101.controllers;
 
-import org.cqrs101.Repository;
-import org.cqrs101.views.repositories.CanceledOrder;
-import org.springframework.http.MediaType;
+import org.cqrs101.*;
+import org.cqrs101.views.repositories.*;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
-import javax.inject.Inject;
+import javax.inject.*;
 import java.util.List;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/tasks/todo")
-public class CanceledOrdersController {
+public class CompletedInvoicesController {
 
-    private final Repository<CanceledOrder> repository;
+    private final Repository<CompletedInvoice> repository;
 
     @Inject
-    public CanceledOrdersController(Repository<CanceledOrder> toDoTasksRepository) {
+    public CompletedInvoicesController(Repository<CompletedInvoice> toDoTasksRepository) {
         this.repository = toDoTasksRepository;
     }
 
@@ -26,7 +26,7 @@ public class CanceledOrdersController {
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
-    public CanceledOrder getById(@PathVariable("id") UUID id) {
+    public CompletedInvoice getById(@PathVariable("id") UUID id) {
         return repository.getById(id);
     }
 
@@ -35,7 +35,7 @@ public class CanceledOrdersController {
             value = "",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<CanceledOrder> getAll() {
+    public List<CompletedInvoice> getAll() {
         return repository.getAll();
     }
 }

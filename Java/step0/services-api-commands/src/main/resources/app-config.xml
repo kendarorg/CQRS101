@@ -20,7 +20,7 @@
     <bean id="bus" class="org.cqrs.ActiveMqBusImpl">
         <constructor-arg>
             <list>
-                <ref bean="ordersCommandHandler" />
+                <ref bean="invoicesCommandHandler" />
             </list>
         </constructor-arg>      
         <constructor-arg type = "java.lang.String" value = "Commands"/> 

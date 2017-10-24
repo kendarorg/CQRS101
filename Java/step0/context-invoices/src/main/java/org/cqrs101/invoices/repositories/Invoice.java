@@ -1,10 +1,10 @@
-package org.cqrs101.orders.repositories;
+package org.cqrs101.invoices.repositories;
 
 import java.util.Date;
 import java.util.UUID;
 import org.cqrs101.shared.customers.CustomerDto;
 
-public class Order {
+public class Invoice {
 
     private UUID id;
     private CustomerDto customer;

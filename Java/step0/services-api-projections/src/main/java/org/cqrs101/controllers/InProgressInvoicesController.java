@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.UUID;
 import javax.inject.Inject;
 import org.cqrs101.Repository;
-import org.cqrs101.views.repositories.InProgressOrder;
+import org.cqrs101.views.repositories.InProgressInvoice;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/tasks/todo")
-public class InProgressOrdersController {
+public class InProgressInvoicesController {
 
-    private final Repository<InProgressOrder> repository;
+    private final Repository<InProgressInvoice> repository;
 
     @Inject
-    public InProgressOrdersController(Repository<InProgressOrder> toDoTasksRepository) {
+    public InProgressInvoicesController(Repository<InProgressInvoice> toDoTasksRepository) {
         this.repository = toDoTasksRepository;
     }
 
@@ -29,7 +29,7 @@ public class InProgressOrdersController {
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
-    public InProgressOrder getById(@PathVariable("id") UUID id) {
+    public InProgressInvoice getById(@PathVariable("id") UUID id) {
         return repository.getById(id);
     }
 
@@ -38,7 +38,7 @@ public class InProgressOrdersController {
             value = "",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<InProgressOrder> getAll() {
+    public List<InProgressInvoice> getAll() {
         return repository.getAll();
     }
 }
