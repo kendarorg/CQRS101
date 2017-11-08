@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/tasks/todo")
+@RequestMapping("/api/invoices/created")
 public class CompletedInvoicesController {
 
     private final Repository<CompletedInvoice> repository;

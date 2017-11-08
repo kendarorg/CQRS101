@@ -1,0 +1,15 @@
+﻿Call the "CreateInvoice" command, thus asking 
+to... create a new invoice!
+
+* Present simple: an order to fulfill
+* Sent to the "CommandApi" on port 8090
+* Request path:
+	API::ExecuteCommand(createInvoice) {
+		Bus::SendCommand(createInvoice){
+			//Here goes the queue
+			InvoicesCommandHandler::Handle(createInvoice){
+				InvoicesRepository::Save(newInvoice)
+				Bus::SendEvent(invoiceCreated)
+			}
+		}
+	}

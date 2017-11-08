@@ -44,7 +44,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GlobalValidator.cs" />
-    <Compile Include="Bus.cs" />
+    <Compile Include="ActiveMqBus.cs" />
+    <Compile Include="InMemoryBus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

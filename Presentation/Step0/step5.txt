@@ -1,0 +1,13 @@
+﻿The events are received by the subscribers
+
+* The Created event handler will delete the invoice
+* Reqest path:
+	CreatedEventHandler::Handle(invoiceCompleted){
+		CreatedRepository::Delete(invoiceId)
+	}
+	
+* The Completed event handler will create a new invoice
+* Reqest path:
+	CompletedEventHandler::Handle(invoiceCompleted){
+		CompletedRepository::Save(newInvoiceCompleted)
+	}

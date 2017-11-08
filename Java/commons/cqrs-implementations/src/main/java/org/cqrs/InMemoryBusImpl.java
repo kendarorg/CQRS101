@@ -13,7 +13,6 @@ public class InMemoryBusImpl implements Bus {
 
     private static final Logger logger = Logger.getLogger(InMemoryBusImpl.class.getSimpleName());
 
-    @Inject
     public InMemoryBusImpl(List<MessageHandler> messageHandlers) {
         for (int i = 0; i < messageHandlers.size(); i++) {
             MessageHandler messageHandler = messageHandlers.get(i);

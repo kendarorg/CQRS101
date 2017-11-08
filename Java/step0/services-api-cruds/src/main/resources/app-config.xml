@@ -13,23 +13,8 @@
         
     
     <context:component-scan base-package="org.cqrs101" />
-    <context:property-placeholder location="application.properties" />
+    <!--<context:property-placeholder location="application.properties" />-->
     
     <bean id="repositoryHelper" class="org.cqrs101.HsqlDbRepositoryHelper"></bean>
-    
-    <bean id="bus" class="org.cqrs.ActiveMqBusImpl">
-        <constructor-arg>
-            <list>
-                <ref bean="inProgressInvoicesEventHandler" />
-                <ref bean="completedrdersEventHandler" />
-            </list>
-        </constructor-arg>   
-        <constructor-arg type = "java.lang.String" value = "Projections"/>   
-    </bean>
-    <bean id="globalValidator" class="org.cqrs.GlobalValidatorImpl">
-        <constructor-arg>
-            <list>
-            </list>
-        </constructor-arg>      
-    </bean>
+
 </beans>  

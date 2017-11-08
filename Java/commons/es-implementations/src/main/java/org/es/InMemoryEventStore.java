@@ -10,35 +10,42 @@ import org.cqrs.Event;
 @Named("eventStore")
 public class InMemoryEventStore implements EventStore {
 
-    private static ConcurrentHashMap<UUID, List<EventDescriptor>> storage = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<UUID, List<EsEvent>> storage = new ConcurrentHashMap<>();
 
     @Override
-    public List<Event> getEventsForAggregate(UUID aggregateId) {
-        List<Event> result = new ArrayList<>();
+    public List<EsEvent> getEventsForAggregate(UUID aggregateId) {
+        List<EsEvent> result = new ArrayList<>();
         if (storage.containsKey(aggregateId)) {
-            for (EventDescriptor eventDescriptor : storage.get(aggregateId)) {
-                result.addAll(eventDescriptor.getData());
+            for (EsEvent eventDescriptor : storage.get(aggregateId)) {
+                result.add(eventDescriptor);
             }
         }
         return result;
     }
 
     @Override
-    public void saveEvent(UUID aggregateId, List<Event> uncommittedChanges, long expectedVersion) throws AggregateConcurrencyException {
+    public void saveEvent(UUID aggregateId, List<EsEvent> uncommittedChanges, long expectedVersion) throws AggregateConcurrencyException {
         storage.putIfAbsent(aggregateId, new ArrayList<>());
-        List<EventDescriptor> data = storage.get(aggregateId);
+        List<EsEvent> data = storage.get(aggregateId);
 
         if (!data.isEmpty()) {
-            EventDescriptor last = data.get(data.size() - 1);
+            EsEvent last = data.get(data.size() - 1);
             if (last.getVersion() != expectedVersion) {
                 throw new AggregateConcurrencyException();
             }
         }
 
-        EventDescriptor target = new EventDescriptor();
-        target.setVersion(expectedVersion + 1);
-        target.setData(uncommittedChanges);
-        data.add(target);
+        long version = expectedVersion+1;
+
+        for(EsEvent uncommittedChange : uncommittedChanges){
+            uncommittedChange.setVersion(version);
+            data.add(uncommittedChange);
+        }
+    }
+
+    @Override
+    public void registerClass(Class messageType) {
+
     }
 
 }

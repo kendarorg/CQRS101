@@ -11,6 +11,7 @@ import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.jms.Connection;
 import javax.jms.DeliveryMode;
 import javax.jms.Destination;
@@ -32,7 +33,6 @@ public class ActiveMqBusImpl implements Bus {
     private ObjectMapper mapper = new ObjectMapper();
     private Session session;
 
-    @Inject
     public ActiveMqBusImpl(List<MessageHandler> messageHandlers, String instanceName) throws Exception {
         try {
             this.instanceName = instanceName;

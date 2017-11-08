@@ -1,8 +1,9 @@
 package org.cqrs101;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.core.env.Environment;
+import org.cqrs101.utils.MainEnvironment;
 
+import javax.inject.Inject;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -18,19 +19,19 @@ import java.util.function.Function;
 public class HsqlDbRepositoryHelper implements RepositoryHelper {
 
     private static final ObjectMapper mapper = new ObjectMapper();
-    private final Environment environment;
+    private final MainEnvironment environment;
     private String name;
     private final String driverName = "org.hsqldb.jdbcDriver";
     private Class clazz;
 
-
-    public HsqlDbRepositoryHelper(Environment environment){
+    @Inject
+    public HsqlDbRepositoryHelper(MainEnvironment environment){
         this.environment = environment;
     }
 
     private Connection createConnection() throws SQLException {
         String url = environment.getProperty("hsqldb.url");
-        String customer = environment.getProperty("hsqldb.customer");
+        String customer = environment.getProperty("hsqldb.user");
         String password = environment.getProperty("hsqldb.password");
         return DriverManager.getConnection(url,customer,password);
     }
@@ -182,6 +183,27 @@ public class HsqlDbRepositoryHelper implements RepositoryHelper {
             stmt.execute(
                     "DELETE FROM \"" + this.name + "\" WHERE "
                     + "id ='" + id + "';");
+        } catch (Exception ex) {
+            throw new RuntimeException("Missing hslqDb Driver", ex);
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                System.out.println(ex);
+            }
+        }
+    }
+
+    @Override
+    public void truncate() {
+        Connection conn = null;
+        try {
+            conn = createConnection();
+            Statement stmt = conn.createStatement();
+            stmt.execute(
+                    "DELETE FROM \"" + this.name + "\" ;");
         } catch (Exception ex) {
             throw new RuntimeException("Missing hslqDb Driver", ex);
         } finally {
