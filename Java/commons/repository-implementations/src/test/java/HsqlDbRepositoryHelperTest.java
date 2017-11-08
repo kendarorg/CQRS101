@@ -126,7 +126,9 @@ public class HsqlDbRepositoryHelperTest {
 
         assertEquals(2,queries.size());
         assertTrue(queries.get(0).indexOf("SELECT data FROM \"SIMPLEOBJECT\" WHERE id =")==0);
+        assertTrue(queries.get(0).indexOf(so.getId().toString())>0);
         assertTrue(queries.get(1).indexOf("INSERT INTO \"SIMPLEOBJECT\" (id,data) VALUES (")==0);
+        assertTrue(queries.get(1).indexOf(so.getId().toString())>0);
     }
 
 
@@ -146,7 +148,9 @@ public class HsqlDbRepositoryHelperTest {
         SimpleObject result = (SimpleObject)targetRead.getById(id);
         assertEquals(3,queries.size());
         assertTrue(queries.get(0).indexOf("SELECT data FROM \"SIMPLEOBJECT\" WHERE")==0);
+        assertTrue(queries.get(0).indexOf(so.getId().toString())>0);
         assertTrue(queries.get(1).indexOf("INSERT INTO \"SIMPLEOBJECT\" (id,data) VALUES (")==0);
+        assertTrue(queries.get(1).indexOf(so.getId().toString())>0);
         assertEquals(queries.get(2),queries.get(0));
     }
 
@@ -165,6 +169,7 @@ public class HsqlDbRepositoryHelperTest {
         assertEquals(0,resultList.size());
         assertEquals(2,queries.size());
         assertTrue(queries.get(0).indexOf("INSERT INTO \"SIMPLEOBJECT\" (id,data) VALUES (")==0);
+        assertTrue(queries.get(0).indexOf(so.getId().toString())>0);
         assertTrue(queries.get(1).indexOf("SELECT * FROM \"SIMPLEOBJECT\";")==0);
     }
 
@@ -187,7 +192,9 @@ public class HsqlDbRepositoryHelperTest {
         assertEquals(0,resultList.size());
         assertEquals(3,queries.size());
         assertTrue(queries.get(0).indexOf("INSERT INTO \"SIMPLEOBJECT\" (id,data) VALUES (")==0);
+        assertTrue(queries.get(0).indexOf(so1.getId().toString())>0);
         assertTrue(queries.get(1).indexOf("INSERT INTO \"SIMPLEOBJECT\" (id,data) VALUES (")==0);
+        assertTrue(queries.get(1).indexOf(so2.getId().toString())>0);
         assertTrue(queries.get(2).indexOf("SELECT * FROM \"SIMPLEOBJECT\";")==0);
     }
 }
