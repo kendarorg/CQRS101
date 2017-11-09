@@ -33,7 +33,8 @@ public class ActiveMqBusImpl implements Bus {
     private final ActiveMqBusHelper busHelper;
     private ObjectMapper mapper = new ObjectMapper();
 
-    public ActiveMqBusImpl(List<MessageHandler> messageHandlers, String instanceName, ActiveMqBusHelper activeMqBusHelper) throws Exception {
+
+    public ActiveMqBusImpl(List<MessageHandler> messageHandlers, String instanceName,ActiveMqBusHelper activeMqBusHelper) throws Exception {
 
         this.instanceName = instanceName;
         busHelper = activeMqBusHelper;

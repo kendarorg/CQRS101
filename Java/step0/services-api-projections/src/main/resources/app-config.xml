@@ -14,6 +14,7 @@
 
     <bean id="repositoryHelper" class="org.cqrs101.HsqlDbRepositoryHelper">
     </bean>
+    <bean id="activeMqBusHelper" class="org.cqrs.ActiveMqBusHelper"></bean>
     
     <bean id="bus" class="org.cqrs.ActiveMqBusImpl">
         <constructor-arg>
@@ -21,8 +22,9 @@
                 <ref bean="inProgressInvoicesEventHandler" />
                 <ref bean="completedInvoicesEventHandler" />
             </list>
-        </constructor-arg>   
-        <constructor-arg type = "java.lang.String" value = "Projections"/>   
+        </constructor-arg>
+        <constructor-arg type = "java.lang.String" value = "Projections"/>
+        <constructor-arg ref="activeMqBusHelper"/>
     </bean>
     <bean id="globalValidator" class="org.cqrs.GlobalValidatorImpl">
         <constructor-arg>

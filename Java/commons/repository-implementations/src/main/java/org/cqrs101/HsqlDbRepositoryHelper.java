@@ -154,7 +154,7 @@ public class HsqlDbRepositoryHelper implements RepositoryHelper {
             if (!exists) {
                 stmt.execute(
                         "INSERT INTO \"" + this.name + "\" (id,data) VALUES ("
-                        + "'" + id + "','" + itemString + "';");
+                        + "'" + id + "','" + itemString + "');");
             } else {
                 stmt.execute(
                         "UPDATE \"" + this.name + "\" set data = '" + itemString + "'"
