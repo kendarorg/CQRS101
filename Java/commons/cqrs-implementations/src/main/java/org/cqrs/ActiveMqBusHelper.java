@@ -23,7 +23,8 @@ public class ActiveMqBusHelper {
         session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
     }
 
-    public MessageConsumer createConsumer(ActiveMQQueue commandsQueue) throws JMSException {
+    public MessageConsumer createConsumer(String queueName) throws JMSException {
+        ActiveMQQueue commandsQueue = new ActiveMQQueue(queueName);
         return session.createConsumer(commandsQueue);
     }
 
@@ -36,7 +37,9 @@ public class ActiveMqBusHelper {
     }
 
     public MessageProducer createProducer(Destination destination) throws JMSException {
-        return session.createProducer(destination);
+        MessageProducer producer= session.createProducer(destination);
+        producer.setDeliveryMode(DeliveryMode.PERSISTENT);
+        return producer;
     }
 
     public TextMessage createTextMessage(String s) throws JMSException {

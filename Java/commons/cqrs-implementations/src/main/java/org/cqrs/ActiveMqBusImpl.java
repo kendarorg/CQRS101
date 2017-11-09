@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.logging.Level;
@@ -61,10 +62,12 @@ public class ActiveMqBusImpl implements Bus {
                 queueName = "COMMANDS." + messageTypeName;
             } else if (isEvent) {
                 queueName = "Consumer." + realInstanceName + ".VirtualTopic.EVENTS_" + messageTypeName;
+            }else {
+                queueName = "Consumer." + realInstanceName + ".VirtualTopic.MESSAGE_" + messageTypeName;
             }
 
-            ActiveMQQueue commandsQueue = new ActiveMQQueue(queueName);
-            consumer = busHelper.createConsumer(commandsQueue);
+
+            consumer = busHelper.createConsumer(queueName);
             consumer.setMessageListener((javax.jms.Message genericMsg) -> {
                 handleMessage(genericMsg, handlerFunction);
             });
@@ -95,6 +98,9 @@ public class ActiveMqBusImpl implements Bus {
             return;
         }
         try {
+            if(message.getCorrelationId()==null){
+                message.setCorrelationId(UUID.randomUUID());
+            }
             Class messageType = message.getClass();
             String messageTypeName = messageType.getSimpleName().toUpperCase(Locale.ROOT);
             boolean isEvent = Event.class.isAssignableFrom(messageType);
@@ -104,11 +110,13 @@ public class ActiveMqBusImpl implements Bus {
                 destination = busHelper.createQueue("COMMANDS." + messageTypeName);
             } else if (isEvent) {
                 destination = busHelper.createTopic("VirtualTopic.EVENTS_" + messageTypeName);
+            } else  {
+                destination = busHelper.createTopic("VirtualTopic.MESSAGE_" + messageTypeName);
             }
 
             // Create a MessageProducer from the Session to the Topic or Queue
             MessageProducer producer = busHelper.createProducer(destination);
-            producer.setDeliveryMode(DeliveryMode.PERSISTENT);
+
 
             TextMessage amqMessage = busHelper.createTextMessage(mapper.writeValueAsString(message));
             amqMessage.setStringProperty("TYPE", messageTypeName);
