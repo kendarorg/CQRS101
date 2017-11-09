@@ -326,3 +326,4 @@ nbdist/
 /Java/01/cqrs101/tasks-domain/nbproject/private/
 /Java/01/cqrs101/tasks-manager-application/nbproject/private/
 /Java/01/cqrs101/utils/nbproject/private/
+**/activemq-data/*
