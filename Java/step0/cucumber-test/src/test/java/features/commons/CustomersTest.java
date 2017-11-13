@@ -1,4 +1,4 @@
-package features.samples;
+package features.commons;
 
 //https://cucumber.io/docs/reference/jvm
 //http://www.hascode.com/2014/12/bdd-testing-with-cucumber-java-and-junit/
@@ -10,6 +10,6 @@ import org.junit.runner.RunWith;
 @RunWith(Cucumber.class)
 @CucumberOptions(
         plugin = {"pretty", "html:target/cucumber"},
-        glue = {"features.samples2","features.samples"})
-public class CucumberTest {
+        glue = {"features.commons"})
+public class CustomersTest {
 }

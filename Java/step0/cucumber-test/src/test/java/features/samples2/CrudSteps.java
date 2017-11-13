@@ -1,4 +1,4 @@
-package features.crud;
+package features.samples2;
 
 import cucumber.api.java.en.Given;
 
