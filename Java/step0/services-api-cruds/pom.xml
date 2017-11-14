@@ -6,6 +6,7 @@
     <groupId>org.kendar</groupId>
     <artifactId>services-api-cruds</artifactId>
     <version>0.1.0</version>
+    <name>services-api-cruds</name>
 
     <parent>
         <groupId>org.springframework.boot</groupId>

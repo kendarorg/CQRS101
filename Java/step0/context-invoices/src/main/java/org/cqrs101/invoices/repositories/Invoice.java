@@ -11,7 +11,6 @@ public class Invoice {
     private Date creationDate;
     private Date completionDate;
     private float value;
-    private boolean canceled;
 
     public UUID getId() {
         return id;
@@ -51,13 +50,5 @@ public class Invoice {
 
     public void setValue(float value) {
         this.value = value;
-    }
-
-    public boolean isCanceled() {
-        return canceled;
-    }
-
-    public void setCanceled(boolean canceled) {
-        this.canceled = canceled;
     }
 }

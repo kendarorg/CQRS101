@@ -1,0 +1,14 @@
+﻿Call the "CompleteInvoice" command
+
+* Present simple: an order to fulfill
+* Sent to the "CommandApi" on port 8090
+* Request path:
+	API::ExecuteCommand(completeInvoice) {
+		Bus::SendCommand(completeInvoice){
+			//Here goes the queue
+			InvoicesCommandHandler::Handle(completeInvoice){
+				InvoicesRepository::Update(invoice)
+				Bus::SendEvent(invoiceComleted)
+			}
+		}
+	}

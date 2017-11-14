@@ -7,7 +7,7 @@ public class CompletedInvoice {
 
     private UUID id;
     private Date creationDate;
-    private Date coompletionDate;
+    private Date completionDate;
     private double value;
     private UUID customerId;
     private String customerName;
@@ -28,12 +28,12 @@ public class CompletedInvoice {
         this.creationDate = creationDate;
     }
 
-    public Date getCoompletionDate() {
-        return coompletionDate;
+    public Date getCompletionDate() {
+        return completionDate;
     }
 
-    public void setCoompletionDate(Date coompletionDate) {
-        this.coompletionDate = coompletionDate;
+    public void setCompletionDate(Date completionDate) {
+        this.completionDate = completionDate;
     }
 
     public double getValue() {

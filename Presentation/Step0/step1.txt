@@ -1,0 +1,10 @@
+﻿Create a Customer
+
+* Simple CRUD operation
+* Calling on the "CurdService", port 8092 
+* Request path: 
+	API::CreateUser(user){
+		Repository::SaveUser(user){
+			DBHelper::SaveObject(user)
+		}
+	}

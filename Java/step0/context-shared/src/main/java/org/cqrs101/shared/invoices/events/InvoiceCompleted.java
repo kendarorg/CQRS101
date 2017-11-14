@@ -32,8 +32,8 @@ public class InvoiceCompleted extends Event {
         return completionDate;
     }
 
-    public void setCompletionDate(Date coompletionDate) {
-        this.completionDate = coompletionDate;
+    public void setCompletionDate(Date completionDate) {
+        this.completionDate = completionDate;
     }
 
     public double getValue() {

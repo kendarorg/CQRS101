@@ -3,6 +3,7 @@ package org.cqrs101.invoices;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.inject.Inject;
 import javax.inject.Named;
 import org.cqrs.*;
 import org.cqrs101.Repository;
@@ -29,6 +30,7 @@ public class InvoicesCommandHandler implements MessageHandler {
         this.bus.registerHandler(c -> handle((CompleteInvoice) c), CompleteInvoice.class, this.getClass());
     }
 
+    @Inject
     public InvoicesCommandHandler(Repository<Invoice> invoicesRepository, CustomersService customersService) {
         this.repository = invoicesRepository;
         this.customersService = customersService;

@@ -35,7 +35,7 @@ public class InProgressInvoicesEventHandler implements MessageHandler {
     }
 
     public void handle(InvoiceCreated message) {
-        logger.log(Level.INFO, "{0}-InvoiceCompleted", message.getCorrelationId());
+        logger.log(Level.INFO, "{0}-InvoiceCreated", message.getCorrelationId());
         CustomerDto customer = customersService.getCustomer(message.getCustomerId());
         InProgressInvoice invoice = new InProgressInvoice();
         invoice.setId(message.getId());

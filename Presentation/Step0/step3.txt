@@ -1,0 +1,9 @@
+﻿The events are received by the subscribers
+
+* The multiple subscribers receive the data
+* It is not guaranteed that a subscriber was invoked
+* Arbitrary complexity can be added inside the event handler
+* Reqest path:
+	CreatedEventHandler::Handle(invoiceCreated){
+		CreatedRepository::Save(newInvoiceCreated)
+	}

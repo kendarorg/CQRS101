@@ -8,7 +8,6 @@ public class CompleteInvoice extends Command {
 
     private UUID id;
     private float value;
-    private Date completionDate;
 
     public UUID getId() {
         return id;
@@ -24,13 +23,5 @@ public class CompleteInvoice extends Command {
 
     public void setValue(float value) {
         this.value = value;
-    }
-
-    public Date getCompletionDate() {
-        return completionDate;
-    }
-
-    public void setCompletionDate(Date completionDate) {
-        this.completionDate = completionDate;
     }
 }

@@ -15,7 +15,9 @@ public interface RepositoryHelper {
 
     List<Object> getAll();
 
-    public Object save(Object item, BiConsumer<Object, UUID> idSetter, Function<Object, UUID> idGetter);
+    Object save(Object item, BiConsumer<Object, UUID> idSetter, Function<Object, UUID> idGetter);
 
     void delete(UUID id);
+
+    void truncate();
 }

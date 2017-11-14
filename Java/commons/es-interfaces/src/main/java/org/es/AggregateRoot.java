@@ -11,9 +11,10 @@ public abstract class AggregateRoot {
 
     private final ConcurrentHashMap<Class, ConcurrentHashMap<Class, Consumer<Object>>> applyFunctions = new ConcurrentHashMap<>();
 
-    protected void registerApply(Consumer<Object> applyFunction, Class messageType) {
+    protected void registerApply(Consumer<Object> applyFunction, Class messageType, EventStore eventStore) {
         applyFunctions.putIfAbsent(this.getClass(), new ConcurrentHashMap<>());
         applyFunctions.get(this.getClass()).putIfAbsent(messageType, applyFunction);
+        eventStore.registerClass(messageType);
     }
 
     private void doApply(Event event) {
@@ -23,10 +24,9 @@ public abstract class AggregateRoot {
     }
 
     protected AggregateRoot() {
-        initializeApply();
     }
 
-    protected abstract void initializeApply();
+    public  abstract void initializeApply(EventStore eventStore);
 
     private final List<Event> changes = new ArrayList<>();
     private UUID id;

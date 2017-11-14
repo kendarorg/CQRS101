@@ -7,25 +7,24 @@
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context.xsd
         http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans.xsd
-        http://www.springframework.org/schema/mvc
-        http://www.springframework.org/schema/mvc/spring-mvc.xsd"> 
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
         
     
     <context:component-scan base-package="org.cqrs101" />
-    <context:property-placeholder location="application.properties" />
-    
-    <bean id="repositoryHelper" class="org.cqrs101.HsqlDbRepositoryHelper"></bean>
+
+    <bean id="repositoryHelper" class="org.cqrs101.HsqlDbRepositoryHelper">
+    </bean>
+    <bean id="activeMqBusHelper" class="org.cqrs.ActiveMqBusHelper"></bean>
     
     <bean id="bus" class="org.cqrs.ActiveMqBusImpl">
         <constructor-arg>
             <list>
                 <ref bean="inProgressInvoicesEventHandler" />
                 <ref bean="completedInvoicesEventHandler" />
-                <ref bean="canceledInvoicesEventHandler" />
             </list>
-        </constructor-arg>   
-        <constructor-arg type = "java.lang.String" value = "Projections"/>   
+        </constructor-arg>
+        <constructor-arg type = "java.lang.String" value = "Projections"/>
+        <constructor-arg ref="activeMqBusHelper"/>
     </bean>
     <bean id="globalValidator" class="org.cqrs.GlobalValidatorImpl">
         <constructor-arg>

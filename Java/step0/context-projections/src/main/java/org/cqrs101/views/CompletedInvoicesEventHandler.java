@@ -39,7 +39,7 @@ public class CompletedInvoicesEventHandler implements MessageHandler {
         CompletedInvoice invoice = new CompletedInvoice();
         invoice.setId(message.getId());
         invoice.setCreationDate(message.getCreationDate());
-        invoice.setCoompletionDate(message.getCompletionDate());
+        invoice.setCompletionDate(message.getCompletionDate());
         invoice.setCustomerName(customer.getCustomerName());
         invoice.setCustomerId(customer.getId());
         

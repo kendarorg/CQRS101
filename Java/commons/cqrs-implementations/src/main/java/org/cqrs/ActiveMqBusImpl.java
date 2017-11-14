@@ -6,11 +6,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.jms.Connection;
 import javax.jms.DeliveryMode;
 import javax.jms.Destination;
@@ -21,33 +23,25 @@ import javax.jms.Session;
 import javax.jms.TextMessage;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.command.ActiveMQQueue;
+import org.cqrs101.utils.MainEnvironment;
 
 public class ActiveMqBusImpl implements Bus {
 
     private static final Logger logger = Logger.getLogger(ActiveMqBusImpl.class.getSimpleName());
-    public static final String brokerURL = "failover:tcp://localhost:61616";
-    private ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory(brokerURL);
-    private final Connection connection;
+
     private final String instanceName;
+    private final ActiveMqBusHelper busHelper;
     private ObjectMapper mapper = new ObjectMapper();
-    private Session session;
 
-    @Inject
-    public ActiveMqBusImpl(List<MessageHandler> messageHandlers, String instanceName) throws Exception {
-        try {
-            this.instanceName = instanceName;
-            factory.setWatchTopicAdvisories(false);
-            connection = factory.createConnection();
-            connection.start();
-            session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
-            for (int i = 0; i < messageHandlers.size(); i++) {
-                MessageHandler messageHandler = messageHandlers.get(i);
-                messageHandler.register(this);
-            }
-        } catch (JMSException ex) {
-            logger.log(Level.SEVERE, "Error initializing ActiveMQ and Handlers;", ex);
-            throw new Exception(ex);
+    public ActiveMqBusImpl(List<MessageHandler> messageHandlers, String instanceName,ActiveMqBusHelper activeMqBusHelper) throws Exception {
+
+        this.instanceName = instanceName;
+        busHelper = activeMqBusHelper;
+
+        for (int i = 0; i < messageHandlers.size(); i++) {
+            MessageHandler messageHandler = messageHandlers.get(i);
+            messageHandler.register(this);
         }
     }
 
@@ -69,10 +63,12 @@ public class ActiveMqBusImpl implements Bus {
                 queueName = "COMMANDS." + messageTypeName;
             } else if (isEvent) {
                 queueName = "Consumer." + realInstanceName + ".VirtualTopic.EVENTS_" + messageTypeName;
+            }else {
+                queueName = "Consumer." + realInstanceName + ".VirtualTopic.MESSAGE_" + messageTypeName;
             }
 
-            ActiveMQQueue commandsQueue = new ActiveMQQueue(queueName);
-            consumer = session.createConsumer(commandsQueue);
+
+            consumer = busHelper.createConsumer(queueName);
             consumer.setMessageListener((javax.jms.Message genericMsg) -> {
                 handleMessage(genericMsg, handlerFunction);
             });
@@ -103,22 +99,27 @@ public class ActiveMqBusImpl implements Bus {
             return;
         }
         try {
+            if(message.getCorrelationId()==null){
+                message.setCorrelationId(UUID.randomUUID());
+            }
             Class messageType = message.getClass();
             String messageTypeName = messageType.getSimpleName().toUpperCase(Locale.ROOT);
             boolean isEvent = Event.class.isAssignableFrom(messageType);
             boolean isCommand = Command.class.isAssignableFrom(messageType);
             Destination destination = null;
             if (isCommand) {
-                destination = session.createQueue("COMMANDS." + messageTypeName);
+                destination = busHelper.createQueue("COMMANDS." + messageTypeName);
             } else if (isEvent) {
-                destination = session.createTopic("VirtualTopic.EVENTS_" + messageTypeName);
+                destination = busHelper.createTopic("VirtualTopic.EVENTS_" + messageTypeName);
+            } else  {
+                destination = busHelper.createTopic("VirtualTopic.MESSAGE_" + messageTypeName);
             }
 
             // Create a MessageProducer from the Session to the Topic or Queue
-            MessageProducer producer = session.createProducer(destination);
-            producer.setDeliveryMode(DeliveryMode.PERSISTENT);
+            MessageProducer producer = busHelper.createProducer(destination);
 
-            TextMessage amqMessage = session.createTextMessage(mapper.writeValueAsString(message));
+
+            TextMessage amqMessage = busHelper.createTextMessage(mapper.writeValueAsString(message));
             amqMessage.setStringProperty("TYPE", messageTypeName);
             amqMessage.setJMSCorrelationID(message.getCorrelationId().toString());
             producer.send(amqMessage);

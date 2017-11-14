@@ -13,7 +13,6 @@ public class InMemoryBusImpl implements Bus {
 
     private static final Logger logger = Logger.getLogger(InMemoryBusImpl.class.getSimpleName());
 
-    @Inject
     public InMemoryBusImpl(List<MessageHandler> messageHandlers) {
         for (int i = 0; i < messageHandlers.size(); i++) {
             MessageHandler messageHandler = messageHandlers.get(i);
@@ -27,9 +26,13 @@ public class InMemoryBusImpl implements Bus {
     @Override
     public void registerHandler(Consumer<Object> handlerFunction, Class messageType, Class callerType) {
         handlerFunctions.putIfAbsent(messageType, new ArrayList<>());
-        if (Command.class.isAssignableFrom(messageType)) {
-            String messageTypeName = messageType.getSimpleName().toUpperCase(Locale.ROOT);
-            messageTypes.putIfAbsent(messageTypeName, messageType);
+
+        String messageTypeName = messageType.getSimpleName().toUpperCase(Locale.ROOT);
+        messageTypes.putIfAbsent(messageTypeName, messageType);
+
+        if (Command.class.isAssignableFrom(messageType) &&
+                handlerFunctions.get(messageType).size()>0) {
+            return;
         }
         handlerFunctions.get(messageType).add(handlerFunction);
     }
