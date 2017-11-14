@@ -6,15 +6,14 @@ using System.Linq;
 
 namespace Cqrs
 {
-    public class Bus : IBus
+    public class ActiveMqBus : IBus
     {
-        public Bus(IList<IMessageHandler> validators)
+        public ActiveMqBus(IList<IMessageHandler> messageHandlers)
         {
-            for (int i = 0; i < validators.Count(); i++)
+            for (int i = 0; i < messageHandlers.Count(); i++)
             {
-                var validator = validators[i];
-                validator.Register(this);
-
+                var messageHandler = messageHandlers[i];
+                messageHandler.Register(this);
             }
         }
 
