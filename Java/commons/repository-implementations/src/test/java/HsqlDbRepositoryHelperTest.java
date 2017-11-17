@@ -4,6 +4,7 @@ import org.junit.*;
 import org.mockito.Matchers;
 import sun.applet.Main;
 
+import java.beans.SimpleBeanInfo;
 import java.io.PrintWriter;
 import java.sql.*;
 import java.util.ArrayList;

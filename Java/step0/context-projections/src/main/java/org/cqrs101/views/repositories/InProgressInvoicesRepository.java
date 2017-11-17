@@ -19,6 +19,7 @@ public class InProgressInvoicesRepository extends BaseRepository<InProgressInvoi
         super(helper);
     }
 
+
     @Override
     public InProgressInvoice save(InProgressInvoice item) {
         return (InProgressInvoice) helper.save(item,

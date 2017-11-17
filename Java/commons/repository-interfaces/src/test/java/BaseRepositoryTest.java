@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.UUID;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -21,9 +22,15 @@ public class BaseRepositoryTest {
     public void constructorShouldCreateTheRepositoryHelper(){
         BaseRepository<String> target = new BaseRepository<String>(repoHelper) {
             @Override
+            public String getById(UUID id) {
+                return null;
+            }
+
+            @Override
             public String save(String item) {
                 return null;
             }
+
         };
         verify(repoHelper, times(1)).create(String.class);
     }

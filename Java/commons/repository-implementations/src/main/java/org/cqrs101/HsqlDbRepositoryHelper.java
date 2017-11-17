@@ -39,7 +39,6 @@ public class HsqlDbRepositoryHelper implements RepositoryHelper {
     @Override
     public RepositoryHelper create(Class clazz) {
         Connection conn = null;
-        this.clazz = clazz;
 
         try {
             Class.forName(driverName);
@@ -48,6 +47,7 @@ public class HsqlDbRepositoryHelper implements RepositoryHelper {
         }
         HsqlDbRepositoryHelper helper = new HsqlDbRepositoryHelper(environment);
         helper.name = clazz.getSimpleName().toUpperCase(Locale.ROOT).toUpperCase(Locale.ROOT);
+        helper.clazz = clazz;
         try {
             conn = createConnection();
             Statement stmt = conn.createStatement();
@@ -85,7 +85,8 @@ public class HsqlDbRepositoryHelper implements RepositoryHelper {
                     + "id ='" + id + "';");
             for (; resultSet.next();) {
                 String data = resultSet.getString("data");
-                return mapper.readValue(data, clazz);
+                Object result = mapper.readValue(data, clazz);
+                    return result;
             }
             return null;
         } catch (Exception ex) {

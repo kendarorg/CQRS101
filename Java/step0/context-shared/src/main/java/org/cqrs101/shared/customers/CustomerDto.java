@@ -5,7 +5,7 @@ import java.util.UUID;
 public class CustomerDto {
 
     private UUID id;
-    private String customerName;
+    private String name;
 
     public UUID getId() {
         return id;
@@ -15,11 +15,11 @@ public class CustomerDto {
         this.id = id;
     }
 
-    public String getCustomerName() {
-        return customerName;
+    public String getName() {
+        return name;
     }
 
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
+    public void setName(String name) {
+        this.name = name;
     }
 }

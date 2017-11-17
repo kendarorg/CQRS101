@@ -6,11 +6,7 @@ import javax.inject.Inject;
 import org.cqrs101.Repository;
 import org.cqrs101.cruds.Customer;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/customers")
@@ -47,16 +43,16 @@ public class CustomersController {
             value = "",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public Customer add(Customer customer) {
+    public Customer add(@RequestBody Customer customer) {
         return repository.save(customer);
     }
 
     @ResponseBody
     @RequestMapping(
-            value = "",
+            value = "/{id}",
             method = RequestMethod.DELETE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public void delete(UUID id) {
+    public void delete(@PathVariable("id") UUID id) {
         repository.delete(id);
     }
 }

@@ -6,6 +6,8 @@ import javax.inject.Named;
 import org.cqrs101.BaseRepository;
 import org.cqrs101.RepositoryHelper;
 
+import java.util.UUID;
+
 @Named("invoicesRepository")
 public class InvoicesRepository extends BaseRepository<Invoice> {
 

@@ -40,7 +40,7 @@ public class InProgressInvoicesEventHandler implements MessageHandler {
         InProgressInvoice invoice = new InProgressInvoice();
         invoice.setId(message.getId());
         invoice.setCreationDate(message.getCreationDate());
-        invoice.setCustomerName(customer.getCustomerName());
+        invoice.setCustomerName(customer.getName());
         invoice.setCustomerId(customer.getId());
 
         repository.save(invoice);

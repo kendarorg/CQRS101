@@ -29,8 +29,7 @@ public abstract class BaseRepository<T> implements Repository<T> {
 
     @Override
     public T getById(UUID id) {
-        return (T)helper.getById(id);
-    }
+        return (T)helper.getById(id);}
 
 //    @Override
 //    public T save(T item) {

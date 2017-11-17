@@ -10,7 +10,6 @@ import org.cqrs.Bus;
 import org.cqrs.MessageHandler;
 import org.cqrs101.Repository;
 import org.cqrs101.shared.invoices.events.InvoiceCompleted;
-import org.cqrs101.shared.invoices.events.InvoiceCreated;
 import org.cqrs101.views.repositories.*;
 
 @Named("completedInvoicesEventHandler")
@@ -40,7 +39,7 @@ public class CompletedInvoicesEventHandler implements MessageHandler {
         invoice.setId(message.getId());
         invoice.setCreationDate(message.getCreationDate());
         invoice.setCompletionDate(message.getCompletionDate());
-        invoice.setCustomerName(customer.getCustomerName());
+        invoice.setCustomerName(customer.getName());
         invoice.setCustomerId(customer.getId());
         
         repository.save(invoice);
