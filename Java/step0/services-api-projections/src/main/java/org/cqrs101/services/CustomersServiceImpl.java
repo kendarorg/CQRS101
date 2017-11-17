@@ -30,7 +30,7 @@ public class CustomersServiceImpl implements CustomersService {
             Client client = ClientBuilder.newClient();
             WebTarget target = client.target("http://localhost:"+crudApiPort).path("api/customers/" + id.toString());
             Invocation.Builder invocationBuilder = target.request(MediaType.APPLICATION_JSON);
-            Response response = invocationBuilder.get();
+            Response response = invocationBuilder.header("Content-type", "application/json").get();
             String responseStr = response.readEntity(String.class);
             return mapper.readValue(responseStr, CustomerDto.class);
         } catch (IOException ex) {
@@ -46,7 +46,7 @@ public class CustomersServiceImpl implements CustomersService {
             Client client = ClientBuilder.newClient();
             WebTarget target = client.target("http://localhost:"+crudApiPort).path("api/customers");
             Invocation.Builder invocationBuilder = target.request(MediaType.APPLICATION_JSON);
-            Response response = invocationBuilder.get();
+            Response response = invocationBuilder.header("Content-type", "application/json").get();
             String responseStr = response.readEntity(String.class);
             return mapper.readValue(responseStr, new TypeReference<List<CustomerDto>>(){});
         } catch (IOException ex) {

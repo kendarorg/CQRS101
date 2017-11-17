@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/invoices/completed")
+@RequestMapping("/api/invoices/inprogress")
 public class InProgressInvoicesController {
 
     private final Repository<InProgressInvoice> repository;

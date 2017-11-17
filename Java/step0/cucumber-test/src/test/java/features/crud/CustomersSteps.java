@@ -1,5 +1,6 @@
-package features.commons;
+package features.crud;
 
+import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.cqrs101.shared.customers.CustomerDto;
@@ -15,6 +16,7 @@ import static org.junit.Assert.assertNull;
 
 public class CustomersSteps {
     @When("^A user is inserted with name '(.*)' and key '(\\d+)'$")
+    //@Given("^A user is inserted with name '(.*)' and key '(\\d+)'$")
     public void a_user_is_inserted_with_name_test_and_key(String name, int id) throws Exception {
         UUID customerId = UUID.fromString(DataUtils.convertToUUID(id));
         CustomerDto newCustomer = new CustomerDto();

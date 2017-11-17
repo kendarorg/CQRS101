@@ -64,6 +64,8 @@ public class InvoicesCommandHandler implements MessageHandler {
         InvoiceCompleted message = new InvoiceCompleted();
         message.setId(command.getId());
         message.setValue(command.getValue());
+        message.setCreationDate(invoiceDao.getCreationDate());
+        message.setCustomerId(invoiceDao.getCustomer().getId());
         message.setCompletionDate(now);
         bus.send(message);
     }

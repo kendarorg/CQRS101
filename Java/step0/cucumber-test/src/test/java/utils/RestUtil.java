@@ -46,6 +46,7 @@ public class RestUtil {
                 response = invocationBuilder.header("Content-type", "application/json").get();
                 responseStr = response.readEntity(String.class);
             }
+            if(clazz ==null) return null;
             return (T)mapper.readValue(responseStr,clazz);
         } catch (IOException ex) {
             return null;
