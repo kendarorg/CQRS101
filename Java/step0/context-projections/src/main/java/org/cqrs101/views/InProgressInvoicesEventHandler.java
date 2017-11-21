@@ -35,7 +35,7 @@ public class InProgressInvoicesEventHandler implements MessageHandler {
     }
 
     public void handle(InvoiceCreated message) {
-        logger.log(Level.INFO, "{0}-InvoiceCreated", message.getCorrelationId());
+        logger.log(Level.INFO, "{0}-InvoiceCreated-START", message.getCorrelationId());
         CustomerDto customer = customersService.getCustomer(message.getCustomerId());
         InProgressInvoice invoice = new InProgressInvoice();
         invoice.setId(message.getId());
@@ -44,10 +44,12 @@ public class InProgressInvoicesEventHandler implements MessageHandler {
         invoice.setCustomerId(customer.getId());
 
         repository.save(invoice);
+        logger.log(Level.INFO, "{0}-InvoiceCreated-END", message.getCorrelationId());
     }
 
     public void handle(InvoiceCompleted message) {
-        logger.log(Level.INFO, "{0}-InvoiceCompleted", message.getCorrelationId());
+        logger.log(Level.INFO, "{0}-InvoiceCompleted-START", message.getCorrelationId());
         repository.delete(message.getId());
+        logger.log(Level.INFO, "{0}-InvoiceCompleted-END", message.getCorrelationId());
     }
 }

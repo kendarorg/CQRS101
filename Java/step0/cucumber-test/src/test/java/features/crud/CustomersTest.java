@@ -10,6 +10,6 @@ import org.junit.runner.RunWith;
 @RunWith(Cucumber.class)
 @CucumberOptions(
         plugin = {"pretty", "html:target/cucumber"},
-        glue = {"features.crud"})
+        glue = {"features.crud","classpath:features.commons"})
 public class CustomersTest {
 }

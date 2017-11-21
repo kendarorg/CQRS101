@@ -1,16 +1,15 @@
 Feature: Invoices basic management
 
   Scenario: Create an invoice
-    Given A user is inserted with name 'test1' and key '1'
-    When An invoice is created with user '1' and id '2'
-    And '1000' ms has gone
-    Then An invoice is visible in InProgress with id '2'
+    Given Data tables cleaned
+    And A customer is inserted with name 'test3' and key '3'
+    When An invoice is created with customer '3' and id '3'
+    Then An invoice is visible in InProgress with id '3'
 
   Scenario: Complete an invoice
-    Given A user is inserted with name 'test2' and key '2'
-    And An invoice is created with user '2' and id '3'
-    And '1000' ms has gone
-    When The invoice with id '3'  is completed
-    And '1000' ms has gone
-    Then No invoices exists in InProgress with id '3'
-    Then An invoice is visible in Completed with id '3'
+    Given Data tables cleaned
+    And A customer is inserted with name 'test4' and key '4'
+    And An invoice is created with customer '4' and id '4'
+    When The invoice with id '4'  is completed
+    Then No invoices exists in InProgress with id '4'
+    Then An invoice is visible in Completed with id '4'

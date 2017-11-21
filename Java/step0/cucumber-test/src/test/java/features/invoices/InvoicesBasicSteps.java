@@ -9,6 +9,7 @@ import org.cqrs101.views.repositories.CompletedInvoice;
 import org.cqrs101.views.repositories.InProgressInvoice;
 import utils.DataUtils;
 import utils.RestUtil;
+import utils.WaiterUtil;
 
 import java.util.UUID;
 
@@ -17,7 +18,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 public class InvoicesBasicSteps {
-    @When("^An invoice is created with user '(\\d+)' and id '(\\d+)'$")
+    @When("^An invoice is created with customer '(\\d+)' and id '(\\d+)'$")
     public void an_invoice_is_created_with_user_and_id(int customerIdInt, int invoiceIdInt) throws Exception {
         UUID customerId = UUID.fromString(DataUtils.convertToUUID(customerIdInt));
         UUID invoiceId = UUID.fromString(DataUtils.convertToUUID(invoiceIdInt));
@@ -32,7 +33,8 @@ public class InvoicesBasicSteps {
     @Then("^An invoice is visible in InProgress with id '(\\d+)'$")
     public void the_invoice_is_visible_in_InProgress_with_id(int invoiceIdInt) throws Exception {
         UUID invoiceId = UUID.fromString(DataUtils.convertToUUID(invoiceIdInt));
-        InProgressInvoice result = RestUtil.askItem(InProgressInvoice.class,8092,"/api/invoices/inprogress/"+invoiceId.toString(),"GET",null);
+        InProgressInvoice result = WaiterUtil.waitTimeout(()->
+                RestUtil.askItem(InProgressInvoice.class,8092,"api/invoices/inprogress/"+invoiceId.toString(),"GET",null));
         assertEquals(invoiceId,result.getId());
     }
 
@@ -56,7 +58,8 @@ public class InvoicesBasicSteps {
     @Then("^An invoice is visible in Completed with id '(\\d+)'$")
     public void an_invoice_is_visible_in_Completed_with_id(int invoiceIdInt) throws Exception {
         UUID invoiceId = UUID.fromString(DataUtils.convertToUUID(invoiceIdInt));
-        CompletedInvoice result = RestUtil.askItem(CompletedInvoice.class,8092,"/api/invoices/completed/"+invoiceId.toString(),"GET",null);
+        CompletedInvoice result = WaiterUtil.waitTimeout(()->
+                RestUtil.askItem(CompletedInvoice.class,8092,"/api/invoices/completed/"+invoiceId.toString(),"GET",null));
         assertNotNull(result);
         assertEquals(invoiceId,result.getId());
     }

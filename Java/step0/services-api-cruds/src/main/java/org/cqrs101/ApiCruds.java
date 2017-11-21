@@ -10,20 +10,20 @@ import org.springframework.context.annotation.ImportResource;
 
 @SpringBootApplication
 @ImportResource("classpath:app-config.xml")
-public class Program {
+public class ApiCruds {
 
     public static void main(String[] args) {
         try {
             final String port = "8091";
             final String baseAddress = "http://localhost:" + port + "/";
 
-            SpringApplication application = new SpringApplication(Program.class);
+            SpringApplication application = new SpringApplication(ApiCruds.class);
             Map<String, Object> map = new HashMap<>();
             map.put("SERVER_PORT", port);
             application.setDefaultProperties(map);
             application.run(args);
         } catch (Exception ex) {
-            Logger.getLogger(Program.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApiCruds.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

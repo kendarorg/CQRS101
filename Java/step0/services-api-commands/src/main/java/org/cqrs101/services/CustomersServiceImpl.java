@@ -25,12 +25,16 @@ public class CustomersServiceImpl implements CustomersService {
 
     @Override
     public CustomerDto getCustomer(UUID id) {
+        String responseStr = "";
         try {
             Client client = ClientBuilder.newClient();
             WebTarget target = client.target("http://localhost:"+crudApiPort).path("api/customers/" + id.toString());
             Invocation.Builder invocationBuilder = target.request(MediaType.APPLICATION_JSON);
             Response response = invocationBuilder.header("Content-type", "application/json").get();
-            String responseStr = response.readEntity(String.class);
+            responseStr = response.readEntity(String.class);
+            if(responseStr==null || responseStr.length()==0){
+                return null;
+            }
             return mapper.readValue(responseStr, CustomerDto.class);
         } catch (IOException ex) {
             Logger.getLogger(CustomersServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -40,13 +44,16 @@ public class CustomersServiceImpl implements CustomersService {
 
     @Override
     public List<CustomerDto> getAll() {
-        
+        String responseStr = "";
         try {
             Client client = ClientBuilder.newClient();
             WebTarget target = client.target("http://localhost:"+crudApiPort).path("api/customers");
             Invocation.Builder invocationBuilder = target.request(MediaType.APPLICATION_JSON);
             Response response = invocationBuilder.header("Content-type", "application/json").get();
-            String responseStr = response.readEntity(String.class);
+            responseStr = response.readEntity(String.class);
+            if(responseStr==null || responseStr.length()==0){
+                return null;
+            }
             return mapper.readValue(responseStr, new TypeReference<List<CustomerDto>>(){});
         } catch (IOException ex) {
             Logger.getLogger(CustomersService.class.getName()).log(Level.SEVERE, null, ex);

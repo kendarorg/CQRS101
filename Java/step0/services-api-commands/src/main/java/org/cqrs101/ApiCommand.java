@@ -7,24 +7,23 @@ import java.util.logging.Logger;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ImportResource;
-import org.springframework.context.annotation.PropertySource;
 
 @SpringBootApplication
 @ImportResource("classpath:app-config.xml")
-public class Program {
+public class ApiCommand {
 
     public static void main(String[] args) {
         try {
             final String port = "8090";
             final String baseAddress = "http://localhost:" + port + "/";
 
-            SpringApplication application = new SpringApplication(Program.class);
+            SpringApplication application = new SpringApplication(ApiCommand.class);
             Map<String, Object> map = new HashMap<>();
             map.put("SERVER_PORT", port);
             application.setDefaultProperties(map);
             application.run(args);
         } catch (Exception ex) {
-            Logger.getLogger(Program.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApiCommand.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

@@ -33,7 +33,7 @@ public class CompletedInvoicesEventHandler implements MessageHandler {
     }
 
     public void handle(InvoiceCompleted message) {
-        logger.log(Level.INFO, "{0}-InvoiceCompleted", message.getCorrelationId());
+        logger.log(Level.INFO, "{0}-InvoiceCompleted-START", message.getCorrelationId());
         CustomerDto customer = customersService.getCustomer(message.getCustomerId());
         CompletedInvoice invoice = new CompletedInvoice();
         invoice.setId(message.getId());
@@ -43,5 +43,6 @@ public class CompletedInvoicesEventHandler implements MessageHandler {
         invoice.setCustomerId(customer.getId());
         
         repository.save(invoice);
+        logger.log(Level.INFO, "{0}-InvoiceCompleted-END", message.getCorrelationId());
     }
 }

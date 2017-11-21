@@ -47,10 +47,13 @@ public class RestUtil {
                 responseStr = response.readEntity(String.class);
             }
             if(clazz ==null) return null;
-            return (T)mapper.readValue(responseStr,clazz);
-        } catch (IOException ex) {
+            T result = (T)mapper.readValue(responseStr,clazz);
+            if(path.indexOf("command")>=0){
+                Thread.sleep(1000);
+            }
+            return result;
+        } catch (Exception ex) {
             return null;
         }
-
     }
 }

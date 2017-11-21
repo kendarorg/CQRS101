@@ -32,6 +32,9 @@ public class CustomersServiceImpl implements CustomersService {
             Invocation.Builder invocationBuilder = target.request(MediaType.APPLICATION_JSON);
             Response response = invocationBuilder.header("Content-type", "application/json").get();
             String responseStr = response.readEntity(String.class);
+            if(responseStr==null || responseStr.length()==0){
+                return null;
+            }
             return mapper.readValue(responseStr, CustomerDto.class);
         } catch (IOException ex) {
             Logger.getLogger(CustomersServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -48,6 +51,9 @@ public class CustomersServiceImpl implements CustomersService {
             Invocation.Builder invocationBuilder = target.request(MediaType.APPLICATION_JSON);
             Response response = invocationBuilder.header("Content-type", "application/json").get();
             String responseStr = response.readEntity(String.class);
+            if(responseStr==null || responseStr.length()==0){
+                return null;
+            }
             return mapper.readValue(responseStr, new TypeReference<List<CustomerDto>>(){});
         } catch (IOException ex) {
             Logger.getLogger(CustomersService.class.getName()).log(Level.SEVERE, null, ex);

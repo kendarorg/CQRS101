@@ -90,7 +90,7 @@ public class HsqlDbRepositoryHelper implements RepositoryHelper {
             }
             return null;
         } catch (Exception ex) {
-            throw new RuntimeException("Missing hslqDb Driver", ex);
+            throw new RuntimeException("Error during get by ID", ex);
         } finally {
             try {
                 if (conn != null) {
@@ -118,7 +118,7 @@ public class HsqlDbRepositoryHelper implements RepositoryHelper {
             }
             return result;
         } catch (Exception ex) {
-            throw new RuntimeException("Missing hslqDb Driver", ex);
+            throw new RuntimeException("Error during select", ex);
         } finally {
             try {
                 if (conn != null) {
@@ -163,7 +163,7 @@ public class HsqlDbRepositoryHelper implements RepositoryHelper {
             }
             return item;
         } catch (Exception ex) {
-            throw new RuntimeException("Missing hslqDb Driver", ex);
+            throw new RuntimeException("Error during save", ex);
         } finally {
             try {
                 if (conn != null) {
@@ -185,7 +185,7 @@ public class HsqlDbRepositoryHelper implements RepositoryHelper {
                     "DELETE FROM \"" + this.name + "\" WHERE "
                     + "id ='" + id + "';");
         } catch (Exception ex) {
-            throw new RuntimeException("Missing hslqDb Driver", ex);
+            throw new RuntimeException("Error during delete", ex);
         } finally {
             try {
                 if (conn != null) {
