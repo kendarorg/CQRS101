@@ -9,4 +9,5 @@ public interface Bus
     List<String> getTypes();
     void registerHandler(Consumer<Object> handlerFunction,Class messageType,Class callerType);
     void send(Message message);
+    void resetHandlers();
 }

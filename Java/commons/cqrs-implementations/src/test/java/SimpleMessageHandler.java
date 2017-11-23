@@ -3,6 +3,7 @@ import org.cqrs.MessageHandler;
 
 import java.lang.reflect.ParameterizedType;
 
+@SuppressWarnings("unchecked")
 public abstract class SimpleMessageHandler<T> implements MessageHandler {
     @Override
     public void register(Bus bus) {

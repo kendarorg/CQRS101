@@ -57,6 +57,11 @@ public class InMemoryBusImpl implements Bus {
     }
 
     @Override
+    public void resetHandlers() {
+        handlerFunctions.clear();
+    }
+
+    @Override
     public Class getType(String messageTypeName) {
         messageTypeName = messageTypeName.toUpperCase(Locale.ROOT);
         if (!messageTypes.containsKey(messageTypeName)) {

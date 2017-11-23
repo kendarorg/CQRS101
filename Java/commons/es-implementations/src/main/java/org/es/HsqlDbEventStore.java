@@ -1,7 +1,6 @@
 package org.es;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.cqrs.Event;
 import org.cqrs101.utils.MainEnvironment;
 
 import javax.inject.Inject;
@@ -13,6 +12,7 @@ import java.util.Locale;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+@SuppressWarnings("unchecked")
 @Named("eventStore")
 public class HsqlDbEventStore implements EventStore {
 

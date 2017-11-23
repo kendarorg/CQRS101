@@ -8,23 +8,17 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.jms.Connection;
-import javax.jms.DeliveryMode;
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageProducer;
-import javax.jms.Session;
 import javax.jms.TextMessage;
-import org.apache.activemq.ActiveMQConnectionFactory;
-import org.apache.activemq.command.ActiveMQQueue;
-import org.cqrs101.utils.MainEnvironment;
 
+@SuppressWarnings("unchecked")
 public class ActiveMqBusImpl implements Bus {
 
     private static final Logger logger = Logger.getLogger(ActiveMqBusImpl.class.getSimpleName());
@@ -46,6 +40,7 @@ public class ActiveMqBusImpl implements Bus {
     }
 
     private final ConcurrentHashMap<String, Class> messageTypes = new ConcurrentHashMap<>();
+    private final ConcurrentLinkedQueue<MessageConsumer> consumers = new ConcurrentLinkedQueue<>();
 
     @Override
     public void registerHandler(Consumer<Object> handlerFunction, Class messageType, Class callerType) {
@@ -72,6 +67,7 @@ public class ActiveMqBusImpl implements Bus {
             consumer.setMessageListener((javax.jms.Message genericMsg) -> {
                 handleMessage(genericMsg, handlerFunction);
             });
+            consumers.add(consumer);
         } catch (JMSException ex) {
             logger.log(Level.SEVERE, "Error registering message handler", ex);
         }
@@ -125,6 +121,14 @@ public class ActiveMqBusImpl implements Bus {
             producer.send(amqMessage);
         } catch (JMSException | JsonProcessingException ex) {
             logger.log(Level.SEVERE, "Error sending data", ex);
+        }
+    }
+
+    @Override
+    public void resetHandlers() {
+        while(!consumers.isEmpty()){
+            MessageConsumer consumer = consumers.poll();
+            busHelper.removeConsumer(consumer);
         }
     }
 

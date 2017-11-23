@@ -7,6 +7,7 @@ import org.cqrs101.utils.MainEnvironment;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.jms.*;
+import javax.jms.Message;
 
 @Named("activeMqBusHelper")
 public class ActiveMqBusHelper {
@@ -44,5 +45,18 @@ public class ActiveMqBusHelper {
 
     public TextMessage createTextMessage(String s) throws JMSException {
         return session.createTextMessage(s);
+    }
+
+    public void removeConsumer(MessageConsumer consumer) {
+        try {
+            consumer.setMessageListener(new MessageListener() {
+                @Override
+                public void onMessage(Message message) {
+
+                }
+            });
+        } catch (JMSException e) {
+            e.printStackTrace();
+        }
     }
 }

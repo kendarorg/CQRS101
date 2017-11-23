@@ -2,10 +2,6 @@ import org.cqrs101.HsqlDbRepositoryHelper;
 import org.cqrs101.utils.MainEnvironment;
 import org.junit.*;
 import org.mockito.Matchers;
-import sun.applet.Main;
-
-import java.beans.SimpleBeanInfo;
-import java.io.PrintWriter;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,13 +22,15 @@ public class HsqlDbRepositoryHelperTest {
     private Statement statement;
     private ResultSet resultSet;
     private ArrayList<String> queries;
+    private MainEnvironment mainEnvironment;
 
     @BeforeClass
     public static void setUpClass() throws Exception {
         // (Optional) Print DriverManager logs to system out
-        DriverManager.setLogWriter(new PrintWriter((System.out)));
+        //DriverManager.setLogWriter(new PrintWriter((System.out)));
 
         try {
+            DriverManager.registerDriver(new MockDriver());
             // (Optional) Sometimes you need to get rid of a driver (e.g JDBC-ODBC Bridge)
             Driver configuredDriver = DriverManager.getDriver("jdbc:odbc:url");
 
@@ -81,10 +79,10 @@ public class HsqlDbRepositoryHelperTest {
     @Before
     public void setUp() throws Exception {
         setUpDriver();
-        MainEnvironment mainEnvironment = new MainEnvironment(null);
-        mainEnvironment.setProperty("hsqldb.url","");
-        mainEnvironment.setProperty("hsqldb.user","");
-        mainEnvironment.setProperty("hsqldb.password","");
+        mainEnvironment = new MainEnvironment(null);
+        mainEnvironment.setProperty("hsqldb.url","test");
+        mainEnvironment.setProperty("hsqldb.user","test");
+        mainEnvironment.setProperty("hsqldb.password","test");
         //env.setProperty();
         queries = new ArrayList<>();
         factory = new HsqlDbRepositoryHelper(mainEnvironment);
@@ -105,7 +103,7 @@ public class HsqlDbRepositoryHelperTest {
 
     @Test
     public void shouldCreateDifferentInstancesForEachCall(){
-        HsqlDbRepositoryHelper target = new HsqlDbRepositoryHelper(new MainEnvironment(null));
+        HsqlDbRepositoryHelper target = new HsqlDbRepositoryHelper(mainEnvironment);
 
         HsqlDbRepositoryHelper result1 = (HsqlDbRepositoryHelper) target.create(SimpleObject.class);
         HsqlDbRepositoryHelper result2 = (HsqlDbRepositoryHelper) target.create(SimpleObject.class);

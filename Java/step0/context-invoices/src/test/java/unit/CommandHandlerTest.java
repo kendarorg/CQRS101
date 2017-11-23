@@ -17,12 +17,15 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
+@SuppressWarnings("unchecked")
 public class CommandHandlerTest {
     private Repository<Invoice> invoicesRepository;
     private CustomersService customersService;
@@ -50,7 +53,9 @@ public class CommandHandlerTest {
     public void shouldGenerateInvoiceCreatedWhenCreating() {
         CustomerDto customer = new CustomerDto();
         customer.setId(UUID.randomUUID());
+
         CreateInvoice command = new CreateInvoice();
+        command.setCorrelationId(UUID.randomUUID());
         when(customersService.getCustomer(any(UUID.class)))
                 .thenReturn(customer);
 
@@ -63,6 +68,7 @@ public class CommandHandlerTest {
     @Test
     public void shouldGenerateInvoiceCompletedWhenCompleting() {
         CompleteInvoice command = new CompleteInvoice();
+        command.setCorrelationId(UUID.randomUUID());
         Invoice invoice = new Invoice();
         invoice.setCustomer(new CustomerDto());
         when(invoicesRepository.getById(any(UUID.class)))

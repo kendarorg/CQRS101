@@ -1,16 +1,13 @@
 package utils;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
 
+@SuppressWarnings("unchecked")
 public class RestUtil {
 
 

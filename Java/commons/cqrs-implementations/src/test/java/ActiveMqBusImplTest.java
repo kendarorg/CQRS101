@@ -1,60 +1,63 @@
+import org.apache.activemq.ActiveMQConnection;
+import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.activemq.advisory.DestinationSource;
+import org.apache.activemq.broker.Broker;
 import org.apache.activemq.broker.BrokerService;
 import org.apache.activemq.broker.TransportConnector;
 import org.apache.activemq.command.ActiveMQDestination;
-import org.cqrs.ActiveMqBusHelper;
-import org.cqrs.ActiveMqBusImpl;
-import org.cqrs.Message;
-import org.cqrs.MessageHandler;
+import org.apache.activemq.command.ActiveMQQueue;
+import org.apache.activemq.command.ActiveMQTopic;
+import org.cqrs.*;
 import org.cqrs101.utils.MainEnvironment;
 import org.junit.*;
-import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
-import javax.jms.*;
+import javax.print.attribute.standard.Destination;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
 
 public class ActiveMqBusImplTest {
 
     private  List<Message> handled;
     private ActiveMqBusHelper busHelper;
-    private BrokerService broker;
+    private static BrokerService broker;
 
     @BeforeClass
     public static void setUpAll() throws Exception {
+        broker = new BrokerService();
 
+        TransportConnector connector = new TransportConnector();
+        connector.setUri(new URI("vm://localhost?broker.persistent=false"));
+        broker.addConnector(connector);
+        broker.start();
+        broker.waitUntilStarted();
 
     }
 
     @AfterClass
     public static void tearDownAll() throws Exception {
+        broker.stop();
+        broker.waitUntilStopped();
 
     }
 
     @After
     public void tearDown() throws Exception {
-        broker.stop();
+
+        broker.deleteAllMessages();
+        new ActiveMQBrokerExtension(broker.getBroker()).clearAllMessages();
+
     }
 
     @Before
     public void setUp() throws Exception {
-        broker = new BrokerService();
 
-        TransportConnector connector = new TransportConnector();
-        connector.setUri(new URI("tcp://localhost:61612"));
-        broker.addConnector(connector);
-        broker.start();
+        broker.deleteAllMessages();
 
         handled = new ArrayList<>();
         MainEnvironment env = new MainEnvironment(null);
-        env.setProperty("amq.brokerurl","tcp://localhost:61612");
+        env.setProperty("amq.brokerurl","vm://localhost?broker.persistent=false");
         busHelper = new ActiveMqBusHelper(env);
     }
 
@@ -63,21 +66,26 @@ public class ActiveMqBusImplTest {
         ActiveMqBusImpl target = new ActiveMqBusImpl(new ArrayList<>(),"test", busHelper);
 
         target.send(new SimpleMessage());
+
+        assertEquals(0,handled.size());
+        target.resetHandlers();
     }
 
     @Test
-    @Ignore
     public void shouldAllowExecutingSimpleHandler() throws Exception {
         List<MessageHandler> handlers = getSimpleMessageHandler();
         SimpleMessage message = new SimpleMessage();
+        message.setCorrelationId(UUID.randomUUID());
 
-        ActiveMqBusImpl target = new ActiveMqBusImpl(handlers,"test", busHelper);
+        ActiveMqBusImpl target = new ActiveMqBusImpl(handlers,"test10", busHelper);
 
         target.send(message);
         Thread.sleep(500);
 
-        assertEquals(1,handled.size());
-        assertSame(message,handled.get(0));
+            assertEquals(1,handled.size());
+        assertEquals(message.getCorrelationId(),handled.get(0).getCorrelationId());
+
+        target.resetHandlers();
     }
 
     @Test
@@ -86,7 +94,7 @@ public class ActiveMqBusImplTest {
 
         List<MessageHandler> handlers = getDoubleCommandHandler();
 
-        ActiveMqBusImpl target = new ActiveMqBusImpl(handlers,"test", busHelper);
+        ActiveMqBusImpl target = new ActiveMqBusImpl(handlers,"test2", busHelper);
 
         target.send(message);
         Thread.sleep(500);
@@ -94,16 +102,17 @@ public class ActiveMqBusImplTest {
         assertEquals(1,handled.size());
         SimpleCommand result = (SimpleCommand)handled.get(0);
         assertEquals(message.getCorrelationId(),result.getCorrelationId());
+
+        target.resetHandlers();
     }
 
     @Test
-    @Ignore
     public void shouldExecuteMessagesForAllHandlers() throws Exception {
         SimpleMessage message = new SimpleMessage();
 
         List<MessageHandler> handlers = getDoubleMessageHandler();
 
-        ActiveMqBusImpl target = new ActiveMqBusImpl(handlers,"test", busHelper);
+        ActiveMqBusImpl target = new ActiveMqBusImpl(handlers,"test3", busHelper);
 
         target.send(message);
         Thread.sleep(500);
@@ -113,6 +122,8 @@ public class ActiveMqBusImplTest {
         assertEquals(message.getCorrelationId(),result.getCorrelationId());
         result =(SimpleMessage) handled.get(1);
         assertEquals(message.getCorrelationId(),result.getCorrelationId());
+
+        target.resetHandlers();
     }
 
     @Test
@@ -121,7 +132,7 @@ public class ActiveMqBusImplTest {
         List<MessageHandler> handlers = getDoubleMessageHandler();
         handlers.addAll(getDoubleCommandHandler());
 
-        ActiveMqBusImpl target = new ActiveMqBusImpl(handlers,"test", busHelper);
+        ActiveMqBusImpl target = new ActiveMqBusImpl(handlers,"test5", busHelper);
 
 
         List<String> types = target.getTypes();
@@ -129,6 +140,8 @@ public class ActiveMqBusImplTest {
         assertEquals(2,types.size());
         assertEquals("SIMPLECOMMAND",types.get(0));
         assertEquals("SIMPLEMESSAGE",types.get(1));
+
+        target.resetHandlers();
     }
 
     @Test
@@ -136,12 +149,14 @@ public class ActiveMqBusImplTest {
 
         List<MessageHandler> handlers = getSimpleMessageHandler();
 
-        ActiveMqBusImpl target = new ActiveMqBusImpl(handlers,"test", busHelper);
+        ActiveMqBusImpl target = new ActiveMqBusImpl(handlers,"test6", busHelper);
 
 
         Object type = target.getType("simplemessage");
 
         assertEquals(SimpleMessage.class,type);
+
+        target.resetHandlers();
     }
 
     @Test
@@ -149,12 +164,14 @@ public class ActiveMqBusImplTest {
 
         List<MessageHandler> handlers = getSimpleMessageHandler();
 
-        ActiveMqBusImpl target = new ActiveMqBusImpl(handlers,"test", busHelper);
+        ActiveMqBusImpl target = new ActiveMqBusImpl(handlers,"test7", busHelper);
 
 
         Object type = target.getType("sImpleMESSage");
 
         assertEquals(SimpleMessage.class,type);
+
+        target.resetHandlers();
     }
 
     private List<MessageHandler> getDoubleCommandHandler() {

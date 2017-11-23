@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("unchecked")
 public abstract class BaseRepository<T> implements Repository<T> {
     protected final RepositoryHelper helper;
 

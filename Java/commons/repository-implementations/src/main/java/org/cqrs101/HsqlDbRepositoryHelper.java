@@ -16,6 +16,7 @@ import java.util.UUID;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
+@SuppressWarnings("unchecked")
 public class HsqlDbRepositoryHelper implements RepositoryHelper {
 
     private static final ObjectMapper mapper = new ObjectMapper();
