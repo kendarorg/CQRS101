@@ -4,11 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.cqrs101.utils.MainEnvironment;
 
 import javax.inject.Inject;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -17,21 +13,23 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 @SuppressWarnings("unchecked")
-public class HsqlDbRepositoryHelper implements RepositoryHelper {
+public class PostgresRepositoryHelper implements RepositoryHelper {
 
     private static final ObjectMapper mapper = new ObjectMapper();
     private final MainEnvironment environment;
     private String name;
-    private final String driverName = "org.hsqldb.jdbcDriver";
+    private final String driverName = "org.postgresql.Driver";
     private Class clazz;
 
     @Inject
-    public HsqlDbRepositoryHelper(MainEnvironment environment){
+    public PostgresRepositoryHelper(MainEnvironment environment){
         this.environment = environment;
     }
 
     private Connection createConnection() throws SQLException {
         String url = environment.getProperty("db.url");
+        String dbName = environment.getProperty("db.name");
+        url = url+"/"+dbName;
         String customer = environment.getProperty("db.user");
         String password = environment.getProperty("db.password");
         return DriverManager.getConnection(url,customer,password);
@@ -46,9 +44,33 @@ public class HsqlDbRepositoryHelper implements RepositoryHelper {
         } catch (Exception e) {
             throw new RuntimeException("Missing HSQLDB Driver");
         }
-        HsqlDbRepositoryHelper helper = new HsqlDbRepositoryHelper(environment);
+        PostgresRepositoryHelper helper = new PostgresRepositoryHelper(environment);
         helper.name = clazz.getSimpleName().toUpperCase(Locale.ROOT).toUpperCase(Locale.ROOT);
         helper.clazz = clazz;
+
+        try {
+
+            String url = environment.getProperty("db.url")+"/";
+            String dbName = environment.getProperty("db.name");
+            String customer = environment.getProperty("db.user");
+            String password = environment.getProperty("db.password");
+            Connection createDb = DriverManager.getConnection(url,customer,password);
+
+            Statement stmt = createDb.createStatement();
+            stmt.executeUpdate(
+                    "CREATE DATABASE \""+dbName+"\"");
+
+        } catch (Exception ex) {
+            System.out.println(ex);
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                System.out.println(ex);
+            }
+        }
         try {
             conn = createConnection();
             Statement stmt = conn.createStatement();

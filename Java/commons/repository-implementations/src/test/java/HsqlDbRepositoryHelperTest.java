@@ -80,9 +80,9 @@ public class HsqlDbRepositoryHelperTest {
     public void setUp() throws Exception {
         setUpDriver();
         mainEnvironment = new MainEnvironment(null);
-        mainEnvironment.setProperty("hsqldb.url","test");
-        mainEnvironment.setProperty("hsqldb.user","test");
-        mainEnvironment.setProperty("hsqldb.password","test");
+        mainEnvironment.setProperty("db.url","test");
+        mainEnvironment.setProperty("db.user","test");
+        mainEnvironment.setProperty("db.password","test");
         //env.setProperty();
         queries = new ArrayList<>();
         factory = new HsqlDbRepositoryHelper(mainEnvironment);

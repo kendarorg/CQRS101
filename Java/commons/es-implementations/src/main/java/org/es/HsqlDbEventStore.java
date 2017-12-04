@@ -65,9 +65,9 @@ public class HsqlDbEventStore implements EventStore {
     }
 
     private Connection createConnection() throws SQLException {
-        String url = environment.getProperty("hsqldb.url");
-        String customer = environment.getProperty("hsqldb.customer");
-        String password = environment.getProperty("hsqldb.password");
+        String url = environment.getProperty("db.url");
+        String customer = environment.getProperty("db.customer");
+        String password = environment.getProperty("db.password");
         return DriverManager.getConnection(url, customer, password);
     }
 

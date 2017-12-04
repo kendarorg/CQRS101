@@ -15,6 +15,6 @@
     <context:component-scan base-package="org.cqrs101" />
     <!--<context:property-placeholder location="application.properties" />-->
     
-    <bean id="repositoryHelper" class="org.cqrs101.HsqlDbRepositoryHelper"></bean>
+    <bean id="repositoryHelper" class="org.cqrs101.PostgresRepositoryHelper"></bean>
 
 </beans>  
