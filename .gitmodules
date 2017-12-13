@@ -1,0 +1,3 @@
+[submodule "CqrsEsLib"]
+	path = CqrsEsLib
+	url = https://github.com/kendarorg/CqrsEs.git
