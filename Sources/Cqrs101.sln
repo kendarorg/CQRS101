@@ -73,7 +73,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cqrs-04.Test", "Cqrs-04\Cqr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Real.Application", "Cqrs-04\Real.Application\Real.Application.csproj", "{1D6C4265-E6CC-4045-B5BF-D4D57D496642}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NServiceBus.Extensions.DependencyInjection", "Cqrs-04\NServiceBus.Extensions.DependencyInjection\NServiceBus.Extensions.DependencyInjection.csproj", "{7B0FBCE6-7BB7-440A-80E9-7BF515D64815}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NServiceBus.Extensions.DependencyInjection", "Cqrs-04\NServiceBus.Extensions.DependencyInjection\NServiceBus.Extensions.DependencyInjection.csproj", "{7B0FBCE6-7BB7-440A-80E9-7BF515D64815}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

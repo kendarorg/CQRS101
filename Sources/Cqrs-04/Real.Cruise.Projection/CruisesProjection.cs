@@ -2,9 +2,6 @@
 using Crud;
 using Cruise.Events;
 using NServiceBus;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Cruise
@@ -13,7 +10,7 @@ namespace Cruise
         IHandleMessages<CruiseCreated>,
         IMessageHandler
     {
-        private IRepository<CruiseProjectionEntity> _repository;
+        private readonly IRepository<CruiseProjectionEntity> _repository;
 
         public CruisesProjection(IRepository<CruiseProjectionEntity> repository)
         {

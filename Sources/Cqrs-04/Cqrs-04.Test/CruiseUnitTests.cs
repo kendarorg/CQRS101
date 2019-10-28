@@ -9,7 +9,7 @@ using Moq;
 using NServiceBus;
 using TestUtils;
 
-namespace Cqrs_01.Test
+namespace Cqrs_04.Test
 {
     [TestClass]
     public class CruiseUnitTests: BaseTestOptimisticEntity<CruiseEntity>

@@ -2,9 +2,7 @@
 using Cruise.Commands;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -17,12 +15,8 @@ namespace Cqrs_04.Test
     [Binding]
     public class IntegrationTestSteps
     {
-        private Process _process;
-
         public string SendRequest(string url,string json=null)
         {
-            string html = string.Empty;
-            
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = json == null ? "GET" : "POST";
             request.ContentType = "application/json";
@@ -86,7 +80,7 @@ namespace Cqrs_04.Test
 
             var allRooms = SendRequest("http://localhost:50922/api/projections/rooms");
             var roomObj = JsonConvert.DeserializeObject<List<RoomsForTripsEntity>>(allRooms)
-                .FirstOrDefault(a => a.CruiseId == cruiseObj.Id && a.Class == clzz && a.Count==1);
+                .FirstOrDefault(a => a.CruiseId == cruiseObj.Id && a.Class == clzz && a.Count==cnt);
             Assert.IsNotNull(roomObj);
         }
 

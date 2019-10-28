@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using Crud;
-using PayPal.Shared;
-using Warehouse.Shared.Commands;
-using Warehouse.Shared.Events;
 
 namespace Purchase.Domain
 {

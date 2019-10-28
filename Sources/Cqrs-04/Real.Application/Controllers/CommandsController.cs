@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Cruise.Commands;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NServiceBus;
 
@@ -13,7 +9,7 @@ namespace Real.Application.Controllers
     [ApiController]
     public class CommandsController : ControllerBase
     {
-        private IMessageSession _messageSession;
+        private readonly IMessageSession _messageSession;
 
         public CommandsController(IMessageSession messageSession)
         {
