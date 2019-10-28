@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Infrastructure\Bus.Lib\Bus.Lib.csproj" />
+      <ProjectReference Include="..\..\Infrastructure\Crud.Lib\Crud.Lib.csproj" />
+      <ProjectReference Include="..\..\Infrastructure\Scheduler.Lib\Scheduler.Lib.csproj" />
+      <ProjectReference Include="..\PayPal.Shared\PayPal.Shared.csproj" />
+      <ProjectReference Include="..\Purchase.Shared\Purchase.Shared.csproj" />
+      <ProjectReference Include="..\Warehouse.Shared\Warehouse.Shared.csproj" />
+    </ItemGroup>
+
+</Project>
