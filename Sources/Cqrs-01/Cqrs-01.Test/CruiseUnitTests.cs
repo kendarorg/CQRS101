@@ -46,6 +46,7 @@ namespace Cqrs_01.Test
 
             //Then
             var message = _messages[0] as CruiseCreated;
+            Assert.AreEqual(message.Name, createCruiseCommand.Name);
             Assert.AreEqual(message.Name, _saved.Name);
         }
 

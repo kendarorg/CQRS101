@@ -1,0 +1,45 @@
+﻿CQRS Conmand Query REsponsibility segregation
+derivat da Meyer (eiffel) 1986 cqs: funzioni separate per lettura e scrittura
+Secondo Fowler 2011 CQRS: separazione dei modelli di rw
+Evoluzione in ottica DDD
+	Domini separati per scrittura e lettura
+Si basa su
+	Bus,
+	Gestori di comandi
+	Gestori di eventi
+Comandi
+	Gestiti come code
+	Sono delle richieste al sistema
+	Ordini
+	Il gestore valida il comando e rigetta
+	Salva lo stato "single source of thruth" e notifica con degli eventi
+	Se gestiti senza optimistic lock devono essere idempotenti
+	Salvano il dato nel modo piu'semplice possible e.g. serializzato
+	Storage: Id, Version, Data
+Eventi
+	Sono notifiche di eventi ormai conclusi
+	Gestiti come dei topic
+Projection
+	Ricevono gli eventi
+	Tramite questi vengono generate le viste materializzate
+	Salvan i dati per la lettura (per fare query semplici)
+Ci sono analogie con varie architetture
+	Actors model: 
+		lo stato di prj e ch e'definito solo con msg
+		Ch e prj hanno storage separati e possono esser indipendenti
+	Microservizi
+	DDD
+		Estremizza separando oltre ai concetti di dominio anche quelli di r e w
+Vediamo la nostra infrastruttura di test-Non e'SAFE FOR PRODUCTION
+	Bus
+		RegisterQueue
+		RegisterTopic
+		RegisterListener
+	Repository
+		CRUD
+	Optimistic repo
+		Gestisce il versioning
+Iniziamo con il nostro Dominio Cruise
+	
+	
+	
