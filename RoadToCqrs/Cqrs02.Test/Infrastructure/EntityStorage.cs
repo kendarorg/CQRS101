@@ -6,12 +6,13 @@ namespace Cqrs01.Test.Infrastructure
 {
     public class EntityStorage
     {
+        private readonly Dictionary<Guid, object> _storage = new Dictionary<Guid, object>();
+        private readonly Bus _bus;
+        
         public EntityStorage(Bus bus)
         {
             _bus = bus;
         }
-        private readonly Dictionary<Guid, object> _storage = new Dictionary<Guid, object>();
-        private readonly Bus _bus;
 
         public void Save<T>(Guid id, AggregateRoot<T> aggregate)
         {

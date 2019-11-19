@@ -7,9 +7,9 @@ namespace Cqrs01.Test.Domain
     public class CruiseEntity: IAggregateEntity
     {
         public Guid Id { get; set; }
-        public int Version { get; set; }
         public string Name { get; set; }
         public List<Room> Rooms { get; set; }
+        public int Version { get; set; }
 
         public CruiseEntity()
         {

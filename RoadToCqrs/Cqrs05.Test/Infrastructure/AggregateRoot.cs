@@ -9,6 +9,7 @@ namespace Cqrs01.Test.Infrastructure
         public object Data { get; set; }
         public DateTime? DelaySend { get; set; }
     }
+    
     public class AggregateRoot<T> where T: IAggregateEntity
     {
         protected AggregateRoot()

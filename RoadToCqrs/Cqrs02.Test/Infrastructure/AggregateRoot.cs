@@ -4,7 +4,6 @@ namespace Cqrs01.Test.Infrastructure
 {
     public class AggregateRoot<T>
     {
-
         protected AggregateRoot()
         {
 

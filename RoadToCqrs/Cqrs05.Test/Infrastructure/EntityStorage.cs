@@ -7,13 +7,14 @@ namespace Cqrs01.Test.Infrastructure
 {
     public class EntityStorage
     {
+        private readonly Dictionary<Guid, IAggregateEntity> _storage = new Dictionary<Guid, IAggregateEntity>();
+        private readonly Bus _bus;
+
         public EntityStorage(Bus bus)
         {
             _bus = bus;
         }
-        private readonly Dictionary<Guid, IAggregateEntity> _storage = new Dictionary<Guid, IAggregateEntity>();
-        private readonly Bus _bus;
-
+        
         public void Save<T>(Guid id, AggregateRoot<T> aggregate,int expectedVersion = -1) where T:IAggregateEntity
         {
             if (!_storage.ContainsKey(id))
