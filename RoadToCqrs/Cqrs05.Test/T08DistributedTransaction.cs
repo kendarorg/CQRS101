@@ -96,6 +96,7 @@ namespace Cqrs05.Test
             //Given
             var now = DateTime.Now;
             var entity = new PaymentEntity(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), 10.0, 1, now);
+            entity.State = PaymentState.Reserving;
 
             //When
             var target = new PaymentAggregateRoot(entity);

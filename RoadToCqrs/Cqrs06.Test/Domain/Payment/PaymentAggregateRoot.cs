@@ -74,5 +74,14 @@ namespace Cqrs05.Test.Domain.Payment
                 }
             }
         }
+
+        public void PaymentCompleted()
+        {
+            if (Entity.State == PaymentState.Paying)
+            {
+                Entity.State = PaymentState.Completed;
+                Publish(new PaymentCompleted(Entity.Id));
+            }
+        }
     }
 }

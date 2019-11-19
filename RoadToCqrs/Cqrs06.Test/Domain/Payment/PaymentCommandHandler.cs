@@ -4,6 +4,7 @@ using Cqrs05.Test.Domain.Payment.Commands;
 using Cqrs05.Test.Domain.Warehouse.Events;
 using Cqrs06.Test.Domain.Payment.Commands;
 using Cqrs06.Test.Domain.Payment.PayPal;
+using Cqrs06.Test.Domain.PayPal.Events;
 using System;
 
 namespace Cqrs05.Test.Domain.Payment
@@ -22,6 +23,7 @@ namespace Cqrs05.Test.Domain.Payment
             _bus.RegisterQueue<ExpirePayment>(Handle);
             _bus.RegisterTopic<ItemsReserved>(Handle);
             _bus.RegisterQueue<CancelPayPalPayment>(Handle);
+            _bus.RegisterQueue<PayPalPaymentCompleted>(Handle);
             _entityStorage = entityStorage;
         }
 
@@ -52,6 +54,17 @@ namespace Cqrs05.Test.Domain.Payment
                     entity.Amount, entity.Expiration);
                 aggregate.Pay(payPalTransactionId);
                 _entityStorage.Save(@event.OwnerId, aggregate, 0);
+            }
+        }
+
+        private void Handle(PayPalPaymentCompleted @event)
+        {
+            var entity = _entityStorage.GetById<PaymentEntity>(@event.OwnerId);
+            if (entity != null)
+            {
+                var aggregate = new PaymentAggregateRoot(entity);
+                aggregate.PaymentCompleted();
+                _entityStorage.Save(entity.Id, aggregate, entity.Version);
             }
         }
 

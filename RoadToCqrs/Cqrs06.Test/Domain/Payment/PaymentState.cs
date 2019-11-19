@@ -12,6 +12,7 @@ namespace Cqrs05.Test.Domain.Payment
         Reserving,
         Failed,
         Confirmed,
-        Paying
+        Paying,
+        Completed
     }
 }
