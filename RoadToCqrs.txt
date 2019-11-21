@@ -122,21 +122,21 @@ T09: Distributed transaction
 The Red Pill
 
 What we have seen until now is only a toy implementation. Several issues should be addressed e.g. (but not limited to): 
-•	Bus failures: in these examples we assume the bus never fails. We should use a subsystem that handles these situations, like a retry policy to send the Events or an XA between an RDBMS and the Bus
-•	The distributed transactions or better “sagas” would be handled easily with a State Machine. Some Service Bus implementation offers even specific DSLs to ease the solution.
-•	The “toxic” messages will be sent typically on the “Dead Letter” queues. Someone should take care of them!
-•	Use only when fitting: an example would be a Tree data structure. Sometimes the effort to build a Domain is simply too big
+Bus failures: in these examples we assume the bus never fails. We should use a subsystem that handles these situations, like a retry policy to send the Events or an XA between an RDBMS and the Bus
+The distributed transactions or better “sagas” would be handled easily with a State Machine. Some Service Bus implementation offers even specific DSLs to ease the solution.
+The “toxic” messages will be sent typically on the “Dead Letter” queues. Someone should take care of them!
+Use only when fitting: an example would be a Tree data structure. Sometimes the effort to build a Domain is simply too big
 
 References and Contacs
 
 •	Enrico Da Ros
 	•	Github: https://github.com/kendarorg
 	•	Linkedin: https://linkedin.com/enricodaros 
-•	Eric Evans, Domain-Driven Design, Addison-Wesley, 2003
-•	Jimmy Nilsson, Applying Domain-Driven Design and Patterns, Pearson, 2006
-•	Vaughn Vernon, Implementing Domain Driven Design, Pearson, 2013
-•	NServiceBus, https://particular.net/nservicebus
-•	Martin Folwer, https://martinfowler.com/
-•	Jimmy Bogard, https://jimmybogard.com/
+Eric Evans, Domain-Driven Design, Addison-Wesley, 2003
+Jimmy Nilsson, Applying Domain-Driven Design and Patterns, Pearson, 2006
+Vaughn Vernon, Implementing Domain Driven Design, Pearson, 2013
+NServiceBus, https://particular.net/nservicebus
+Martin Folwer, https://martinfowler.com/
+Jimmy Bogard, https://jimmybogard.com/
 
 
