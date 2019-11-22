@@ -10,6 +10,6 @@ namespace Infrastructure.Lib.Cqrs
 
         void Save<T>(AggregateRoot<T> aggregate, int expectedVersion = -1) where T : IAggregateEntity;
 
-        T GetById<T>(Guid id) where T : IAggregateRoot;
+        T GetById<T,K>(Guid id) where T : IAggregateRoot;
     }
 }

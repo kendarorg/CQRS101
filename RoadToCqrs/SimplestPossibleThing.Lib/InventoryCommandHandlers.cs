@@ -23,28 +23,28 @@ namespace SimplestPossibleThing.Lib
 
         public void Handle(DeactivateInventoryItem message)
         {
-            var item = _repository.GetById<InventoryItem>(message.InventoryItemId);
+            var item = _repository.GetById<InventoryItem,InventoryItemEntity>(message.InventoryItemId);
             item.Deactivate();
             _repository.Save(item, message.OriginalVersion);
         }
 
         public void Handle(RemoveItemsFromInventory message)
         {
-            var item = _repository.GetById<InventoryItem>(message.InventoryItemId);
+            var item = _repository.GetById<InventoryItem, InventoryItemEntity>(message.InventoryItemId);
             item.Remove(message.Count);
             _repository.Save(item, message.OriginalVersion);
         }
 
         public void Handle(CheckInItemsToInventory message)
         {
-            var item = _repository.GetById<InventoryItem>(message.InventoryItemId);
+            var item = _repository.GetById<InventoryItem, InventoryItemEntity>(message.InventoryItemId);
             item.CheckIn(message.Count);
             _repository.Save(item, message.OriginalVersion);
         }
 
         public void Handle(RenameInventoryItem message)
         {
-            var item = _repository.GetById<InventoryItem>(message.InventoryItemId);
+            var item = _repository.GetById<InventoryItem, InventoryItemEntity>(message.InventoryItemId);
             item.ChangeName(message.NewName);
             _repository.Save(item, message.OriginalVersion);
         }

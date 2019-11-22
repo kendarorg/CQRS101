@@ -6,5 +6,6 @@ namespace SimplestPossibleThing.Lib.Projection
     {
         void Save(InventoryItemDetailsDto inventoryItemDetailsDto);
         InventoryItemDetailsDto GetById(Guid id);
+        void Delete(Guid id);
     }
 }

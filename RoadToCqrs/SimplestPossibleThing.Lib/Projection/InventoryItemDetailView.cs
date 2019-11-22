@@ -23,6 +23,7 @@ namespace SimplestPossibleThing.Lib.Projection
             InventoryItemDetailsDto d = GetDetailsItem(message.Id);
             d.Name = message.NewName;
             d.Version = message.Version;
+            _repository.Save(d);
         }
 
         private InventoryItemDetailsDto GetDetailsItem(Guid id)
@@ -42,6 +43,7 @@ namespace SimplestPossibleThing.Lib.Projection
             InventoryItemDetailsDto d = GetDetailsItem(message.Id);
             d.CurrentCount -= message.Count;
             d.Version = message.Version;
+            _repository.Save(d);
         }
 
         public void Handle(ItemsCheckedInToInventory message)
@@ -49,11 +51,12 @@ namespace SimplestPossibleThing.Lib.Projection
             InventoryItemDetailsDto d = GetDetailsItem(message.Id);
             d.CurrentCount += message.Count;
             d.Version = message.Version;
+            _repository.Save(d);
         }
 
         public void Handle(InventoryItemDeactivated message)
         {
-            BullShitDatabase.details.Remove(message.Id);
+            _repository.Delete(message.Id);
         }
     }
 }

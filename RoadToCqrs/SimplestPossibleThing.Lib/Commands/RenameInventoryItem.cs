@@ -1,5 +1,6 @@
-﻿using System;
-using System.Windows.Input;
+﻿using Infrastructure.Lib.Cqrs;
+using System;
+
 
 namespace SimplestPossibleThing.Lib.Commands
 {

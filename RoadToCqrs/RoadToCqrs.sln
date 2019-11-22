@@ -15,11 +15,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cqrs05.Test", "Cqrs05.Test\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cqrs06.Test", "Cqrs06.Test\Cqrs06.Test.csproj", "{3902DE13-7AE6-4465-9008-C9E005A97D4A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimplestPossibleThing", "SimplestPossibleThing\SimplestPossibleThing.csproj", "{62D9199B-C02D-4162-B918-41A44F9D00A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimplestPossibleThing", "SimplestPossibleThing\SimplestPossibleThing.csproj", "{62D9199B-C02D-4162-B918-41A44F9D00A2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimplestPossibleThing.Lib", "SimplestPossibleThing.Lib\SimplestPossibleThing.Lib.csproj", "{96C12956-C497-4D05-8780-612AFDB5B741}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimplestPossibleThing.Lib", "SimplestPossibleThing.Lib\SimplestPossibleThing.Lib.csproj", "{96C12956-C497-4D05-8780-612AFDB5B741}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Lib", "Infrastructure.Lib\Infrastructure.Lib.csproj", "{08FC43C4-AA24-4683-97C9-788DC07D8C27}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Lib", "Infrastructure.Lib\Infrastructure.Lib.csproj", "{08FC43C4-AA24-4683-97C9-788DC07D8C27}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Mongo", "Infrastructure.Mongo\Infrastructure.Mongo.csproj", "{E1F7032C-49AB-4F31-A070-FC1F233361DA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimplestPossibleThing.Mongo", "SimplestPossibleThing.Mongo\SimplestPossibleThing.Mongo.csproj", "{A23F3D88-8A88-4FB5-8E5F-87D997BE7A27}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,6 +67,14 @@ Global
 		{08FC43C4-AA24-4683-97C9-788DC07D8C27}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{08FC43C4-AA24-4683-97C9-788DC07D8C27}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{08FC43C4-AA24-4683-97C9-788DC07D8C27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E1F7032C-49AB-4F31-A070-FC1F233361DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1F7032C-49AB-4F31-A070-FC1F233361DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1F7032C-49AB-4F31-A070-FC1F233361DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1F7032C-49AB-4F31-A070-FC1F233361DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A23F3D88-8A88-4FB5-8E5F-87D997BE7A27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A23F3D88-8A88-4FB5-8E5F-87D997BE7A27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A23F3D88-8A88-4FB5-8E5F-87D997BE7A27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A23F3D88-8A88-4FB5-8E5F-87D997BE7A27}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
