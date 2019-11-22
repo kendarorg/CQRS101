@@ -25,11 +25,7 @@ namespace Cqrs01.Test
             //Given
             var id = Guid.NewGuid();
             var name = "test";
-            var command = new CreateCruise
-            {
-                CruiseId = id,
-                Name = name
-            };
+            var command = new CreateCruise(id,name);
 
             //When
             _target.Handle(command);
@@ -47,11 +43,7 @@ namespace Cqrs01.Test
             //Given
             var id = Guid.NewGuid();
             var name = "test";
-            var command = new CreateCruise
-            {
-                CruiseId = id,
-                Name = name
-            };
+            var command = new CreateCruise(id,name);
 
             //When
             _target.Handle(command);
@@ -70,12 +62,7 @@ namespace Cqrs01.Test
             var name = "test";
             var aggregateRoot = new CruiseAggregateRoot(id, name);
             _entityStorage.Save(id, aggregateRoot);
-            var command = new AddRoom
-            {
-                CruiseId = id,
-                Number = 1,
-                Category = 2
-            };
+            var command = new AddRoom(id,1,2);
 
             //When
             _target.Handle(command);
@@ -97,12 +84,7 @@ namespace Cqrs01.Test
             var name = "test";
             var aggregateRoot = new CruiseAggregateRoot(id, name);
             _entityStorage.Save(id, aggregateRoot);
-            var command = new AddRoom
-            {
-                CruiseId = id,
-                Number = 1,
-                Category = 2
-            };
+            var command = new AddRoom(id,1,2);
 
             //When
             _target.Handle(command);
