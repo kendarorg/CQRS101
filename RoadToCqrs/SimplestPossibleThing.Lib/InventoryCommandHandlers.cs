@@ -1,4 +1,5 @@
 ﻿using Infrastructure.Lib.Cqrs;
+
 using Infrastructure.Lib.ServiceBus;
 using SimplestPossibleThing.Lib.Commands;
 using System;
@@ -7,18 +8,19 @@ using System.Text;
 
 namespace SimplestPossibleThing.Lib
 {
-    public class InventoryCommandHandlers:
-        IMessageHandler<CreateInventoryItem>,
-        IMessageHandler<DeactivateInventoryItem>,
-        IMessageHandler<RemoveItemsFromInventory>,
-        IMessageHandler<CheckInItemsToInventory>,
-        IMessageHandler<RenameInventoryItem>
+    public class InventoryCommandHandlers
+
     {
         private readonly IEntityStorage _repository;
 
-        public InventoryCommandHandlers(IEntityStorage repository)
+        public InventoryCommandHandlers(IBus bus, IEntityStorage repository)
         {
             _repository = repository;
+            bus.Register<CreateInventoryItem>(Handle);
+            bus.Register<DeactivateInventoryItem>(Handle);
+            bus.Register<RemoveItemsFromInventory>(Handle);
+            bus.Register<CheckInItemsToInventory>(Handle);
+            bus.Register<RenameInventoryItem>(Handle);
         }
 
         public void Handle(CreateInventoryItem message)
@@ -29,7 +31,7 @@ namespace SimplestPossibleThing.Lib
 
         public void Handle(DeactivateInventoryItem message)
         {
-            var item = _repository.GetById<InventoryItem,InventoryItemEntity>(message.InventoryItemId);
+            var item = _repository.GetById<InventoryItem, InventoryItemEntity>(message.InventoryItemId);
             item.Deactivate();
             _repository.Save(item, message.OriginalVersion);
         }

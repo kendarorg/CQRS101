@@ -23,6 +23,15 @@ namespace Infrastructure.Mongo.Projections
             collection.DeleteOne(toDelete => toDelete.Id == id);
         }
 
+        public IEnumerable<InventoryItemListDto> GetAll()
+        {
+            var client = new MongoClient(_connectionString);
+            var database = client.GetDatabase("cqrs");
+            database.CreateCollection("InventoryItemDetails");
+            var collection = database.GetCollection<InventoryItemListDto>("InventoryItemDetails");
+            return collection.Find(document => true).ToList();
+        }
+
         public InventoryItemListDto GetById(Guid id)
         {
             var client = new MongoClient(_connectionString);

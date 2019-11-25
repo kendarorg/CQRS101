@@ -1,4 +1,5 @@
 ﻿using Infrastructure.Lib.Cqrs;
+using Infrastructure.Lib.ServiceBus;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Newtonsoft.Json;

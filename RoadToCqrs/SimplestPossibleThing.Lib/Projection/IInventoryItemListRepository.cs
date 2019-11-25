@@ -1,4 +1,6 @@
-﻿using System;
+﻿
+using System;
+using System.Collections.Generic;
 
 namespace SimplestPossibleThing.Lib.Projection
 {
@@ -7,5 +9,6 @@ namespace SimplestPossibleThing.Lib.Projection
         void Save(InventoryItemListDto inventoryItemListDto);
         InventoryItemListDto GetById(Guid id);
         void Delete(Guid id);
+        IEnumerable<InventoryItemListDto> GetAll();
     }
 }

@@ -1,4 +1,5 @@
-﻿using Infrastructure.Lib.ServiceBus;
+﻿
+using Infrastructure.Lib.ServiceBus;
 using SimplestPossibleThing.Lib.Events;
 using System;
 using System.Collections.Generic;
@@ -6,16 +7,17 @@ using System.Text;
 
 namespace SimplestPossibleThing.Lib.Projection
 {
-    public class InventoryListView :
-        IMessageHandler<InventoryItemCreated>,
-        IMessageHandler<InventoryItemRenamed>,
-        IMessageHandler<InventoryItemDeactivated>
+    public class InventoryListView 
     {
         private readonly IInventoryItemListRepository _repository;
 
-        public InventoryListView(IInventoryItemListRepository repository)
+        public InventoryListView(IBus bus,IInventoryItemListRepository repository)
         {
             _repository = repository;
+
+            bus.Register<InventoryItemCreated>(Handle);
+            bus.Register<InventoryItemRenamed>(Handle);
+            bus.Register<InventoryItemDeactivated>(Handle);
         }
         public void Handle(InventoryItemCreated message)
         {
