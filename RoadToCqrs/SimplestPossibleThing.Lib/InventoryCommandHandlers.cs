@@ -1,4 +1,5 @@
 ﻿using Infrastructure.Lib.Cqrs;
+using Infrastructure.Lib.ServiceBus;
 using SimplestPossibleThing.Lib.Commands;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,12 @@ using System.Text;
 
 namespace SimplestPossibleThing.Lib
 {
-    public class InventoryCommandHandlers
+    public class InventoryCommandHandlers:
+        IMessageHandler<CreateInventoryItem>,
+        IMessageHandler<DeactivateInventoryItem>,
+        IMessageHandler<RemoveItemsFromInventory>,
+        IMessageHandler<CheckInItemsToInventory>,
+        IMessageHandler<RenameInventoryItem>
     {
         private readonly IEntityStorage _repository;
 

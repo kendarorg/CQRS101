@@ -1,11 +1,15 @@
-﻿using SimplestPossibleThing.Lib.Events;
+﻿using Infrastructure.Lib.ServiceBus;
+using SimplestPossibleThing.Lib.Events;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace SimplestPossibleThing.Lib.Projection
 {
-    public class InventoryListView
+    public class InventoryListView :
+        IMessageHandler<InventoryItemCreated>,
+        IMessageHandler<InventoryItemRenamed>,
+        IMessageHandler<InventoryItemDeactivated>
     {
         private readonly IInventoryItemListRepository _repository;
 

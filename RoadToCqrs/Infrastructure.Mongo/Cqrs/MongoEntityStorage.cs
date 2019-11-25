@@ -58,20 +58,14 @@ namespace Infrastructure.Mongo.Cqrs
                         Data = JsonConvert.SerializeObject(entity)
                     };
 
-                    if (expectedVersion == -1)
-                    {
-                        collection.InsertOne(data);
-                    }
-                    else
-                    {
-                        var result = collection.ReplaceOne<EntityData>(document =>
-                            document.Id == data.Id && document.Version == data.Version - 1,
-                            data);
+                    var result = collection.ReplaceOne<EntityData>(
+                        filter: dt => dt.Id == data.Id,
+                        options: new UpdateOptions { IsUpsert = true },
+                        replacement: data);
 
-                        if (result.ModifiedCount == 0)
-                        {
-                            throw new ConcurrencyException();
-                        }
+                    if (result.MatchedCount == 0 || result.UpsertedId == null)
+                    {
+                        throw new ConcurrencyException();
                     }
                     foreach (var @event in aggregate.GetUnsentEvents())
                     {
