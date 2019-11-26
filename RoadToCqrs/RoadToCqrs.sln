@@ -25,7 +25,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Mongo", "Inf
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimplestPossibleThing.Mongo", "SimplestPossibleThing.Mongo\SimplestPossibleThing.Mongo.csproj", "{A23F3D88-8A88-4FB5-8E5F-87D997BE7A27}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.RabbitMq", "Infrastructure.RabbitMq\Infrastructure.RabbitMq.csproj", "{65AA3BB6-C5F4-4BC7-A597-933CD578628C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.RabbitMq", "Infrastructure.RabbitMq\Infrastructure.RabbitMq.csproj", "{65AA3BB6-C5F4-4BC7-A597-933CD578628C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Cqrs07", "Cqrs07", "{F11A06C6-FC49-4611-BA7F-517FAB1EB181}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -84,6 +86,14 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{62D9199B-C02D-4162-B918-41A44F9D00A2} = {F11A06C6-FC49-4611-BA7F-517FAB1EB181}
+		{96C12956-C497-4D05-8780-612AFDB5B741} = {F11A06C6-FC49-4611-BA7F-517FAB1EB181}
+		{08FC43C4-AA24-4683-97C9-788DC07D8C27} = {F11A06C6-FC49-4611-BA7F-517FAB1EB181}
+		{E1F7032C-49AB-4F31-A070-FC1F233361DA} = {F11A06C6-FC49-4611-BA7F-517FAB1EB181}
+		{A23F3D88-8A88-4FB5-8E5F-87D997BE7A27} = {F11A06C6-FC49-4611-BA7F-517FAB1EB181}
+		{65AA3BB6-C5F4-4BC7-A597-933CD578628C} = {F11A06C6-FC49-4611-BA7F-517FAB1EB181}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {87BCAF88-B97A-4886-88A8-C507024A7407}

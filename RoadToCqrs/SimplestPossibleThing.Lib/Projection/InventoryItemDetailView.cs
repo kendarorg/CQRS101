@@ -29,7 +29,6 @@ namespace SimplestPossibleThing.Lib.Projection
         {
             InventoryItemDetailsDto d = GetDetailsItem(message.Id);
             d.Name = message.NewName;
-            d.Version = message.Version;
             _repository.Save(d);
         }
 
@@ -49,7 +48,6 @@ namespace SimplestPossibleThing.Lib.Projection
         {
             InventoryItemDetailsDto d = GetDetailsItem(message.Id);
             d.CurrentCount -= message.Count;
-            d.Version = message.Version;
             _repository.Save(d);
         }
 
@@ -57,7 +55,6 @@ namespace SimplestPossibleThing.Lib.Projection
         {
             InventoryItemDetailsDto d = GetDetailsItem(message.Id);
             d.CurrentCount += message.Count;
-            d.Version = message.Version;
             _repository.Save(d);
         }
 

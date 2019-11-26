@@ -14,12 +14,11 @@ namespace Infrastructure.Rabbit
 {
     public class RabbitBus : Lib.ServiceBus.IBus
     {
-        private readonly string _rabbitHost;
+        const int MAX_RETRIES = 3;
         private readonly IConnection _connection;
 
         public RabbitBus(string rabbitHost = "localhost")
         {
-            _rabbitHost = rabbitHost;
             var factory = new ConnectionFactory() { HostName = rabbitHost };
             _connection = factory.CreateConnection();
             
@@ -100,7 +99,21 @@ namespace Infrastructure.Rabbit
                 }
                 catch (Exception ex)
                 {
-                    channel.BasicReject(ea.DeliveryTag, false);
+                    int retryCount = GetRetryCount(ea.BasicProperties, "x-retry");
+                    if (retryCount > MAX_RETRIES)
+                    {
+                        channel.BasicReject(ea.DeliveryTag, false);
+                    }
+                    else
+                    {
+                        IBasicProperties propertiesForCopy = channel.CreateBasicProperties();
+                        IDictionary<string, object> headersCopy = CopyHeaders(ea.BasicProperties);
+                        propertiesForCopy.Headers = headersCopy;
+                        propertiesForCopy.Headers["x-retry"] = ++retryCount;
+                        propertiesForCopy.Headers["x-exception"] = ex.ToString();
+                        channel.BasicPublish(ea.Exchange, ea.RoutingKey, propertiesForCopy, ea.Body);
+                        channel.BasicAck(ea.DeliveryTag, false);
+                    }
                 }
             };
             channel.BasicConsume(queue: queueName,
@@ -126,49 +139,6 @@ namespace Infrastructure.Rabbit
                                  routingKey: routingKey,
                                  basicProperties: null,
                                  body: body);
-        }
-    }
-}
-
-
-private static void ReceiveBadMessageExtended(IModel model)
-{
-    model.BasicQos(0, 1, false);
-    QueueingBasicConsumer consumer = new QueueingBasicConsumer(model);
-    model.BasicConsume(RabbitMqService.BadMessageBufferedQueue, false, consumer);
-    string customRetryHeaderName = "number-of-retries";
-    int maxNumberOfRetries = 3;
-    while (true)
-    {
-        BasicDeliverEventArgs deliveryArguments = consumer.Queue.Dequeue() as BasicDeliverEventArgs;
-        String message = Encoding.UTF8.GetString(deliveryArguments.Body);
-        Console.WriteLine("Message from queue: {0}", message);
-        Random random = new Random();
-        int i = random.Next(0, 3);
-        int retryCount = GetRetryCount(deliveryArguments.BasicProperties, customRetryHeaderName);
-        if (i == 2) //no exception, accept message
-        {
-            Console.WriteLine("Message {0} accepted. Number of retries: {1}", message, retryCount);
-            model.BasicAck(deliveryArguments.DeliveryTag, false);
-        }
-        else //simulate exception: accept message, but create copy and throw back
-        {
-            if (retryCount < maxNumberOfRetries)
-            {
-                Console.WriteLine("Message {0} has thrown an exception. Current number of retries: {1}", message, retryCount);
-                IBasicProperties propertiesForCopy = model.CreateBasicProperties();
-                IDictionary<string, object> headersCopy = CopyHeaders(deliveryArguments.BasicProperties);
-                propertiesForCopy.Headers = headersCopy;
-                propertiesForCopy.Headers[customRetryHeaderName] = ++retryCount;
-                model.BasicPublish(deliveryArguments.Exchange, deliveryArguments.RoutingKey, propertiesForCopy, deliveryArguments.Body);
-                model.BasicAck(deliveryArguments.DeliveryTag, false);
-                Console.WriteLine("Message {0} thrown back at queue for retry. New retry count: {1}", message, retryCount);
-            }
-            else //must be rejected, cannot process
-            {
-                Console.WriteLine("Message {0} has reached the max number of retries. It will be rejected.", message);
-                model.BasicReject(deliveryArguments.DeliveryTag, false);
-            }
         }
     }
 }

@@ -39,7 +39,7 @@ namespace SimplestPossibleThing.Lib
         {
             if (count <= 0) throw new InvalidOperationException("must have a count greater than 0 to add to inventory");
             Entity.Items += count;
-            Publish(new ItemsRemovedFromInventory(Entity.Id, count));
+            Publish(new ItemsCheckedInToInventory(Entity.Id, count));
         }
 
         public void Deactivate()
