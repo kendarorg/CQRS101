@@ -15,22 +15,20 @@ namespace Infrastructure.Rabbit
     public class RabbitBus : Lib.ServiceBus.IBus
     {
         private readonly string _rabbitHost;
-        private readonly IAdvancedBus _advancedBus;
-
+        private readonly IConnection _connection;
 
         public RabbitBus(string rabbitHost = "localhost")
         {
             _rabbitHost = rabbitHost;
-
-            _advancedBus = RabbitHutch.CreateBus("host=" + rabbitHost).Advanced;
-            _advancedBus.ExchangeDeclare("events", ExchangeType.Topic);
-            _advancedBus.ExchangeDeclare("commands", ExchangeType.Direct);
+            var factory = new ConnectionFactory() { HostName = rabbitHost };
+            _connection = factory.CreateConnection();
         }
 
 
 
-        public void Register<T>(Action<T> handler) where T:class
+        public void Register<T>(Action<T> handler) where T : class
         {
+            string queueName = typeof(T).Name;
             string exchangeName = "commands";
             var exchangeType = ExchangeType.Direct;
             if (typeof(IEvent).IsAssignableFrom(typeof(T)))
@@ -38,36 +36,46 @@ namespace Infrastructure.Rabbit
                 exchangeType = ExchangeType.Topic;
                 exchangeName = "events";
             }
-            var queue = _advancedBus.QueueDeclare(typeof(T).Name);
-            var exchange = _advancedBus.ExchangeDeclare(exchangeName, exchangeType);
-            var binding = _advancedBus.Bind(exchange, queue, typeof(T).Name);
-            _advancedBus.Consume(queue, x => x
-                    .Add<T>((message, info) =>
-                    {
-                        handler(message.Body);
-                    })
-                    .ThrowOnNoMatchingHandler = false
-                );
+            var channel = _connection.CreateModel();
+            channel.QueueDeclare(queueName, true);
+            channel.ExchangeDeclare(exchangeName, exchangeType, true);
+            channel.QueueBind(queueName, exchangeName, queueName);
+            var consumer = new EventingBasicConsumer(channel);
+            consumer.Received += (model, ea) =>
+            {
+                try
+                {
+                    var body = ea.Body;
+                    var message = JsonConvert.DeserializeObject<T>(Encoding.UTF8.GetString(body));
+                    handler(message);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
+            };
+            channel.BasicConsume(queue: queueName,
+                                 autoAck: true,
+                                 consumer: consumer);
         }
 
         public void Send(object message, TimeSpan? delay = null)
         {
+            string queueName = message.GetType().Name;
+            string exchangeName = "commands";
             if (typeof(IEvent).IsAssignableFrom(message.GetType()))
             {
-                var exchange = _advancedBus.ExchangeDeclare("events", ExchangeType.Topic);
-                _advancedBus.Publish(exchange, message.GetType().Name,true,new MessageProperties
-                {
-                    
-                }, Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message)));
+                exchangeName = "events";
             }
-            else if (typeof(ICommand).IsAssignableFrom(message.GetType()))
-            {
-                var exchange = _advancedBus.ExchangeDeclare("commands", ExchangeType.Direct);
-                _advancedBus.Publish(exchange, message.GetType().Name, true, new MessageProperties
-                {
+            var channel = _connection.CreateModel();
+            channel.QueueDeclare(queueName, true);
 
-                }, Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message)));
-            }
+            var body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message));
+
+            channel.BasicPublish(exchange: exchangeName,
+                                 routingKey: queueName,
+                                 basicProperties: null,
+                                 body: body);
         }
     }
 }

@@ -7,4 +7,7 @@ namespace Infrastructure.Lib.Cqrs
     public class ConcurrencyException : Exception
     {
     }
+    public class LostUpdateException : Exception
+    {
+    }
 }
