@@ -12,20 +12,6 @@ namespace Infrastructure.Mongo.Projections
     {
         private readonly string _connectionString;
 
-
-
-        private static InventoryItemListDto ToDto(BsonDocument bson)
-        {
-            return new InventoryItemListDto(bson["_id"].AsGuid, bson["Name"].AsString);
-        }
-
-        private static BsonDocument FromDto(InventoryItemListDto bson)
-        {
-            var doc = new BsonDocument();
-            doc["_id"] = bson.Id.ToString().Replace("-", "");
-            doc["Name"] = bson.Name;
-            return doc;
-        }
         public MongoInventoryItemListRepository(string connectionString)
         {
             _connectionString = connectionString;
@@ -34,9 +20,8 @@ namespace Infrastructure.Mongo.Projections
         {
             var client = new MongoClient(_connectionString);
             var database = client.GetDatabase("cqrs");
-            //database.CreateCollection("InventoryItemDetails");
-            var collection = database.GetCollection<BsonDocument>("InventoryItemList");
-            var filter = Builders<BsonDocument>.Filter.Eq("_id", new ObjectId(id.ToString().Replace("-", "")));
+            var collection = database.GetCollection<InventoryItemListDto>("InventoryItemList");
+            var filter = Builders<InventoryItemListDto>.Filter.Eq("_id", id);
             collection.DeleteOne(filter);
         }
 
@@ -44,38 +29,34 @@ namespace Infrastructure.Mongo.Projections
         {
             var client = new MongoClient(_connectionString);
             var database = client.GetDatabase("cqrs");
-            //database.CreateCollection("InventoryItemDetails");
-            var collection = database.GetCollection<BsonDocument>("InventoryItemList");
-            return collection.AsQueryable().Select(bd => ToDto(bd));
+            var collection = database.GetCollection<InventoryItemListDto>("InventoryItemList");
+            return collection.AsQueryable();
         }
 
         public InventoryItemListDto GetById(Guid id)
         {
             var client = new MongoClient(_connectionString);
             var database = client.GetDatabase("cqrs");
-            //database.CreateCollection("InventoryItemDetails");
-            var collection = database.GetCollection<BsonDocument>("InventoryItemList");
-            var filter = Builders<BsonDocument>.Filter.Eq("_id", new ObjectId(id.ToString().Replace("-", "")));
-            var bson = collection.Find(filter).FirstOrDefault();
-            if (bson == null)
+            var collection = database.GetCollection<InventoryItemListDto>("InventoryItemList");
+            var filter = Builders<InventoryItemListDto>.Filter.Eq("_id", id);
+            var result = collection.Find(filter).FirstOrDefault();
+            if (result == null)
             {
                 return null;
             }
-            return ToDto(bson);
+            return result;
         }
 
         public void Save(InventoryItemListDto inventoryItemListDto)
         {
             var client = new MongoClient(_connectionString);
             var database = client.GetDatabase("cqrs");
-            //database.CreateCollection("InventoryItemDetails");
-            var collection = database.GetCollection<BsonDocument>("InventoryItemList");
+            var collection = database.GetCollection<InventoryItemListDto>("InventoryItemList");
 
-            var objectID = new ObjectId(inventoryItemListDto.Id.ToString().Replace("-", ""));
 
-            var filter = Builders<BsonDocument>.Filter.Eq("_id", objectID);
+            var filter = Builders<InventoryItemListDto>.Filter.Eq("Id", inventoryItemListDto.Id);
             var result = collection.ReplaceOne(
-                filter, FromDto(inventoryItemListDto), new UpdateOptions { IsUpsert = true });
+                filter, inventoryItemListDto, new UpdateOptions { IsUpsert = true });
         }
     }
 }

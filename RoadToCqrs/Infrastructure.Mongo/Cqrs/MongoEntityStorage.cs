@@ -11,7 +11,7 @@ namespace Infrastructure.Mongo.Cqrs
 {
     public class EntityData
     {
-        public Guid _id { get; set; }
+        public Guid Id { get; set; }
         public int Version { get; set; }
         public string Data { get; set; }
     }
@@ -31,15 +31,15 @@ namespace Infrastructure.Mongo.Cqrs
             var client = new MongoClient(_connectionString);
             var database = client.GetDatabase("cqrs");
             //database.CreateCollection("entityStorage");
-            var collection = database.GetCollection<BsonDocument>("entityStorage");
-            var filter = Builders<BsonDocument>.Filter.Eq("_id",new ObjectId( id.ToString().Replace("-","")));
+            var collection = database.GetCollection<EntityData>("entityStorage");
+            var filter = Builders<EntityData>.Filter.Eq("Id", id);
             var result = collection.Find(filter).FirstOrDefault();
             if (result == null)
             {
                 return default(T);
             }
             return (T)Activator.CreateInstance(typeof(T),
-                new object[] { JsonConvert.DeserializeObject<K>(result["Data"].AsString) });
+                new object[] { JsonConvert.DeserializeObject<K>(result.Data) });
         }
 
         public void Save<T>(AggregateRoot<T> aggregate, int expectedVersion = -1) where T : IAggregateEntity
@@ -49,31 +49,33 @@ namespace Infrastructure.Mongo.Cqrs
             {
                 var database = client.GetDatabase("cqrs");
                 //database.CreateCollection("entityStorage");
-                var collection = database.GetCollection<BsonDocument>("entityStorage");
+                var collection = database.GetCollection<EntityData>("entityStorage");
                 try
                 {
                     var entity = aggregate.Entity;
-                    var data = new BsonDocument();
-                    data["_id"] = new ObjectId(entity.Id.ToString().Replace("-",""));
-                    data["Version"] = entity.Version;
-                    data["Data"] = JsonConvert.SerializeObject(entity);
+                    var entityData = new EntityData
+                    {
+                        Id = entity.Id,
+                        Data = JsonConvert.SerializeObject(entity),
+                        Version = entity.Version
+                    };
 
-                    var filter = Builders<BsonDocument>.Filter.Eq("_id", data["_id"]);
+                    var filter = Builders<EntityData>.Filter.And(Builders<EntityData>.Filter.Eq("Id", entity.Id), Builders<EntityData>.Filter.Eq("Version", expectedVersion));
                     var result = collection.ReplaceOne(
-                        filter, data, new UpdateOptions { IsUpsert = true });
+                        filter, entityData, new UpdateOptions { IsUpsert = true, });
 
                     if (result.MatchedCount == 0 && result.UpsertedId == null)
                     {
                         var existing = collection.Find(filter).FirstOrDefault();
-                        if(existing!=null && existing["Version"].AsInt32 < expectedVersion)
+                        if (existing != null && existing.Version < expectedVersion)
                         {
                             throw new LostUpdateException();
                         }
                         throw new ConcurrencyException();
                     }
-                    foreach (var @event in aggregate.GetUnsentEvents())
+                    foreach (ItemToSend @event in aggregate.GetUnsentEvents())
                     {
-                        _bus.Send(@event);
+                        _bus.Send(@event.Data, @event.DelaySend);
                     }
                 }
                 catch (Exception ex)

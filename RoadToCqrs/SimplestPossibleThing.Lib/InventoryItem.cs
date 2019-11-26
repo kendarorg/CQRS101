@@ -15,6 +15,7 @@ namespace SimplestPossibleThing.Lib
         public InventoryItem(Guid id, string name)
         {
             Entity = new InventoryItemEntity(id, name);
+            Entity.Version = -1;
             Publish(new InventoryItemCreated(id, name));
         }
 
@@ -29,7 +30,7 @@ namespace SimplestPossibleThing.Lib
         public void Remove(int count)
         {
             if (count <= 0) throw new InvalidOperationException("cant remove negative count from inventory");
-            Entity.Items += count;
+            Entity.Items -= count;
             Publish(new ItemsRemovedFromInventory(Entity.Id, count));
         }
 
@@ -37,7 +38,7 @@ namespace SimplestPossibleThing.Lib
         public void CheckIn(int count)
         {
             if (count <= 0) throw new InvalidOperationException("must have a count greater than 0 to add to inventory");
-            Entity.Items -= count;
+            Entity.Items += count;
             Publish(new ItemsRemovedFromInventory(Entity.Id, count));
         }
 

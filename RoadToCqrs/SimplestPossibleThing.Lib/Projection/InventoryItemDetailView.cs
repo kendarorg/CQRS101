@@ -14,11 +14,11 @@ namespace SimplestPossibleThing.Lib.Projection
         public InventoryItemDetailView(IBus bus,IInventoryItemDetailsRepository repository)
         {
             _repository = repository;
-            bus.Register<InventoryItemCreated>(Handle);
-            bus.Register<InventoryItemRenamed>(Handle);
-            bus.Register<InventoryItemDeactivated>(Handle);
-            bus.Register<ItemsCheckedInToInventory>(Handle);
-            bus.Register<ItemsRemovedFromInventory>(Handle);
+            bus.Register<InventoryItemCreated>(Handle, "InventoryItemDetailView");
+            bus.Register<InventoryItemRenamed>(Handle, "InventoryItemDetailView");
+            bus.Register<InventoryItemDeactivated>(Handle, "InventoryItemDetailView");
+            bus.Register<ItemsCheckedInToInventory>(Handle, "InventoryItemDetailView");
+            bus.Register<ItemsRemovedFromInventory>(Handle, "InventoryItemDetailView");
         }
         public void Handle(InventoryItemCreated message)
         {

@@ -26,20 +26,24 @@ namespace Infrastructure.Rabbit
 
 
 
-        public void Register<T>(Action<T> handler) where T : class
+        public void Register<T>(Action<T> handler, string prefix = "") where T : class
         {
             string queueName = typeof(T).Name;
+            string routingKey = typeof(T).Name;
             string exchangeName = "commands";
             var exchangeType = ExchangeType.Direct;
             if (typeof(IEvent).IsAssignableFrom(typeof(T)))
             {
-                exchangeType = ExchangeType.Topic;
-                exchangeName = "events";
+                exchangeName = "events." + queueName;
+                queueName = queueName + "." + prefix;
+                exchangeType = ExchangeType.Fanout;
+                routingKey = "";
+
             }
             var channel = _connection.CreateModel();
             channel.QueueDeclare(queueName, true);
             channel.ExchangeDeclare(exchangeName, exchangeType, true);
-            channel.QueueBind(queueName, exchangeName, queueName);
+            channel.QueueBind(queueName, exchangeName, routingKey);
             var consumer = new EventingBasicConsumer(channel);
             consumer.Received += (model, ea) =>
             {
@@ -59,21 +63,22 @@ namespace Infrastructure.Rabbit
                                  consumer: consumer);
         }
 
-        public void Send(object message, TimeSpan? delay = null)
+        public void Send(object message, TimeSpan? delay)
         {
             string queueName = message.GetType().Name;
+            string routingKey = queueName;
             string exchangeName = "commands";
             if (typeof(IEvent).IsAssignableFrom(message.GetType()))
             {
-                exchangeName = "events";
+                exchangeName = "events." + queueName;
+                routingKey = "";
             }
             var channel = _connection.CreateModel();
-            channel.QueueDeclare(queueName, true);
 
             var body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message));
 
             channel.BasicPublish(exchange: exchangeName,
-                                 routingKey: queueName,
+                                 routingKey: routingKey,
                                  basicProperties: null,
                                  body: body);
         }

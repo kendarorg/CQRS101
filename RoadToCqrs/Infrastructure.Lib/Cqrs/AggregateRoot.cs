@@ -6,7 +6,7 @@ namespace Infrastructure.Lib.Cqrs
     public class ItemToSend
     {
         public object Data { get; set; }
-        public DateTime? DelaySend { get; set; }
+        public TimeSpan? DelaySend { get; set; }
     }
 
 
@@ -37,8 +37,10 @@ namespace Infrastructure.Lib.Cqrs
 
         public T Entity { get; protected set; }
 
-        protected void Publish(object @event, DateTime? delayToSend = null)
+        protected void Publish(IEvent @event, TimeSpan? delayToSend = null)
         {
+            Entity.Version++;
+            @event.Version = Entity.Version;
             _unsentEvents.Add(new ItemToSend { Data = @event, DelaySend = delayToSend });
         }
     }

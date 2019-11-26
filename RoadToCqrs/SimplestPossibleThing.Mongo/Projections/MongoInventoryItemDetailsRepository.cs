@@ -19,9 +19,8 @@ namespace Infrastructure.Mongo.Projections
         {
             var client = new MongoClient(_connectionString);
             var database = client.GetDatabase("cqrs");
-            //database.CreateCollection("InventoryItemDetails");
-            var collection = database.GetCollection<BsonDocument>("InventoryItemDetails");
-            var filter = Builders<BsonDocument>.Filter.Eq("_id", new ObjectId(id.ToString().Replace("-", "")));
+            var collection = database.GetCollection<InventoryItemDetailsDto>("InventoryItemDetails");
+            var filter = Builders<InventoryItemDetailsDto>.Filter.Eq("_id", id);
             collection.DeleteOne(filter);
         }
 
@@ -29,44 +28,25 @@ namespace Infrastructure.Mongo.Projections
         {
             var client = new MongoClient(_connectionString);
             var database = client.GetDatabase("cqrs");
-            //database.CreateCollection("InventoryItemDetails");
-            var collection = database.GetCollection<BsonDocument>("InventoryItemDetails");
-            var filter = Builders<BsonDocument>.Filter.Eq("_id", new ObjectId(id.ToString().Replace("-", "")));
-            var bson = collection.Find(filter).FirstOrDefault();
-            if (bson == null)
+            var collection = database.GetCollection<InventoryItemDetailsDto>("InventoryItemDetails");
+            var filter = Builders<InventoryItemDetailsDto>.Filter.Eq("Id", id);
+            var result = collection.Find(filter).FirstOrDefault();
+            if (result == null)
             {
                 return null;
             }
-            return ToDto(bson);
-        }
-
-        private static InventoryItemDetailsDto ToDto(BsonDocument bson)
-        {
-            return new InventoryItemDetailsDto(bson["_id"].AsGuid, bson["Name"].AsString, bson["CurrentCount"].ToInt32(), bson["Version"].ToInt32());
-        }
-
-        private static BsonDocument FromDto(InventoryItemDetailsDto bson)
-        {
-            var doc = new BsonDocument();
-            doc["_id"] = bson.Id.ToString().Replace("-", "");
-            doc["Name"] = bson.Name;
-            doc["CurrentCount"] = bson.CurrentCount;
-            doc["Version"] = bson.Version;
-            return doc;
+            return result;
         }
 
         public void Save(InventoryItemDetailsDto inventoryItemDetailsDto)
         {
             var client = new MongoClient(_connectionString);
             var database = client.GetDatabase("cqrs");
-            //database.CreateCollection("InventoryItemDetails");
-            var collection = database.GetCollection<BsonDocument>("InventoryItemDetails");
-            
-            var objectID = new ObjectId(inventoryItemDetailsDto.Id.ToString().Replace("-", ""));
+            var collection = database.GetCollection<InventoryItemDetailsDto>("InventoryItemDetails");
 
-            var filter = Builders<BsonDocument>.Filter.Eq("_id", objectID);
+            var filter = Builders<InventoryItemDetailsDto>.Filter.Eq("_id", inventoryItemDetailsDto.Id);
             var result = collection.ReplaceOne(
-                filter, FromDto(inventoryItemDetailsDto), new UpdateOptions { IsUpsert = true });
+                filter, inventoryItemDetailsDto, new UpdateOptions { IsUpsert = true });
         }
     }
 }

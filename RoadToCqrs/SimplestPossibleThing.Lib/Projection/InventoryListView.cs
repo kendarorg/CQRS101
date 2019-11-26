@@ -15,9 +15,9 @@ namespace SimplestPossibleThing.Lib.Projection
         {
             _repository = repository;
 
-            bus.Register<InventoryItemCreated>(Handle);
-            bus.Register<InventoryItemRenamed>(Handle);
-            bus.Register<InventoryItemDeactivated>(Handle);
+            bus.Register<InventoryItemCreated>(Handle, "InventoryListView");
+            bus.Register<InventoryItemRenamed>(Handle, "InventoryListView");
+            bus.Register<InventoryItemDeactivated>(Handle, "InventoryListView");
         }
         public void Handle(InventoryItemCreated message)
         {
