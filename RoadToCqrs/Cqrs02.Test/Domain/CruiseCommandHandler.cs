@@ -7,14 +7,12 @@ namespace Cqrs01.Test.Domain
     public class CruiseCommandHandler
     {
         private readonly EntityStorage _entityStorage;
-        private readonly Bus _bus;
 
         public CruiseCommandHandler(Bus bus,EntityStorage entityStorage)
         {
             _entityStorage = entityStorage;
-            _bus = bus;
-            _bus.RegisterQueue<CreateCruise>(Handle);
-            _bus.RegisterQueue<AddRoom>(Handle);
+            bus.RegisterQueue<CreateCruise>(Handle);
+            bus.RegisterQueue<AddRoom>(Handle);
         }
         public void Handle(CreateCruise command)
         {

@@ -7,14 +7,17 @@ namespace Cqrs02.Test.Projections
 {
     public class CruisesListProjection
     {
-        private Bus _bus;
         private Dictionary<Guid, CruisesListEntity> _data = new Dictionary<Guid, CruisesListEntity>();
 
         public CruisesListProjection(Bus bus)
         {
-            _bus = bus;
-            _bus.RegisterTopic<CruiseCreated>(Handle);
-            _bus.RegisterTopic<RoomAdded>(Handle);
+            bus.RegisterTopic<CruiseCreated>(Handle);
+            bus.RegisterTopic<RoomAdded>(Handle);
+        }
+
+        public CruisesListEntity GetById(Guid id)
+        {
+            return _data[id];
         }
 
         private void Handle(RoomAdded @event)
@@ -38,11 +41,6 @@ namespace Cqrs02.Test.Projections
         private void Handle(CruiseCreated @event)
         {
             _data[@event.CruiseId] = new CruisesListEntity(@event.CruiseId,@event.Name);
-        }
-
-        public CruisesListEntity GetById(Guid id)
-        {
-            return _data[id];
         }
     }
 }

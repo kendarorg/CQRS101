@@ -2,7 +2,12 @@
 
 namespace Cqrs01.Test.Infrastructure
 {
-    public class AggregateRoot<T>
+    public interface IAggregateRoot<T>
+    {
+        IEnumerable<object> GetUnsentEvents();
+        T Entity { get; }
+    }
+    public class AggregateRoot<T> :IAggregateRoot<T>
     {
         protected AggregateRoot()
         {

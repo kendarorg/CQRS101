@@ -59,7 +59,8 @@ namespace Cqrs03.Test
             commandHandler.Handle(new AddRoom(id, 1, 2, 0));
 
             //When
-            Assert.ThrowsException<Exception>(()=>commandHandler.Handle(new AddRoom(id, 2, 1, 0)));
+            Assert.ThrowsException<Exception>(()=>
+                commandHandler.Handle(new AddRoom(id, 2, 1, 0)));
         }
     }
 }

@@ -21,8 +21,8 @@ namespace Cqrs05.Test.Domain.Payment
         {
             Entity = new PaymentEntity(id, product, userId, amount, quantity, expiration);
             Entity.State = PaymentState.Reserving;
-            Publish(new ReserveItems(product, quantity, id, expiration));
             Publish(new ExpirePayment(id), expiration);
+            Publish(new ReserveItems(product, quantity, id, expiration));
         }
 
         public void Expire()

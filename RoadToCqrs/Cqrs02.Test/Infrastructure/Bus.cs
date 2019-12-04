@@ -5,7 +5,14 @@ using System.Collections.Generic;
 // ReSharper disable RedundantLambdaSignatureParentheses
 namespace Cqrs02.Test.Infrastructure
 {
-    public class Bus 
+    public interface IBus
+    {
+        void AddListener(Action<object> listener);
+        void RegisterQueue<T>(Action<T> handler);
+        void RegisterTopic<T>(Action<T> handler);
+        void Send(object message);
+    }
+    public class Bus : IBus
     {
         public Bus()
         {

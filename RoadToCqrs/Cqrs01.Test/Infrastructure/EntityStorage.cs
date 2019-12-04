@@ -3,21 +3,26 @@ using System.Collections.Generic;
 
 namespace Cqrs01.Test.Infrastructure
 {
-    public class EntityStorage
+    public interface IEntityStorage
     {
-    	private readonly Dictionary<Guid, object> _storage = new Dictionary<Guid, object>();
+        void Save<T>(Guid id, AggregateRoot<T> aggregate);
+        T GetById<T>(Guid id);
+    }
+    public class EntityStorage : IEntityStorage
+    {
+        private readonly Dictionary<Guid, object> _storage = new Dictionary<Guid, object>();
         public List<object> Events { get; private set; }
-        
+
         public EntityStorage()
         {
             Events = new List<object>();
         }
-        
+
         public void Save<T>(Guid id, AggregateRoot<T> aggregate)
         {
             Events.Clear();
             _storage[id] = aggregate.Entity;
-            foreach(var @event in aggregate.GetUnsentEvents())
+            foreach (var @event in aggregate.GetUnsentEvents())
             {
                 Events.Add(@event);
             }

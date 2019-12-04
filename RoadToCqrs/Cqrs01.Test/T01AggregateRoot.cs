@@ -48,15 +48,14 @@ namespace Cqrs01.Test
             var id = Guid.NewGuid();
             var name = "test";
             var target = new CruiseAggregateRoot(id, name);
-            target.ClearEvents();
 
             //When
             target.AddRoom(1, 2);
 
             //Then
             var events = target.GetUnsentEvents().ToList();
-            Assert.AreEqual(1, events.Count);
-            var roomAdded = events[0] as RoomAdded;
+            Assert.AreEqual(2, events.Count);
+            var roomAdded = events[1] as RoomAdded;
             Assert.AreEqual(id, roomAdded.CruiseId);
             Assert.AreEqual(1, roomAdded.Number);
             Assert.AreEqual(2, roomAdded.Category);

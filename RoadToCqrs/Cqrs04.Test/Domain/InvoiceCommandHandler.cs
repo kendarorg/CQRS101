@@ -35,8 +35,10 @@ namespace Cqrs04.Test.Domains.Invoices
         public void Handle(EmitInvoice command)
         {
             var entity = _entityStorage.GetById<InvoiceEntity>(command.InvoiceId);
-            var customer = _customersServices.GetCustomerById(entity.CustomerId);
+
             var aggregate = new InvoiceAggregateRoot(entity);
+
+            var customer = _customersServices.GetCustomerById(entity.CustomerId);
             var address = _customersServices.GetBillingAddressForId(customer.BillingAddressId);
             aggregate.EmitInvoice(address);
             _entityStorage.Save(command.InvoiceId, aggregate, command.ExpectedVersion);
