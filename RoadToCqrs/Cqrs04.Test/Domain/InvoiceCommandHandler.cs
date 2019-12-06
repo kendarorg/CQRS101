@@ -9,9 +9,20 @@ namespace Cqrs04.Test.Domains.Invoices
     public class InvoiceCommandHandler
     {
         private readonly ICustomersServiceProxy _customersServices;
-
         private readonly EntityStorage _entityStorage;
         private readonly Bus _bus;
+        
+        public void Handle(EmitInvoice command)
+        {
+            var entity = _entityStorage.GetById<InvoiceEntity>(command.InvoiceId);
+
+            var aggregate = new InvoiceAggregateRoot(entity);
+
+            var customer = _customersServices.GetCustomerById(entity.CustomerId);
+            var address = _customersServices.GetBillingAddressForId(customer.BillingAddressId);
+            aggregate.EmitInvoice(address);
+            _entityStorage.Save(command.InvoiceId, aggregate, command.ExpectedVersion);
+        }
 
         public InvoiceCommandHandler(Bus bus, EntityStorage entityStorage, ICustomersServiceProxy customerServices)
         {
@@ -30,18 +41,6 @@ namespace Cqrs04.Test.Domains.Invoices
                 var aggregate = new InvoiceAggregateRoot(command.InvoiceId, command.CustomerId);
                 _entityStorage.Save(command.InvoiceId, aggregate);
             }
-        }
-
-        public void Handle(EmitInvoice command)
-        {
-            var entity = _entityStorage.GetById<InvoiceEntity>(command.InvoiceId);
-
-            var aggregate = new InvoiceAggregateRoot(entity);
-
-            var customer = _customersServices.GetCustomerById(entity.CustomerId);
-            var address = _customersServices.GetBillingAddressForId(customer.BillingAddressId);
-            aggregate.EmitInvoice(address);
-            _entityStorage.Save(command.InvoiceId, aggregate, command.ExpectedVersion);
         }
     }
 }
