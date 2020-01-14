@@ -32,7 +32,7 @@ namespace Cqrs06.Test
             payPalPaymentService.Setup(pps => pps.Pay(
                 It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<double>(), It.IsAny<DateTime>()))
                 .Returns(payPalPaymentId);
-            var target = new PaymentCommandHandler(bus, entityStorage, payPalPaymentService.Object);
+            var target = new PaymentCommandHandler(bus, entityStorage );
 
             //When
             bus.Send(new CreatePayment(paymentId, productId, customerId, 10.0, 1));

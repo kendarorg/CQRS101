@@ -4,6 +4,7 @@ using Cqrs05.Test.Domain.Payment.Events;
 using Cqrs05.Test.Domain.Warehouse.Commands;
 using Cqrs06.Test.Domain.Payment.Commands;
 using Cqrs06.Test.Domain.Payment.Events;
+using Cqrs06.Test.Domain.PayPal.Commands;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,15 +30,8 @@ namespace Cqrs05.Test.Domain.Payment
 
         public void Expire()
         {
-            if (Entity.State == PaymentState.Reserving)
-            {
-                Entity.State = PaymentState.Failed;
-                Publish(new PaymentFailed(Entity.Id));
-            }
-            else if (Entity.State == PaymentState.Paying)
-            {
-                Publish(new CancelPayPalPayment(Entity.Id));
-            }
+            Entity.State = PaymentState.Failed;
+            Publish(new PaymentFailed(Entity.Id));
         }
 
         public void Confirm()
@@ -49,31 +43,21 @@ namespace Cqrs05.Test.Domain.Payment
             }
         }
 
-        public void Pay(Guid payPalTransactionId)
+        public void StartPayment()
         {
             if (Entity.State == PaymentState.Reserving)
             {
                 Entity.State = PaymentState.Paying;
-                Entity.PayPalTransactionId = payPalTransactionId;
-                Publish(new PaypalPaymentInititated(Entity.Id, payPalTransactionId));
+                Publish(new PayWithPayPal
+                {
+                    PaymentId = Entity.Id,
+                    CustomerId = Entity.CustomerId,
+                    Amount = Entity.Amount,
+                    Expiration = Entity.Expiration,
+                });
             }
         }
 
-        public void PaymentRefunded(bool wereAbleToRefund)
-        {
-            if (Entity.State == PaymentState.Paying)
-            {
-                if (wereAbleToRefund)
-                {
-                    Entity.State = PaymentState.Failed;
-                    Publish(new PaymentFailed(Entity.Id));
-                }
-                else
-                {
-                    Publish(new CancelPayPalPayment(Entity.Id));
-                }
-            }
-        }
 
         public void PaymentCompleted()
         {

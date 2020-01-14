@@ -11,19 +11,16 @@ namespace Cqrs05.Test.Domain.Payment
 {
     public class PaymentCommandHandler
     {
-        private readonly IPayPalPaymentService _payPal;
         private readonly Bus _bus;
         private readonly EntityStorage _entityStorage;
 
-        public PaymentCommandHandler(Bus bus, EntityStorage entityStorage, IPayPalPaymentService payPal)
+        public PaymentCommandHandler(Bus bus, EntityStorage entityStorage)
         {
-            _payPal = payPal;
             _bus = bus;
             _bus.RegisterQueue<CreatePayment>(Handle);
             _bus.RegisterQueue<ExpirePayment>(Handle);
             _bus.RegisterTopic<ItemsReserved>(Handle);
-            _bus.RegisterQueue<CancelPayPalPayment>(Handle);
-            _bus.RegisterQueue<PayPalPaymentCompleted>(Handle);
+            _bus.RegisterTopic<PayPalPaymentCompleted>(Handle);
             _entityStorage = entityStorage;
         }
 
@@ -46,39 +43,18 @@ namespace Cqrs05.Test.Domain.Payment
         private void Handle(ItemsReserved @event)
         {
             var entity = _entityStorage.GetById<PaymentEntity>(@event.OwnerId);
-            if (entity != null)
-            {
-                var aggregate = new PaymentAggregateRoot(entity);
-                var payPalTransactionId = _payPal.Pay(
-                    entity.Id, entity.CustomerId, 
-                    entity.Amount, entity.Expiration);
-                aggregate.Pay(payPalTransactionId);
-                _entityStorage.Save(@event.OwnerId, aggregate, 0);
-            }
+            var aggregate = new PaymentAggregateRoot(entity);
+            aggregate.StartPayment();
+            _entityStorage.Save(@event.OwnerId, aggregate, 0);
+            
         }
 
         private void Handle(PayPalPaymentCompleted @event)
         {
             var entity = _entityStorage.GetById<PaymentEntity>(@event.OwnerId);
-            if (entity != null)
-            {
-                var aggregate = new PaymentAggregateRoot(entity);
-                aggregate.PaymentCompleted();
-                _entityStorage.Save(entity.Id, aggregate, entity.Version);
-            }
-        }
-
-        private void Handle(CancelPayPalPayment @event)
-        {
-            var entity = _entityStorage.GetById<PaymentEntity>(@event.PaymentId);
-            if (entity != null)
-            {
-                var payPalCanceled = _payPal.Cancel(entity.PayPalTransactionId);
-                
-                var aggregate = new PaymentAggregateRoot(entity);
-                aggregate.PaymentRefunded(payPalCanceled);
-                _entityStorage.Save(entity.Id, aggregate, entity.Version);
-            }
+            var aggregate = new PaymentAggregateRoot(entity);
+            aggregate.PaymentCompleted();
+            _entityStorage.Save(entity.Id, aggregate, entity.Version);
         }
     }
 }

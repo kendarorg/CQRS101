@@ -46,8 +46,8 @@ namespace Cqrs05.Test
             //Then
             var events = target.GetUnsentEvents().ToList();
             Assert.AreEqual(2, events.Count);
-            Assert.IsInstanceOfType(events[0].Data, typeof(ReserveItems));
-            Assert.IsInstanceOfType(events[1].Data, typeof(ExpirePayment));
+            Assert.IsInstanceOfType(events[0].Data, typeof(ExpirePayment));
+            Assert.IsInstanceOfType(events[1].Data, typeof(ReserveItems));
         }
 
         [TestMethod]
